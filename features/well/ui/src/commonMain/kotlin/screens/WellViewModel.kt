@@ -4,6 +4,7 @@ import base.Router
 import base.TransitionConfig
 import base_viewModel.BaseViewModel
 import debugLog
+import logic.GameSetupFactory
 import logic.generateDoubleDeck
 import logic.takeFromDeck
 import model.CardStack
@@ -15,6 +16,7 @@ import models.UserData
 
 class WellViewModel(
     private val router: Router,
+    private val gameSetupFactory: GameSetupFactory
 ) : BaseViewModel<
         WellContract.WellEvent,
         WellContract.WellState,
@@ -31,55 +33,10 @@ class WellViewModel(
     }
 
     private fun createNewGame() {
-        val deck = generateDoubleDeck().shuffled().toMutableList()
-        debugLog("newDeck: size: ${deck.size}, $deck")
-
-        // 2. Формируем внутренние стопки (пока не переворачиваем)
-        val innerWells = createInnerWells(deck)
-
-        // 3. Создаем внешние стопки (уже перевернутые)
-        val externalWells = createExternalWells(deck)
-
-        val stackWells = innerWells + externalWells
-        // 5. Только теперь обновляем состояние
         updateState {
             this.copy(
-                stackWells = stackWells,
-                stock = CardStack(deck, SlotAddress(SlotType.STOCK))
+                stackWells = gameSetupFactory.createNewGame(),
             )
-        }
-    }
-
-    private fun createInnerWells(deck: MutableList<Card>) : List<CardStack> {
-       val innerWells = List(4) { index ->
-            CardStack(
-                cards = deck.takeFromDeck(10),
-                address = SlotAddress(SlotType.INNER_WELL, index)
-            )
-        }
-        return flipTopCards(innerWells)
-    }
-
-    private fun createExternalWells(deck: MutableList<Card>) : List<CardStack> {
-        return List(4) { index ->
-            val topCard = deck.removeFirst().copy(isFaceUp = true)
-            CardStack(
-                cards = listOf(topCard),
-                address = SlotAddress(SlotType.EXTERNAL_WELL, index)
-            )
-        }
-    }
-
-    private fun flipTopCards(stacks: List<CardStack>): List<CardStack> {
-        return stacks.map { stack ->
-            if (stack.cards.isNotEmpty()) {
-                val updatedCards = stack.cards.toMutableList().apply {
-                    set(lastIndex, last().copy(isFaceUp = true))
-                }
-                stack.copy(cards = updatedCards)
-            } else {
-                stack
-            }
         }
     }
 

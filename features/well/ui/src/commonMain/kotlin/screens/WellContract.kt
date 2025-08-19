@@ -9,7 +9,6 @@ import model.SlotAddress
 object WellContract {
     data class WellState(
         val isStockAnimating: Boolean = false,
-        val stock: CardStack = CardStack.emptyStock,
         val stackWells: List<CardStack> = emptyList(),
     ) : UiState
 

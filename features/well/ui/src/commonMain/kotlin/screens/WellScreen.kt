@@ -93,7 +93,7 @@ fun WellScreen() {
                 }
             )
             MiddleRow(
-                stockDeck = state.stock,
+                stackWells = state.stackWells,
                 cardFactory = cardFactory,
                 onClick = { slotAddress ->
                     viewModel.onEvent(WellContract.WellEvent.ClickCard(address = slotAddress))
@@ -132,7 +132,7 @@ fun TopRow(
 
 @Composable
 fun MiddleRow(
-    stockDeck: CardStack,
+    stackWells: List<CardStack>,
     cardFactory: CardResourcesFactory,
     onClick: (SlotAddress) -> Unit,
 ) {
@@ -144,7 +144,7 @@ fun MiddleRow(
     ) {
         // Колода (слева)
         CreateCardSlot(
-            stackList = listOf(stockDeck),
+            stackList = stackWells,
             address = SlotAddress(SlotType.STOCK),
             cardFactory = cardFactory,
             onClick = onClick

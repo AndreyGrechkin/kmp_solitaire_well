@@ -19,6 +19,8 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(projects.core.common)
             implementation(projects.core.utils)
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
         }
     }
 }
