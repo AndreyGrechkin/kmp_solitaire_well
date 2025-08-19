@@ -1,0 +1,42 @@
+package theme
+
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.ui.graphics.Color
+
+val LightCardGameColors = lightColorScheme(
+    primary = Color(0xFF6200EE),
+    secondary = Color(0xFF03DAC6),
+    background = Color(0xFFF5F5F5),
+    surface = Color.White,
+    onPrimary = Color.White,
+    onSecondary = Color.Black,
+    onBackground = Color.Black,
+    onSurface = Color.Black
+)
+
+val DarkCardGameColors = darkColorScheme(
+    primary = Color(0xFFBB86FC),
+    secondary = Color(0xFF03DAC6),
+    background = Color(0xFF121212),
+    surface = Color(0xFF1E1E1E),
+    onPrimary = Color.Black,
+    onSecondary = Color.Black,
+    onBackground = Color.White,
+    onSurface = Color.White
+)
+
+fun lightColorPalette() = LightCardGameColors
+fun darkColorPalette() = DarkCardGameColors
+
+object CardColors {
+    val cardBack = Color(0xFF2A52BE) // классический синий цвет рубашки
+    val cardFront = Color.White
+    val black = Color.Black
+    val heart = Color(0xFFD32F2F)
+    val diamond = Color(0xFFD32F2F)
+    val club = Color(0xFF000000)
+    val spade = Color(0xFF000000)
+    val defaultBackground = Color(0xFF2E7D32)
+    val defaultEmptyCardSlot = Color(0x55212121)
+}
