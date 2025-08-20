@@ -8,6 +8,8 @@ import logic.GameSetupFactory
 import logic.generateDoubleDeck
 import logic.takeFromDeck
 import model.CardStack
+import model.CardState
+import model.GameState
 import model.SlotAddress
 import model.SlotType
 import models.Card
@@ -28,7 +30,7 @@ class WellViewModel(
         when (event) {
             WellContract.WellEvent.OnNewGame -> createNewGame()
             is WellContract.WellEvent.NavigateToSettings -> openSettings()
-            is WellContract.WellEvent.ClickCard -> handleClickCard(event.address)
+            is WellContract.WellEvent.ClickCard -> handleClickCard(event.state)
         }
     }
 
@@ -40,8 +42,61 @@ class WellViewModel(
         }
     }
 
-    private fun handleClickCard(address: SlotAddress) {
-        debugLog("adress: $address")
+    private fun handleClickCard(gameState: GameState) {
+        debugLog("adress: $gameState")
+        when(gameState.state){
+            CardState.DEFAULT -> {
+                if (gameState.state == state.value.gameState.state) {
+                    if (gameState.card != null && gameState.address.type != SlotType.STOCK)
+                        updateState {
+                            this.copy(gameState = gameState.copy(state = CardState.SELECTED))
+                        }
+                } else {
+                    when(gameState.address.type){
+                        SlotType.FOUNDATION -> {}
+                        SlotType.STOCK -> {}
+                        SlotType.STOCK_PLAY -> {
+                            updateState {
+                                this.copy(gameState = gameState.copy(state = CardState.ERROR))
+                            }
+                        }
+                        SlotType.WASTE -> {}
+                        SlotType.INNER_WELL -> {}
+                        SlotType.EXTERNAL_WELL -> {}
+                    }
+                }
+            }
+            CardState.SELECTED -> {
+                if (gameState.state == state.value.gameState.state) {
+                    if (gameState.card != null && gameState.address.type != SlotType.STOCK)
+                        updateState {
+                            this.copy(
+                                gameState = gameState.copy(state = CardState.DEFAULT),
+                            )
+                        }
+                } else {
+                    when(gameState.address.type){
+                        SlotType.FOUNDATION -> {}
+                        SlotType.STOCK -> {}
+                        SlotType.STOCK_PLAY -> {}
+                        SlotType.WASTE -> {}
+                        SlotType.INNER_WELL -> {}
+                        SlotType.EXTERNAL_WELL -> {}
+                    }
+                }
+            }
+            CardState.SUCCESS -> {
+                updateState {
+                    this.copy(gameState = gameState.copy(state = CardState.DEFAULT))
+                }
+            }
+            CardState.ERROR -> {
+                updateState {
+                    this.copy(gameState = gameState.copy(state = CardState.DEFAULT))
+                }
+            }
+        }
+
     }
 
     fun openSettings() {

@@ -1,6 +1,12 @@
 package screens
 
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.keyframes
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -8,6 +14,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -32,10 +39,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.defey.solitairewell.data.resources.Res
 import com.defey.solitairewell.data.resources.back_blue
+import debugLog
 import getScreenMetrics
 import logic.CardResourcesFactory
 import model.CardStack
 import model.CardState
+import model.GameState
 import model.SlotAddress
 import model.SlotType
 import models.CardResource
@@ -88,22 +97,27 @@ fun WellScreen() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp),
-                onClick = { slotAddress ->
-                    viewModel.onEvent(WellContract.WellEvent.ClickCard(address = slotAddress))
+                stackWells = state.stackWells,
+                cardFactory = cardFactory,
+                gameState = state.gameState,
+                onClick = { state ->
+                    viewModel.onEvent(WellContract.WellEvent.ClickCard(state = state))
                 }
             )
             MiddleRow(
                 stackWells = state.stackWells,
                 cardFactory = cardFactory,
-                onClick = { slotAddress ->
-                    viewModel.onEvent(WellContract.WellEvent.ClickCard(address = slotAddress))
+                gameState = state.gameState,
+                onClick = { state ->
+                    viewModel.onEvent(WellContract.WellEvent.ClickCard(state = state))
                 }
             )
             WellSlotBox(
                 stackWells = state.stackWells,
                 cardFactory = cardFactory,
-                onClick = { slotAddress ->
-                    viewModel.onEvent(WellContract.WellEvent.ClickCard(address = slotAddress))
+                gameState = state.gameState,
+                onClick = { state ->
+                    viewModel.onEvent(WellContract.WellEvent.ClickCard(state = state))
                 }
             )
         }
@@ -112,8 +126,11 @@ fun WellScreen() {
 
 @Composable
 fun TopRow(
+    stackWells: List<CardStack>,
+    cardFactory: CardResourcesFactory,
     modifier: Modifier,
-    onClick: (SlotAddress) -> Unit,
+    gameState: GameState,
+    onClick: (GameState) -> Unit,
 ) {
     Row(
         modifier = modifier
@@ -122,8 +139,11 @@ fun TopRow(
         horizontalArrangement = Arrangement.SpaceAround
     ) {
         repeat(5) { index ->
-            EmptyCardSlot(
+            CreateCardSlot(
+                stackList = stackWells,
                 address = SlotAddress(SlotType.STOCK_PLAY, index),
+                cardFactory = cardFactory,
+                gameState = gameState,
                 onClick = onClick
             )
         }
@@ -133,8 +153,9 @@ fun TopRow(
 @Composable
 fun MiddleRow(
     stackWells: List<CardStack>,
+    gameState: GameState,
     cardFactory: CardResourcesFactory,
-    onClick: (SlotAddress) -> Unit,
+    onClick: (GameState) -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -147,14 +168,18 @@ fun MiddleRow(
             stackList = stackWells,
             address = SlotAddress(SlotType.STOCK),
             cardFactory = cardFactory,
+            gameState = gameState,
             onClick = onClick
         )
 
         Spacer(modifier = Modifier.weight(2f))
 
         // Склад (справа)
-        EmptyCardSlot(
+        CreateCardSlot(
+            stackList = stackWells,
             address = SlotAddress(SlotType.WASTE),
+            cardFactory = cardFactory,
+            gameState = gameState,
             onClick = onClick
         )
     }
@@ -163,8 +188,9 @@ fun MiddleRow(
 @Composable
 fun WellSlotBox(
     stackWells: List<CardStack>,
+    gameState: GameState,
     cardFactory: CardResourcesFactory,
-    onClick: (SlotAddress) -> Unit,
+    onClick: (GameState) -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -177,6 +203,7 @@ fun WellSlotBox(
                 stackList = stackWells,
                 address = SlotAddress(SlotType.EXTERNAL_WELL, TOP_INDEX),
                 cardFactory = cardFactory,
+                gameState = gameState,
                 onClick = onClick
             )
 
@@ -184,6 +211,7 @@ fun WellSlotBox(
                 stackList = stackWells,
                 address = SlotAddress(SlotType.INNER_WELL, TOP_INDEX),
                 cardFactory = cardFactory,
+                gameState = gameState,
                 onClick = onClick
             )
 
@@ -191,6 +219,7 @@ fun WellSlotBox(
                 stackList = stackWells,
                 address = SlotAddress(SlotType.INNER_WELL, BOTTOM_INDEX),
                 cardFactory = cardFactory,
+                gameState = gameState,
                 onClick = onClick
             )
 
@@ -198,6 +227,7 @@ fun WellSlotBox(
                 stackList = stackWells,
                 address = SlotAddress(SlotType.EXTERNAL_WELL, BOTTOM_INDEX),
                 cardFactory = cardFactory,
+                gameState = gameState,
                 onClick = onClick
             )
 
@@ -208,8 +238,11 @@ fun WellSlotBox(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row() {
-                EmptyCardSlot(
+                CreateCardSlot(
+                    stackList = stackWells,
                     address = SlotAddress(SlotType.FOUNDATION, LEFT_INDEX),
+                    cardFactory = cardFactory,
+                    gameState = gameState,
                     onClick = onClick
                 )
                 Spacer(
@@ -218,8 +251,11 @@ fun WellSlotBox(
                         .width(rememberCardSize())
                         .aspectRatio(0.7f)
                 )
-                EmptyCardSlot(
+                CreateCardSlot(
+                    stackList = stackWells,
                     address = SlotAddress(SlotType.FOUNDATION, TOP_INDEX),
+                    cardFactory = cardFactory,
+                    gameState = gameState,
                     onClick = onClick
                 )
             }
@@ -228,6 +264,7 @@ fun WellSlotBox(
                     stackList = stackWells,
                     address = SlotAddress(SlotType.EXTERNAL_WELL, LEFT_INDEX),
                     cardFactory = cardFactory,
+                    gameState = gameState,
                     onClick = onClick
                 )
 
@@ -235,6 +272,7 @@ fun WellSlotBox(
                     stackList = stackWells,
                     address = SlotAddress(SlotType.INNER_WELL, LEFT_INDEX),
                     cardFactory = cardFactory,
+                    gameState = gameState,
                     onClick = onClick
                 )
 
@@ -248,6 +286,7 @@ fun WellSlotBox(
                     stackList = stackWells,
                     address = SlotAddress(SlotType.INNER_WELL, RIGHT_INDEX),
                     cardFactory = cardFactory,
+                    gameState = gameState,
                     onClick = onClick
                 )
 
@@ -255,13 +294,17 @@ fun WellSlotBox(
                     stackList = stackWells,
                     address = SlotAddress(SlotType.EXTERNAL_WELL, RIGHT_INDEX),
                     cardFactory = cardFactory,
+                    gameState = gameState,
                     onClick = onClick
                 )
 
             }
             Row() {
-                EmptyCardSlot(
+                CreateCardSlot(
+                    stackList = stackWells,
                     address = SlotAddress(SlotType.FOUNDATION, BOTTOM_INDEX),
+                    cardFactory = cardFactory,
+                    gameState = gameState,
                     onClick = onClick
                 )
                 Spacer(
@@ -270,8 +313,11 @@ fun WellSlotBox(
                         .width(rememberCardSize())
                         .aspectRatio(0.7f)
                 )
-                EmptyCardSlot(
+                CreateCardSlot(
+                    stackList = stackWells,
                     address = SlotAddress(SlotType.FOUNDATION, RIGHT_INDEX),
+                    cardFactory = cardFactory,
+                    gameState = gameState,
                     onClick = onClick
                 )
             }
@@ -285,22 +331,61 @@ fun CreateCardSlot(
     stackList: List<CardStack>,
     address: SlotAddress,
     cardFactory: CardResourcesFactory,
-    onClick: (SlotAddress) -> Unit,
+    gameState: GameState,
+    onClick: (GameState) -> Unit,
 ) {
     val stack = stackList.find { it.address == address }
+    val state = if (gameState.address == address) gameState.state
+    else CardState.DEFAULT
     if (stack?.cards.isNullOrEmpty()) {
         EmptyCardSlot(
-            address = address,
-            onClick = onClick
+            state = state,
+            onAnimationComplete = {
+                onClick(
+                    GameState(
+                        card = null,
+                        address = address,
+                        state = state
+                    )
+                )
+                debugLog("finis Anim")
+            },
+            onClick = {
+                onClick(
+                    GameState(
+                        card = null,
+                        address = address,
+                        state = state
+                    )
+                )
+            }
         )
     } else {
         val topCard = stack.topCard ?: return
         PlayingCard(
             cardResource = cardFactory.createCardResources(topCard),
             isFaceUp = topCard.isFaceUp,
-            address = address,
-            state = CardState.DEFAULT,
-            onClick = onClick
+            state = state,
+            onAnimationComplete = {
+                onClick(
+                    GameState(
+                        card = topCard,
+                        address = address,
+                        state = state
+                    )
+                )
+                debugLog("finis Anim")
+            },
+            onClick = {
+                onClick(
+                    GameState(
+                        card = topCard,
+                        address = address,
+                        state = state
+                    )
+                )
+
+            }
         )
     }
 }
@@ -308,23 +393,23 @@ fun CreateCardSlot(
 @Composable
 fun EmptyCardSlot(
     modifier: Modifier = Modifier,
-    address: SlotAddress,
-    onClick: (SlotAddress) -> Unit = {},
+    state: CardState,
+    onAnimationComplete: () -> Unit = {},
+    onClick: () -> Unit = {},
 ) {
-    Box(
-        modifier = modifier
-            .padding(8.dp)
-            .width(rememberCardSize())
-            .aspectRatio(0.7f)
-            .clip(MaterialTheme.shapes.medium)
-            .clickable(
-                onClick = { onClick(address) }
-            )
-            .background(
-                color = CardColors.defaultEmptyCardSlot,
-            )
-    )
+    AnimatedBorder(
+        state = state,
+        onAnimationComplete = onAnimationComplete
+    ) {
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .clickable(onClick = onClick)
+                .background(color = CardColors.defaultEmptyCardSlot)
+        )
+    }
 }
+
 
 @Composable
 fun calculateHalfCardHeight(): Dp {
@@ -344,66 +429,111 @@ fun PlayingCard(
     cardResource: CardResource,
     isFaceUp: Boolean,
     modifier: Modifier = Modifier,
-    address: SlotAddress,
     state: CardState = CardState.DEFAULT,
-    onClick: (SlotAddress) -> Unit = {},
+    onAnimationComplete: () -> Unit = {},
+    onClick: () -> Unit = {},
 ) {
-    // Анимируем цвет обводки
+    AnimatedBorder(
+        state = state,
+        onAnimationComplete = onAnimationComplete
+    ) {
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .clickable(onClick = onClick)
+                .background(color = CardColors.cardFront)
+        ) {
+            if (isFaceUp) {
+                Column(Modifier.fillMaxSize()) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = cardResource.rank,
+                            color = CardColors.black,
+                            fontSize = 32.sp
+                        )
+                        Image(
+                            painter = painterResource(cardResource.suit),
+                            contentDescription = cardResource.rank,
+                            modifier = Modifier.padding(start = 8.dp).size(24.dp),
+                        )
+                    }
+                    Image(
+                        painter = painterResource(cardResource.image),
+                        contentDescription = cardResource.rank,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+            } else {
+                Image(
+                    painter = painterResource(Res.drawable.back_blue),
+                    contentDescription = "Card back",
+                    modifier = Modifier.fillMaxSize().padding(4.dp),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun AnimatedBorder(
+    state: CardState,
+    onAnimationComplete: () -> Unit = {},
+    content: @Composable BoxScope.() -> Unit,
+) {
     val borderColor by animateColorAsState(
         targetValue = when (state) {
-            CardState.SELECTED -> Color.Green
+            CardState.SELECTED -> Color.Yellow
+            CardState.SUCCESS -> Color.Green
             CardState.ERROR -> Color.Red
             CardState.DEFAULT -> Color.Transparent
         },
         animationSpec = when (state) {
-            CardState.ERROR -> tween(durationMillis = 500, delayMillis = 1000)
-            else -> tween(durationMillis = 200)
+            CardState.SELECTED -> tween(durationMillis = 200)
+            CardState.DEFAULT -> tween(durationMillis = 200)
+            else -> tween(durationMillis = 500)
+        },
+        finishedListener = {
+            if (state == CardState.SUCCESS || state == CardState.ERROR) {
+                onAnimationComplete()
+            }
         }
     )
+
+    val infiniteTransition = rememberInfiniteTransition()
+    val alpha by infiniteTransition.animateFloat(
+        initialValue = 1f,
+        targetValue = 0.3f,
+        animationSpec = infiniteRepeatable(
+            animation = keyframes {
+                durationMillis = 1000
+                0.0f at 0 using FastOutSlowInEasing
+                0.3f at 333 using FastOutSlowInEasing
+                1.0f at 666 using FastOutSlowInEasing
+            },
+            repeatMode = RepeatMode.Restart,
+        ),
+        label = "blinking_animation"
+    )
+
+    val showBlinkingEffect = state == CardState.SUCCESS || state == CardState.ERROR
+    val actualBorderColor = if (showBlinkingEffect) {
+        borderColor.copy(alpha = alpha)
+    } else {
+        borderColor
+    }
+
     Box(
-        modifier = modifier
+        modifier = Modifier
             .padding(8.dp)
             .width(rememberCardSize())
             .aspectRatio(0.7f)
             .clip(MaterialTheme.shapes.medium)
-            .clickable(
-                onClick = { onClick(address) }
-            )
-            .background(
-                color = CardColors.cardFront,
-            )
             .border(
                 width = if (state != CardState.DEFAULT) 2.dp else 0.dp,
-                color = borderColor,
+                color = actualBorderColor,
                 shape = MaterialTheme.shapes.medium
             )
     ) {
-        if (isFaceUp) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-
-                    Text(text = cardResource.rank, color = CardColors.black, fontSize = 32.sp)
-                    Image(
-                        painter = painterResource(cardResource.suit),
-                        contentDescription = cardResource.rank,
-                        modifier = Modifier.padding(start = 8.dp).size(24.dp),
-                        )
-                }
-                Image(
-                    painter = painterResource(cardResource.image),
-                    contentDescription = cardResource.rank,
-                    modifier = Modifier.fillMaxSize()
-
-                )
-            }
-        } else {
-            Image(
-                painter = painterResource(Res.drawable.back_blue),
-                contentDescription = "Card back",
-                modifier = Modifier.fillMaxSize().padding(4.dp),
-            )
-        }
+        content()
     }
 }

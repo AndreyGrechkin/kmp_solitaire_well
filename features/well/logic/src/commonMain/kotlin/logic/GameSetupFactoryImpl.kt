@@ -20,11 +20,11 @@ class GameSetupFactoryImpl:GameSetupFactory {
     private fun createInnerWells(deck: MutableList<Card>) : List<CardStack> {
         val innerWells = List(4) { index ->
             CardStack(
-                cards = deck.takeFromDeck(10),
+                cards = deck.takeFromDeck(10).map { it.copy(isFaceUp = true) },
                 address = SlotAddress(SlotType.INNER_WELL, index)
             )
         }
-        return flipTopCards(innerWells)
+        return innerWells
     }
 
     private fun createExternalWells(deck: MutableList<Card>) : List<CardStack> {
@@ -37,16 +37,4 @@ class GameSetupFactoryImpl:GameSetupFactory {
         }
     }
 
-    private fun flipTopCards(stacks: List<CardStack>): List<CardStack> {
-        return stacks.map { stack ->
-            if (stack.cards.isNotEmpty()) {
-                val updatedCards = stack.cards.toMutableList().apply {
-                    set(lastIndex, last().copy(isFaceUp = true))
-                }
-                stack.copy(cards = updatedCards)
-            } else {
-                stack
-            }
-        }
-    }
 }
