@@ -18,13 +18,14 @@ import models.UserData
 
 class WellViewModel(
     private val router: Router,
-    private val gameSetupFactory: GameSetupFactory
+    private val gameSetupFactory: GameSetupFactory,
 ) : BaseViewModel<
         WellContract.WellEvent,
         WellContract.WellState,
         WellContract.WellAction>(
     initialState = WellContract.WellState()
 ) {
+    private var cardsToDealCount = 5
 
     override suspend fun handleEvent(event: WellContract.WellEvent) {
         when (event) {
@@ -35,68 +36,87 @@ class WellViewModel(
     }
 
     private fun createNewGame() {
-        updateState {
-            this.copy(
-                stackWells = gameSetupFactory.createNewGame(),
-            )
-        }
+        cardsToDealCount = 5
+        updateState { this.copy(stackWells = gameSetupFactory.createNewGame()) }
     }
 
     private fun handleClickCard(gameState: GameState) {
         debugLog("adress: $gameState")
-        when(gameState.state){
-            CardState.DEFAULT -> {
-                if (gameState.state == state.value.gameState.state) {
-                    if (gameState.card != null && gameState.address.type != SlotType.STOCK)
-                        updateState {
-                            this.copy(gameState = gameState.copy(state = CardState.SELECTED))
-                        }
-                } else {
-                    when(gameState.address.type){
-                        SlotType.FOUNDATION -> {}
-                        SlotType.STOCK -> {}
-                        SlotType.STOCK_PLAY -> {
+        if (gameState.address.type == SlotType.STOCK) {
+            handleClickedStock()
+        } else {
+            when (gameState.state) {
+                CardState.DEFAULT -> {
+                    if (gameState.state == state.value.gameState.state) {
+                        if (gameState.card != null && gameState.address.type != SlotType.STOCK)
                             updateState {
-                                this.copy(gameState = gameState.copy(state = CardState.ERROR))
+                                this.copy(gameState = gameState.copy(state = CardState.SELECTED))
                             }
+                    } else {
+                        when (gameState.address.type) {
+                            SlotType.FOUNDATION -> {}
+                            SlotType.STOCK -> {}
+                            SlotType.STOCK_PLAY -> {
+                                updateState {
+                                    this.copy(gameState = gameState.copy(state = CardState.ERROR))
+                                }
+                            }
+
+                            SlotType.WASTE -> {}
+                            SlotType.INNER_WELL -> {}
+                            SlotType.EXTERNAL_WELL -> {}
                         }
-                        SlotType.WASTE -> {}
-                        SlotType.INNER_WELL -> {}
-                        SlotType.EXTERNAL_WELL -> {}
                     }
                 }
-            }
-            CardState.SELECTED -> {
-                if (gameState.state == state.value.gameState.state) {
-                    if (gameState.card != null && gameState.address.type != SlotType.STOCK)
-                        updateState {
-                            this.copy(
-                                gameState = gameState.copy(state = CardState.DEFAULT),
-                            )
+
+                CardState.SELECTED -> {
+                    if (gameState.state == state.value.gameState.state) {
+                        if (gameState.card != null && gameState.address.type != SlotType.STOCK)
+                            updateState {
+                                this.copy(
+                                    gameState = gameState.copy(state = CardState.DEFAULT),
+                                )
+                            }
+                    } else {
+                        when (gameState.address.type) {
+                            SlotType.FOUNDATION -> {}
+                            SlotType.STOCK -> {}
+                            SlotType.STOCK_PLAY -> {}
+                            SlotType.WASTE -> {}
+                            SlotType.INNER_WELL -> {}
+                            SlotType.EXTERNAL_WELL -> {}
                         }
-                } else {
-                    when(gameState.address.type){
-                        SlotType.FOUNDATION -> {}
-                        SlotType.STOCK -> {}
-                        SlotType.STOCK_PLAY -> {}
-                        SlotType.WASTE -> {}
-                        SlotType.INNER_WELL -> {}
-                        SlotType.EXTERNAL_WELL -> {}
                     }
                 }
-            }
-            CardState.SUCCESS -> {
-                updateState {
-                    this.copy(gameState = gameState.copy(state = CardState.DEFAULT))
+
+                CardState.SUCCESS -> {
+                    updateState {
+                        this.copy(gameState = gameState.copy(state = CardState.DEFAULT))
+                    }
                 }
-            }
-            CardState.ERROR -> {
-                updateState {
-                    this.copy(gameState = gameState.copy(state = CardState.DEFAULT))
+
+                CardState.ERROR -> {
+                    updateState {
+                        this.copy(gameState = gameState.copy(state = CardState.DEFAULT))
+                    }
                 }
             }
         }
+    }
 
+    private fun handleClickedStock() {
+        val currentStacks = state.value.stackWells
+        val result = gameSetupFactory.handleStockClick(currentStacks, cardsToDealCount)
+
+        // Обновляем состояние во ViewModel
+        cardsToDealCount = result.newDealCount
+        updateState { this.copy(stackWells = result.updatedStacks) }
+
+        // Проверяем завершение пасьянса
+        if (cardsToDealCount == 0) {
+            debugLog("Пасьянс завершен")
+            // TODO: Обработка завершения игры
+        }
     }
 
     fun openSettings() {
@@ -104,7 +124,7 @@ class WellViewModel(
         router.navigateTo(Screen.Settings(settingsData), TransitionConfig.SLIDE_VERTICAL)
     }
 
-    companion object{
+    companion object {
         const val LEFT_INDEX = 0
         const val TOP_INDEX = 1
         const val RIGHT_INDEX = 2

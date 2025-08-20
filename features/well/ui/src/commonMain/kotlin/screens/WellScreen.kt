@@ -337,9 +337,11 @@ fun CreateCardSlot(
     val stack = stackList.find { it.address == address }
     val state = if (gameState.address == address) gameState.state
     else CardState.DEFAULT
+    val stackSize = stack?.cards?.size ?: 0
     if (stack?.cards.isNullOrEmpty()) {
         EmptyCardSlot(
             state = state,
+            stackSize = stackSize,
             onAnimationComplete = {
                 onClick(
                     GameState(
@@ -366,6 +368,7 @@ fun CreateCardSlot(
             cardResource = cardFactory.createCardResources(topCard),
             isFaceUp = topCard.isFaceUp,
             state = state,
+            stackSize = stackSize,
             onAnimationComplete = {
                 onClick(
                     GameState(
@@ -393,12 +396,14 @@ fun CreateCardSlot(
 @Composable
 fun EmptyCardSlot(
     modifier: Modifier = Modifier,
+    stackSize: Int,
     state: CardState,
     onAnimationComplete: () -> Unit = {},
     onClick: () -> Unit = {},
 ) {
     AnimatedBorder(
         state = state,
+        stackSize= stackSize,
         onAnimationComplete = onAnimationComplete
     ) {
         Box(
@@ -408,6 +413,7 @@ fun EmptyCardSlot(
                 .background(color = CardColors.defaultEmptyCardSlot)
         )
     }
+
 }
 
 
@@ -427,6 +433,7 @@ fun rememberCardSize(): Dp {
 @Composable
 fun PlayingCard(
     cardResource: CardResource,
+    stackSize: Int,
     isFaceUp: Boolean,
     modifier: Modifier = Modifier,
     state: CardState = CardState.DEFAULT,
@@ -435,6 +442,7 @@ fun PlayingCard(
 ) {
     AnimatedBorder(
         state = state,
+        stackSize = stackSize,
         onAnimationComplete = onAnimationComplete
     ) {
         Box(
@@ -477,6 +485,7 @@ fun PlayingCard(
 @Composable
 fun AnimatedBorder(
     state: CardState,
+    stackSize: Int,
     onAnimationComplete: () -> Unit = {},
     content: @Composable BoxScope.() -> Unit,
 ) {
@@ -521,10 +530,10 @@ fun AnimatedBorder(
     } else {
         borderColor
     }
-
+Column(modifier = Modifier.padding(8.dp)) {
     Box(
         modifier = Modifier
-            .padding(8.dp)
+
             .width(rememberCardSize())
             .aspectRatio(0.7f)
             .clip(MaterialTheme.shapes.medium)
@@ -536,4 +545,12 @@ fun AnimatedBorder(
     ) {
         content()
     }
+    Text(
+        text = stackSize.toString(),
+        color = CardColors.black,
+        fontSize = 16.sp,
+        modifier = Modifier
+            .align(Alignment.CenterHorizontally)
+    )
+}
 }
