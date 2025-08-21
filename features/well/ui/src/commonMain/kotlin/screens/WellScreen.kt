@@ -28,8 +28,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,6 +45,7 @@ import com.defey.solitairewell.data.resources.Res
 import com.defey.solitairewell.data.resources.back_blue
 import debugLog
 import getScreenMetrics
+import kotlinx.coroutines.delay
 import logic.CardResourcesFactory
 import model.CardStack
 import model.CardState
@@ -436,7 +441,7 @@ fun PlayingCard(
     stackSize: Int,
     isFaceUp: Boolean,
     modifier: Modifier = Modifier,
-    state: CardState = CardState.DEFAULT,
+    state: CardState,
     onAnimationComplete: () -> Unit = {},
     onClick: () -> Unit = {},
 ) {
@@ -489,6 +494,12 @@ fun AnimatedBorder(
     onAnimationComplete: () -> Unit = {},
     content: @Composable BoxScope.() -> Unit,
 ) {
+    LaunchedEffect(state) {
+        if (state == CardState.SUCCESS || state == CardState.ERROR) {
+            delay(550)
+            onAnimationComplete()
+        }
+    }
     val borderColor by animateColorAsState(
         targetValue = when (state) {
             CardState.SELECTED -> Color.Yellow
@@ -497,14 +508,9 @@ fun AnimatedBorder(
             CardState.DEFAULT -> Color.Transparent
         },
         animationSpec = when (state) {
-            CardState.SELECTED -> tween(durationMillis = 200)
-            CardState.DEFAULT -> tween(durationMillis = 200)
-            else -> tween(durationMillis = 500)
-        },
-        finishedListener = {
-            if (state == CardState.SUCCESS || state == CardState.ERROR) {
-                onAnimationComplete()
-            }
+            CardState.SUCCESS,
+            CardState.ERROR -> tween(durationMillis = 500)
+            else -> tween(durationMillis = 200)
         }
     )
 
@@ -533,7 +539,6 @@ fun AnimatedBorder(
 Column(modifier = Modifier.padding(8.dp)) {
     Box(
         modifier = Modifier
-
             .width(rememberCardSize())
             .aspectRatio(0.7f)
             .clip(MaterialTheme.shapes.medium)
