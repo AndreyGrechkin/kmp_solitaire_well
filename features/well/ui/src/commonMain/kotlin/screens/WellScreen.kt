@@ -31,9 +31,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -92,7 +89,7 @@ fun WellScreen() {
                 }
                 Button(
                     onClick = {
-
+                        viewModel.onEvent(WellContract.WellEvent.OnBackMove)
                     }
                 ) {
                     Text(text = "Отменить ход")
@@ -105,24 +102,33 @@ fun WellScreen() {
                 stackWells = state.stackWells,
                 cardFactory = cardFactory,
                 gameState = state.gameState,
+                onAnimationComplete = {
+                    viewModel.onEvent(WellContract.WellEvent.OnAnimationFinished)
+                },
                 onClick = { state ->
-                    viewModel.onEvent(WellContract.WellEvent.ClickCard(state = state))
+                    viewModel.onEvent(WellContract.WellEvent.OnClickCard(state = state))
                 }
             )
             MiddleRow(
                 stackWells = state.stackWells,
                 cardFactory = cardFactory,
                 gameState = state.gameState,
+                onAnimationComplete = {
+                    viewModel.onEvent(WellContract.WellEvent.OnAnimationFinished)
+                },
                 onClick = { state ->
-                    viewModel.onEvent(WellContract.WellEvent.ClickCard(state = state))
+                    viewModel.onEvent(WellContract.WellEvent.OnClickCard(state = state))
                 }
             )
             WellSlotBox(
                 stackWells = state.stackWells,
                 cardFactory = cardFactory,
                 gameState = state.gameState,
+                onAnimationComplete = {
+                    viewModel.onEvent(WellContract.WellEvent.OnAnimationFinished)
+                },
                 onClick = { state ->
-                    viewModel.onEvent(WellContract.WellEvent.ClickCard(state = state))
+                    viewModel.onEvent(WellContract.WellEvent.OnClickCard(state = state))
                 }
             )
         }
@@ -135,6 +141,7 @@ fun TopRow(
     cardFactory: CardResourcesFactory,
     modifier: Modifier,
     gameState: GameState,
+    onAnimationComplete: () -> Unit,
     onClick: (GameState) -> Unit,
 ) {
     Row(
@@ -149,6 +156,7 @@ fun TopRow(
                 address = SlotAddress(SlotType.STOCK_PLAY, index),
                 cardFactory = cardFactory,
                 gameState = gameState,
+                onAnimationComplete = onAnimationComplete,
                 onClick = onClick
             )
         }
@@ -160,6 +168,7 @@ fun MiddleRow(
     stackWells: List<CardStack>,
     gameState: GameState,
     cardFactory: CardResourcesFactory,
+    onAnimationComplete: () -> Unit,
     onClick: (GameState) -> Unit,
 ) {
     Row(
@@ -174,6 +183,7 @@ fun MiddleRow(
             address = SlotAddress(SlotType.STOCK),
             cardFactory = cardFactory,
             gameState = gameState,
+            onAnimationComplete = onAnimationComplete,
             onClick = onClick
         )
 
@@ -185,6 +195,7 @@ fun MiddleRow(
             address = SlotAddress(SlotType.WASTE),
             cardFactory = cardFactory,
             gameState = gameState,
+            onAnimationComplete = onAnimationComplete,
             onClick = onClick
         )
     }
@@ -195,12 +206,13 @@ fun WellSlotBox(
     stackWells: List<CardStack>,
     gameState: GameState,
     cardFactory: CardResourcesFactory,
+    onAnimationComplete: () -> Unit,
     onClick: (GameState) -> Unit,
 ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
         contentAlignment = Alignment.TopCenter
     ) {
         Column {
@@ -209,6 +221,7 @@ fun WellSlotBox(
                 address = SlotAddress(SlotType.EXTERNAL_WELL, TOP_INDEX),
                 cardFactory = cardFactory,
                 gameState = gameState,
+                onAnimationComplete = onAnimationComplete,
                 onClick = onClick
             )
 
@@ -217,6 +230,7 @@ fun WellSlotBox(
                 address = SlotAddress(SlotType.INNER_WELL, TOP_INDEX),
                 cardFactory = cardFactory,
                 gameState = gameState,
+                onAnimationComplete = onAnimationComplete,
                 onClick = onClick
             )
 
@@ -225,6 +239,7 @@ fun WellSlotBox(
                 address = SlotAddress(SlotType.INNER_WELL, BOTTOM_INDEX),
                 cardFactory = cardFactory,
                 gameState = gameState,
+                onAnimationComplete = onAnimationComplete,
                 onClick = onClick
             )
 
@@ -233,6 +248,7 @@ fun WellSlotBox(
                 address = SlotAddress(SlotType.EXTERNAL_WELL, BOTTOM_INDEX),
                 cardFactory = cardFactory,
                 gameState = gameState,
+                onAnimationComplete = onAnimationComplete,
                 onClick = onClick
             )
 
@@ -248,6 +264,7 @@ fun WellSlotBox(
                     address = SlotAddress(SlotType.FOUNDATION, LEFT_INDEX),
                     cardFactory = cardFactory,
                     gameState = gameState,
+                    onAnimationComplete = onAnimationComplete,
                     onClick = onClick
                 )
                 Spacer(
@@ -261,6 +278,7 @@ fun WellSlotBox(
                     address = SlotAddress(SlotType.FOUNDATION, TOP_INDEX),
                     cardFactory = cardFactory,
                     gameState = gameState,
+                    onAnimationComplete = onAnimationComplete,
                     onClick = onClick
                 )
             }
@@ -270,6 +288,7 @@ fun WellSlotBox(
                     address = SlotAddress(SlotType.EXTERNAL_WELL, LEFT_INDEX),
                     cardFactory = cardFactory,
                     gameState = gameState,
+                    onAnimationComplete = onAnimationComplete,
                     onClick = onClick
                 )
 
@@ -278,6 +297,7 @@ fun WellSlotBox(
                     address = SlotAddress(SlotType.INNER_WELL, LEFT_INDEX),
                     cardFactory = cardFactory,
                     gameState = gameState,
+                    onAnimationComplete = onAnimationComplete,
                     onClick = onClick
                 )
 
@@ -292,6 +312,7 @@ fun WellSlotBox(
                     address = SlotAddress(SlotType.INNER_WELL, RIGHT_INDEX),
                     cardFactory = cardFactory,
                     gameState = gameState,
+                    onAnimationComplete = onAnimationComplete,
                     onClick = onClick
                 )
 
@@ -300,6 +321,7 @@ fun WellSlotBox(
                     address = SlotAddress(SlotType.EXTERNAL_WELL, RIGHT_INDEX),
                     cardFactory = cardFactory,
                     gameState = gameState,
+                    onAnimationComplete = onAnimationComplete,
                     onClick = onClick
                 )
 
@@ -310,6 +332,7 @@ fun WellSlotBox(
                     address = SlotAddress(SlotType.FOUNDATION, BOTTOM_INDEX),
                     cardFactory = cardFactory,
                     gameState = gameState,
+                    onAnimationComplete = onAnimationComplete,
                     onClick = onClick
                 )
                 Spacer(
@@ -323,6 +346,7 @@ fun WellSlotBox(
                     address = SlotAddress(SlotType.FOUNDATION, RIGHT_INDEX),
                     cardFactory = cardFactory,
                     gameState = gameState,
+                    onAnimationComplete = onAnimationComplete,
                     onClick = onClick
                 )
             }
@@ -337,6 +361,7 @@ fun CreateCardSlot(
     address: SlotAddress,
     cardFactory: CardResourcesFactory,
     gameState: GameState,
+    onAnimationComplete: () -> Unit,
     onClick: (GameState) -> Unit,
 ) {
     val stack = stackList.find { it.address == address }
@@ -347,16 +372,7 @@ fun CreateCardSlot(
         EmptyCardSlot(
             state = state,
             stackSize = stackSize,
-            onAnimationComplete = {
-                onClick(
-                    GameState(
-                        card = null,
-                        address = address,
-                        state = state
-                    )
-                )
-                debugLog("finis Anim")
-            },
+            onAnimationComplete = onAnimationComplete,
             onClick = {
                 onClick(
                     GameState(
@@ -374,16 +390,7 @@ fun CreateCardSlot(
             isFaceUp = topCard.isFaceUp,
             state = state,
             stackSize = stackSize,
-            onAnimationComplete = {
-                onClick(
-                    GameState(
-                        card = topCard,
-                        address = address,
-                        state = state
-                    )
-                )
-                debugLog("finis Anim")
-            },
+            onAnimationComplete = onAnimationComplete,
             onClick = {
                 onClick(
                     GameState(

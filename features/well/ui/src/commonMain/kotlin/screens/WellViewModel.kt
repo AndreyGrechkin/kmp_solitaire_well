@@ -5,6 +5,7 @@ import base.TransitionConfig
 import base_viewModel.BaseViewModel
 import debugLog
 import logic.GameSetupFactory
+import model.CardStack
 import model.CardState
 import model.GameState
 import model.MoveCardResult
@@ -22,12 +23,24 @@ class WellViewModel(
     initialState = WellContract.WellState()
 ) {
     private var cardsToDealCount = 5
+    private var prevStackWells: List<CardStack> = emptyList()
+    private var prevGameState: GameState = state.value.gameState
 
     override suspend fun handleEvent(event: WellContract.WellEvent) {
         when (event) {
             WellContract.WellEvent.OnNewGame -> createNewGame()
+            WellContract.WellEvent.OnBackMove -> {
+                updateState {
+                    this.copy(
+                        stackWells = prevStackWells,
+                        gameState = gameState.copy(state = CardState.DEFAULT),
+                    )
+                }
+            }
+
             is WellContract.WellEvent.NavigateToSettings -> openSettings()
-            is WellContract.WellEvent.ClickCard -> handleClickCard(event.state)
+            is WellContract.WellEvent.OnClickCard -> handleClickCard(event.state)
+            is WellContract.WellEvent.OnAnimationFinished -> handleFinishedAnimation()
         }
     }
 
@@ -36,7 +49,14 @@ class WellViewModel(
         updateState { this.copy(stackWells = gameSetupFactory.createNewGame()) }
     }
 
+    private fun handleFinishedAnimation() {
+        updateState { this.copy(gameState = gameState.copy(state = CardState.DEFAULT)) }
+    }
+
     private fun handleClickCard(gameState: GameState) {
+        prevStackWells = state.value.stackWells
+        prevGameState = state.value.gameState
+
         if (gameState.address.type == SlotType.STOCK) {
             handleClickedStock()
             updateState { this.copy(gameState = gameState.copy(state = CardState.DEFAULT)) }
