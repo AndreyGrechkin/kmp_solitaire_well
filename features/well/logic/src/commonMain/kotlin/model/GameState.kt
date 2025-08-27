@@ -3,13 +3,13 @@ package model
 import models.Card
 
 data class GameState(
-    val card: Card?,
+    val cards: Card?,
     val address: SlotAddress,
     val state: CardState,
 ) {
     companion object {
         val EMPTY = GameState(
-            card = null,
+            cards = null,
             address = SlotAddress(
                 SlotType.STOCK
             ),

@@ -24,8 +24,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,13 +36,20 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.defey.solitairewell.data.resources.Res
 import com.defey.solitairewell.data.resources.back_blue
-import debugLog
+import com.defey.solitairewell.data.resources.back_move
+import com.defey.solitairewell.data.resources.game_list
+import com.defey.solitairewell.data.resources.help
+import com.defey.solitairewell.data.resources.new_game
+import com.defey.solitairewell.data.resources.settings
 import getScreenMetrics
 import kotlinx.coroutines.delay
 import logic.CardResourcesFactory
@@ -57,7 +66,6 @@ import screens.WellViewModel.Companion.BOTTOM_INDEX
 import screens.WellViewModel.Companion.LEFT_INDEX
 import screens.WellViewModel.Companion.RIGHT_INDEX
 import screens.WellViewModel.Companion.TOP_INDEX
-import statusBarPadding
 import theme.CardColors
 
 @Composable
@@ -65,72 +73,134 @@ fun WellScreen() {
     val viewModel: WellViewModel = koinViewModel()
     val cardFactory = koinInject<CardResourcesFactory>()
     val state by viewModel.state.collectAsState()
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .statusBarPadding()
-            .background(CardColors.defaultBackground)
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
+    val scrollState = rememberScrollState()
+    Scaffold { paddingValues ->
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .background(CardColors.defaultBackground)
         ) {
-            Row(
+            Column(
                 modifier = Modifier
+                    .verticalScroll(scrollState) // ← Вот и весь секрет!
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                    .padding(16.dp),
             ) {
-                Button(
-                    onClick = {
-                        viewModel.onEvent(WellContract.WellEvent.OnNewGame)
-                    }
+//            Text(text = state.gameMessage, color = CardColors.black, fontSize = 16.sp)
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(text = "Новая игра")
+
+                    Image(
+                        painter = painterResource(Res.drawable.new_game),
+                        contentDescription = "new game",
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clickable(
+                                onClick = {
+                                    viewModel.onEvent(WellContract.WellEvent.OnNewGame)
+                                }
+                            ),
+                    )
+                    Image(
+                        painter = painterResource(Res.drawable.back_move),
+                        contentDescription = "new game",
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clickable(
+                                onClick = {
+                                    viewModel.onEvent(WellContract.WellEvent.OnBackMove)
+                                }
+                            ),
+                    )
+
+                    Image(
+                        painter = painterResource(Res.drawable.help),
+                        contentDescription = "new game",
+                        colorFilter = if (state.isEnabled) null else ColorFilter.tint(Color.Gray , blendMode = BlendMode.Modulate),
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clickable(
+                                enabled = state.isEnabled,
+                                onClick = {
+                                    viewModel.onEvent(WellContract.WellEvent.OnHelp)
+                                }
+                            ),
+                    )
+
+                    Image(
+                        painter = painterResource(Res.drawable.settings),
+                        contentDescription = "new game",
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clickable(
+                                onClick = {
+
+                                }
+                            ),
+                    )
+
+                    Image(
+                        painter = painterResource(Res.drawable.game_list),
+                        contentDescription = "new game",
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clickable(
+                                onClick = {
+
+                                }
+                            ),
+                    )
+
+
                 }
-                Button(
-                    onClick = {
-                        viewModel.onEvent(WellContract.WellEvent.OnBackMove)
+
+                TopRow(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp),
+                    stackWells = state.stackWells,
+                    cardFactory = cardFactory,
+                    gameState = state.gameState,
+                    onAnimationComplete = {
+                        viewModel.onEvent(WellContract.WellEvent.OnAnimationFinished)
+                    },
+                    onClick = { state ->
+                        viewModel.onEvent(WellContract.WellEvent.OnClickCard(state = state))
                     }
-                ) {
-                    Text(text = "Отменить ход")
+                )
+                Box {
+                    MiddleRow(
+                        stackWells = state.stackWells,
+                        cardFactory = cardFactory,
+                        gameState = state.gameState,
+                        message = state.gameMessage,
+                        onAnimationComplete = {
+                            viewModel.onEvent(WellContract.WellEvent.OnAnimationFinished)
+                        },
+                        onClick = { state ->
+                            viewModel.onEvent(WellContract.WellEvent.OnClickCard(state = state))
+                        }
+                    )
+                    WellSlotBox(
+                        stackWells = state.stackWells,
+                        cardFactory = cardFactory,
+                        gameState = state.gameState,
+                        onAnimationComplete = {
+                            viewModel.onEvent(WellContract.WellEvent.OnAnimationFinished)
+                        },
+                        onClick = { state ->
+                            viewModel.onEvent(WellContract.WellEvent.OnClickCard(state = state))
+                        }
+                    )
                 }
+
+
             }
-            TopRow(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp),
-                stackWells = state.stackWells,
-                cardFactory = cardFactory,
-                gameState = state.gameState,
-                onAnimationComplete = {
-                    viewModel.onEvent(WellContract.WellEvent.OnAnimationFinished)
-                },
-                onClick = { state ->
-                    viewModel.onEvent(WellContract.WellEvent.OnClickCard(state = state))
-                }
-            )
-            MiddleRow(
-                stackWells = state.stackWells,
-                cardFactory = cardFactory,
-                gameState = state.gameState,
-                onAnimationComplete = {
-                    viewModel.onEvent(WellContract.WellEvent.OnAnimationFinished)
-                },
-                onClick = { state ->
-                    viewModel.onEvent(WellContract.WellEvent.OnClickCard(state = state))
-                }
-            )
-            WellSlotBox(
-                stackWells = state.stackWells,
-                cardFactory = cardFactory,
-                gameState = state.gameState,
-                onAnimationComplete = {
-                    viewModel.onEvent(WellContract.WellEvent.OnAnimationFinished)
-                },
-                onClick = { state ->
-                    viewModel.onEvent(WellContract.WellEvent.OnClickCard(state = state))
-                }
-            )
         }
     }
 }
@@ -146,9 +216,8 @@ fun TopRow(
 ) {
     Row(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceAround
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
         repeat(5) { index ->
             CreateCardSlot(
@@ -167,37 +236,57 @@ fun TopRow(
 fun MiddleRow(
     stackWells: List<CardStack>,
     gameState: GameState,
+    message: String,
     cardFactory: CardResourcesFactory,
     onAnimationComplete: () -> Unit,
     onClick: (GameState) -> Unit,
 ) {
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        // Колода (слева)
-        CreateCardSlot(
-            stackList = stackWells,
-            address = SlotAddress(SlotType.STOCK),
-            cardFactory = cardFactory,
-            gameState = gameState,
-            onAnimationComplete = onAnimationComplete,
-            onClick = onClick
-        )
-
+        Column {
+            // Колода (слева)
+            CreateCardSlot(
+                stackList = stackWells,
+                address = SlotAddress(SlotType.STOCK),
+                cardFactory = cardFactory,
+                gameState = gameState,
+                onAnimationComplete = onAnimationComplete,
+                onClick = onClick
+            )
+            Text(
+                text = message,
+                color = CardColors.black,
+                fontSize = 16.sp,
+                modifier = Modifier
+                    .padding(horizontal = 4.dp)
+                    .align(Alignment.CenterHorizontally)
+            )
+        }
         Spacer(modifier = Modifier.weight(2f))
 
         // Склад (справа)
-        CreateCardSlot(
-            stackList = stackWells,
-            address = SlotAddress(SlotType.WASTE),
-            cardFactory = cardFactory,
-            gameState = gameState,
-            onAnimationComplete = onAnimationComplete,
-            onClick = onClick
-        )
+        Column {
+            CreateCardSlot(
+                stackList = stackWells,
+                address = SlotAddress(SlotType.WASTE),
+                cardFactory = cardFactory,
+                gameState = gameState,
+                onAnimationComplete = onAnimationComplete,
+                onClick = onClick
+            )
+            Text(
+                text = "СКЛАД",
+                color = CardColors.black,
+                fontSize = 16.sp,
+                modifier = Modifier
+                    .padding(horizontal = 4.dp)
+                    .align(Alignment.CenterHorizontally)
+            )
+        }
+
     }
 }
 
@@ -211,8 +300,8 @@ fun WellSlotBox(
 ) {
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+            .fillMaxWidth()
+            .padding(bottom = 16.dp, top = 32.dp),
         contentAlignment = Alignment.TopCenter
     ) {
         Column {
@@ -269,7 +358,7 @@ fun WellSlotBox(
                 )
                 Spacer(
                     modifier = Modifier
-                        .padding(horizontal = 8.dp)
+                        .padding(horizontal = 4.dp)
                         .width(rememberCardSize())
                         .aspectRatio(0.7f)
                 )
@@ -303,7 +392,7 @@ fun WellSlotBox(
 
                 Spacer(
                     modifier = Modifier
-                        .padding(horizontal = 8.dp)
+                        .padding(horizontal = 4.dp)
                         .width(rememberCardSize())
                         .aspectRatio(0.7f)
                 )
@@ -337,7 +426,7 @@ fun WellSlotBox(
                 )
                 Spacer(
                     modifier = Modifier
-                        .padding(horizontal = 8.dp)
+                        .padding(horizontal = 4.dp)
                         .width(rememberCardSize())
                         .aspectRatio(0.7f)
                 )
@@ -368,15 +457,25 @@ fun CreateCardSlot(
     val state = if (gameState.address == address) gameState.state
     else CardState.DEFAULT
     val stackSize = stack?.cards?.size ?: 0
+
+    val isVisibleCount = when (address.type) {
+        SlotType.FOUNDATION -> true
+        SlotType.STOCK -> false
+        SlotType.STOCK_PLAY -> false
+        SlotType.WASTE -> false
+        SlotType.INNER_WELL -> true
+        SlotType.EXTERNAL_WELL -> true
+    }
     if (stack?.cards.isNullOrEmpty()) {
         EmptyCardSlot(
             state = state,
             stackSize = stackSize,
             onAnimationComplete = onAnimationComplete,
+            isVisibleCount = isVisibleCount,
             onClick = {
                 onClick(
                     GameState(
-                        card = null,
+                        cards = null,
                         address = address,
                         state = state
                     )
@@ -390,11 +489,12 @@ fun CreateCardSlot(
             isFaceUp = topCard.isFaceUp,
             state = state,
             stackSize = stackSize,
+            isVisibleCount = isVisibleCount,
             onAnimationComplete = onAnimationComplete,
             onClick = {
                 onClick(
                     GameState(
-                        card = topCard,
+                        cards = topCard,
                         address = address,
                         state = state
                     )
@@ -410,12 +510,14 @@ fun EmptyCardSlot(
     modifier: Modifier = Modifier,
     stackSize: Int,
     state: CardState,
+    isVisibleCount: Boolean,
     onAnimationComplete: () -> Unit = {},
     onClick: () -> Unit = {},
 ) {
     AnimatedBorder(
         state = state,
-        stackSize= stackSize,
+        stackSize = stackSize,
+        isVisibleCount = isVisibleCount,
         onAnimationComplete = onAnimationComplete
     ) {
         Box(
@@ -449,12 +551,14 @@ fun PlayingCard(
     isFaceUp: Boolean,
     modifier: Modifier = Modifier,
     state: CardState,
+    isVisibleCount: Boolean,
     onAnimationComplete: () -> Unit = {},
     onClick: () -> Unit = {},
 ) {
     AnimatedBorder(
         state = state,
         stackSize = stackSize,
+        isVisibleCount = isVisibleCount,
         onAnimationComplete = onAnimationComplete
     ) {
         Box(
@@ -474,7 +578,7 @@ fun PlayingCard(
                         Image(
                             painter = painterResource(cardResource.suit),
                             contentDescription = cardResource.rank,
-                            modifier = Modifier.padding(start = 8.dp).size(24.dp),
+                            modifier = Modifier.size(24.dp),
                         )
                     }
                     Image(
@@ -498,12 +602,13 @@ fun PlayingCard(
 fun AnimatedBorder(
     state: CardState,
     stackSize: Int,
+    isVisibleCount: Boolean,
     onAnimationComplete: () -> Unit = {},
     content: @Composable BoxScope.() -> Unit,
 ) {
     LaunchedEffect(state) {
         if (state == CardState.SUCCESS || state == CardState.ERROR) {
-            delay(550)
+            delay(350)
             onAnimationComplete()
         }
     }
@@ -516,7 +621,9 @@ fun AnimatedBorder(
         },
         animationSpec = when (state) {
             CardState.SUCCESS,
-            CardState.ERROR -> tween(durationMillis = 500)
+            CardState.ERROR,
+                -> tween(durationMillis = 300)
+
             else -> tween(durationMillis = 200)
         }
     )
@@ -543,26 +650,29 @@ fun AnimatedBorder(
     } else {
         borderColor
     }
-Column(modifier = Modifier.padding(8.dp)) {
-    Box(
-        modifier = Modifier
-            .width(rememberCardSize())
-            .aspectRatio(0.7f)
-            .clip(MaterialTheme.shapes.medium)
-            .border(
-                width = if (state != CardState.DEFAULT) 2.dp else 0.dp,
-                color = actualBorderColor,
-                shape = MaterialTheme.shapes.medium
+    Column(modifier = Modifier.padding(4.dp)) {
+        if (isVisibleCount)
+            Text(
+                text = stackSize.toString(),
+                color = CardColors.black,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.ExtraBold,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
             )
-    ) {
-        content()
+
+        Box(
+            modifier = Modifier
+                .width(rememberCardSize())
+                .aspectRatio(0.7f)
+                .clip(MaterialTheme.shapes.medium)
+                .border(
+                    width = if (state != CardState.DEFAULT) 2.dp else 0.dp,
+                    color = actualBorderColor,
+                    shape = MaterialTheme.shapes.medium
+                )
+        ) {
+            content()
+        }
     }
-    Text(
-        text = stackSize.toString(),
-        color = CardColors.black,
-        fontSize = 16.sp,
-        modifier = Modifier
-            .align(Alignment.CenterHorizontally)
-    )
-}
 }

@@ -13,7 +13,8 @@ fun generateDoubleDeck(): List<Card> {
 }
 
 fun MutableList<Card>.takeFromDeck(count: Int): List<Card> {
-    val taken = this.take(count)
-    repeat(count) { this.removeFirst() }
+    val actualCount = minOf(count, this.size)
+    val taken = this.take(actualCount)
+    repeat(actualCount) { this.removeAt(0) }
     return taken
 }

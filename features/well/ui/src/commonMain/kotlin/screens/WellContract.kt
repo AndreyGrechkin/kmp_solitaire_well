@@ -9,7 +9,9 @@ import model.GameState
 object WellContract {
     data class WellState(
         val stackWells: List<CardStack> = emptyList(),
-        val gameState: GameState = GameState.EMPTY
+        val gameState: GameState = GameState.EMPTY,
+        val gameMessage: String = "",
+        val isEnabled: Boolean = true
     ) : UiState
 
     sealed interface WellEvent : UiEvent {
@@ -18,6 +20,7 @@ object WellContract {
         data object OnAnimationFinished : WellEvent
         data object OnNewGame : WellEvent
         data object OnBackMove : WellEvent
+        data object OnHelp : WellEvent
     }
 
     sealed interface WellAction : UiAction {

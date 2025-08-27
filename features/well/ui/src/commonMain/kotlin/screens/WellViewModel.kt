@@ -25,15 +25,19 @@ class WellViewModel(
     private var cardsToDealCount = 5
     private var prevStackWells: List<CardStack> = emptyList()
     private var prevGameState: GameState = state.value.gameState
+    private var countStep = 0
 
     override suspend fun handleEvent(event: WellContract.WellEvent) {
         when (event) {
             WellContract.WellEvent.OnNewGame -> createNewGame()
             WellContract.WellEvent.OnBackMove -> {
+                countStep = countStep + 1
                 updateState {
                     this.copy(
                         stackWells = prevStackWells,
                         gameState = gameState.copy(state = CardState.DEFAULT),
+                        gameMessage = "Ход: $countStep",
+                        isEnabled = false
                     )
                 }
             }
@@ -41,43 +45,75 @@ class WellViewModel(
             is WellContract.WellEvent.NavigateToSettings -> openSettings()
             is WellContract.WellEvent.OnClickCard -> handleClickCard(event.state)
             is WellContract.WellEvent.OnAnimationFinished -> handleFinishedAnimation()
+            WellContract.WellEvent.OnHelp -> {
+
+            }
         }
     }
 
     private fun createNewGame() {
         cardsToDealCount = 5
-        updateState { this.copy(stackWells = gameSetupFactory.createNewGame()) }
+        updateState { this.copy(
+            stackWells = gameSetupFactory.createNewGame(),
+            gameMessage = "Ход: $countStep"
+        ) }
     }
 
     private fun handleFinishedAnimation() {
         updateState { this.copy(gameState = gameState.copy(state = CardState.DEFAULT)) }
     }
 
+    private fun updateGameMessage(text: String) {
+        updateState {
+            this.copy(gameMessage = text)
+        }
+    }
+
     private fun handleClickCard(gameState: GameState) {
+        if (state.value.stackWells.isEmpty()) return
         prevStackWells = state.value.stackWells
         prevGameState = state.value.gameState
 
         if (gameState.address.type == SlotType.STOCK) {
+            countStep = countStep + 1
             handleClickedStock()
-            updateState { this.copy(gameState = gameState.copy(state = CardState.DEFAULT)) }
             return
         }
         val oldGameState = state.value.gameState
         val moveCardResult =
             gameSetupFactory.handleMoveCard(state.value.stackWells, oldGameState, gameState)
         when (moveCardResult) {
-            MoveCardResult.Default -> updateState { this.copy(gameState = gameState.copy(state = CardState.DEFAULT)) }
-            MoveCardResult.Error -> updateState { this.copy(gameState = gameState.copy(state = CardState.ERROR)) }
-            MoveCardResult.Selected -> updateState { this.copy(gameState = gameState.copy(state = CardState.SELECTED)) }
+            MoveCardResult.Default -> updateState {
+                debugLog("click: Default")
+                this.copy(gameState = gameState.copy(state = CardState.DEFAULT)) }
+            MoveCardResult.Error -> updateState {
+                debugLog("click: Error")
+                countStep = countStep + 1
+                this.copy(
+                    gameState = gameState.copy(state = CardState.ERROR),
+                    gameMessage = "Ход: $countStep"
+                )
+            }
+            MoveCardResult.Selected -> updateState {
+                debugLog("click: Select")
+                this.copy(gameState = gameState.copy(state = CardState.SELECTED)) }
             is MoveCardResult.Success -> {
+                debugLog("click: Success")
+                countStep = countStep + 1
+                val validGame =  moveCardResult.newStacks
+                val gameVin = validGame
+                    .filter { it.address.type == SlotType.FOUNDATION }
+                    .sumOf { it.cards.size }
+
                 updateState {
                     this.copy(
                         stackWells = moveCardResult.newStacks,
                         gameState = GameState(
-                            card = oldGameState.card,
+                            cards = oldGameState.cards,
                             address = gameState.address,
                             state = CardState.SUCCESS
                         ),
+                        gameMessage = if (gameVin == 104) "Победа!!!" else "Ход: $countStep"
                     )
                 }
             }
@@ -87,15 +123,24 @@ class WellViewModel(
     private fun handleClickedStock() {
         val currentStacks = state.value.stackWells
         val result = gameSetupFactory.handleStockClick(currentStacks, cardsToDealCount)
-
-        // Обновляем состояние во ViewModel
         cardsToDealCount = result.newDealCount
-        updateState { this.copy(stackWells = result.updatedStacks) }
+
+        updateState {
+            this.copy(
+                stackWells = result.updatedStacks,
+                gameState = gameState.copy(state = CardState.DEFAULT),
+                isEnabled = true,
+                gameMessage = if (cardsToDealCount == 0) "Пичалька" else "Ход: $countStep"
+            )
+        }
+        // Обновляем состояние во ViewModel
+
+
 
         // Проверяем завершение пасьянса
         if (cardsToDealCount == 0) {
             debugLog("Пасьянс завершен")
-            // TODO: Обработка завершения игры
+
         }
     }
 
