@@ -7,7 +7,7 @@ import models.UserData
 
 object SettingsContract {
     data class SettingsState(
-        val userData: UserData
+        val userData: String = ""
     ) : UiState
 
     sealed interface SettingsEvent : UiEvent {

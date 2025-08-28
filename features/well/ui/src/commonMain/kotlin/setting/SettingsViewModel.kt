@@ -5,13 +5,12 @@ import base.Router
 import models.UserData
 
 class SettingsViewModel(
-    val userData: UserData,
     private val router: Router,
 ) : BaseViewModel<
         SettingsContract.SettingsEvent,
         SettingsContract.SettingsState,
         SettingsContract.SettingsAction>(
-    initialState = SettingsContract.SettingsState(userData = userData)
+    initialState = SettingsContract.SettingsState()
 ) {
     override suspend fun handleEvent(event: SettingsContract.SettingsEvent) {
         when (event) {

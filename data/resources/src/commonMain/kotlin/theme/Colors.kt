@@ -37,6 +37,7 @@ object CardColors {
     val diamond = Color(0xFFD32F2F)
     val club = Color(0xFF000000)
     val spade = Color(0xFF000000)
+    val selected = Color(0xFFFF8000)
     val defaultBackground = Color(0xFF2E7D32)
     val defaultEmptyCardSlot = Color(0x55212121)
 }

@@ -49,6 +49,7 @@ import com.defey.solitairewell.data.resources.back_move
 import com.defey.solitairewell.data.resources.game_list
 import com.defey.solitairewell.data.resources.help
 import com.defey.solitairewell.data.resources.new_game
+import com.defey.solitairewell.data.resources.rules
 import com.defey.solitairewell.data.resources.settings
 import getScreenMetrics
 import kotlinx.coroutines.delay
@@ -108,10 +109,15 @@ fun WellScreen() {
                     )
                     Image(
                         painter = painterResource(Res.drawable.back_move),
-                        contentDescription = "new game",
+                        contentDescription = "back",
+                        colorFilter = if (state.availableBackMove) null else ColorFilter.tint(
+                            Color.Gray,
+                            blendMode = BlendMode.Modulate
+                        ),
                         modifier = Modifier
                             .size(48.dp)
                             .clickable(
+                                enabled = state.availableBackMove,
                                 onClick = {
                                     viewModel.onEvent(WellContract.WellEvent.OnBackMove)
                                 }
@@ -121,11 +127,14 @@ fun WellScreen() {
                     Image(
                         painter = painterResource(Res.drawable.help),
                         contentDescription = "new game",
-                        colorFilter = if (state.isEnabled) null else ColorFilter.tint(Color.Gray , blendMode = BlendMode.Modulate),
+                        colorFilter = if (state.availableHint) null else ColorFilter.tint(
+                            Color.Gray,
+                            blendMode = BlendMode.Modulate
+                        ),
                         modifier = Modifier
                             .size(48.dp)
                             .clickable(
-                                enabled = state.isEnabled,
+                                enabled = state.availableHint,
                                 onClick = {
                                     viewModel.onEvent(WellContract.WellEvent.OnHelp)
                                 }
@@ -139,11 +148,21 @@ fun WellScreen() {
                             .size(48.dp)
                             .clickable(
                                 onClick = {
+                                    viewModel.onEvent(WellContract.WellEvent.NavigateToSettings)
+                                }
+                            ),
+                    )
+                    Image(
+                        painter = painterResource(Res.drawable.rules),
+                        contentDescription = "new game",
+                        modifier = Modifier
+                            .size(48.dp)
+                            .clickable(
+                                onClick = {
 
                                 }
                             ),
                     )
-
                     Image(
                         painter = painterResource(Res.drawable.game_list),
                         contentDescription = "new game",
@@ -166,6 +185,7 @@ fun WellScreen() {
                     stackWells = state.stackWells,
                     cardFactory = cardFactory,
                     gameState = state.gameState,
+                    helpState = state.hintState,
                     onAnimationComplete = {
                         viewModel.onEvent(WellContract.WellEvent.OnAnimationFinished)
                     },
@@ -178,6 +198,7 @@ fun WellScreen() {
                         stackWells = state.stackWells,
                         cardFactory = cardFactory,
                         gameState = state.gameState,
+                        helpState = state.hintState,
                         message = state.gameMessage,
                         onAnimationComplete = {
                             viewModel.onEvent(WellContract.WellEvent.OnAnimationFinished)
@@ -190,6 +211,7 @@ fun WellScreen() {
                         stackWells = state.stackWells,
                         cardFactory = cardFactory,
                         gameState = state.gameState,
+                        helpState = state.hintState,
                         onAnimationComplete = {
                             viewModel.onEvent(WellContract.WellEvent.OnAnimationFinished)
                         },
@@ -211,6 +233,7 @@ fun TopRow(
     cardFactory: CardResourcesFactory,
     modifier: Modifier,
     gameState: GameState,
+    helpState: List<GameState>,
     onAnimationComplete: () -> Unit,
     onClick: (GameState) -> Unit,
 ) {
@@ -225,6 +248,7 @@ fun TopRow(
                 address = SlotAddress(SlotType.STOCK_PLAY, index),
                 cardFactory = cardFactory,
                 gameState = gameState,
+                helpState = helpState,
                 onAnimationComplete = onAnimationComplete,
                 onClick = onClick
             )
@@ -236,6 +260,7 @@ fun TopRow(
 fun MiddleRow(
     stackWells: List<CardStack>,
     gameState: GameState,
+    helpState: List<GameState>,
     message: String,
     cardFactory: CardResourcesFactory,
     onAnimationComplete: () -> Unit,
@@ -253,6 +278,7 @@ fun MiddleRow(
                 address = SlotAddress(SlotType.STOCK),
                 cardFactory = cardFactory,
                 gameState = gameState,
+                helpState = emptyList(),
                 onAnimationComplete = onAnimationComplete,
                 onClick = onClick
             )
@@ -274,6 +300,7 @@ fun MiddleRow(
                 address = SlotAddress(SlotType.WASTE),
                 cardFactory = cardFactory,
                 gameState = gameState,
+                helpState = helpState,
                 onAnimationComplete = onAnimationComplete,
                 onClick = onClick
             )
@@ -294,6 +321,7 @@ fun MiddleRow(
 fun WellSlotBox(
     stackWells: List<CardStack>,
     gameState: GameState,
+    helpState: List<GameState>,
     cardFactory: CardResourcesFactory,
     onAnimationComplete: () -> Unit,
     onClick: (GameState) -> Unit,
@@ -310,6 +338,7 @@ fun WellSlotBox(
                 address = SlotAddress(SlotType.EXTERNAL_WELL, TOP_INDEX),
                 cardFactory = cardFactory,
                 gameState = gameState,
+                helpState = helpState,
                 onAnimationComplete = onAnimationComplete,
                 onClick = onClick
             )
@@ -319,6 +348,7 @@ fun WellSlotBox(
                 address = SlotAddress(SlotType.INNER_WELL, TOP_INDEX),
                 cardFactory = cardFactory,
                 gameState = gameState,
+                helpState = helpState,
                 onAnimationComplete = onAnimationComplete,
                 onClick = onClick
             )
@@ -328,6 +358,7 @@ fun WellSlotBox(
                 address = SlotAddress(SlotType.INNER_WELL, BOTTOM_INDEX),
                 cardFactory = cardFactory,
                 gameState = gameState,
+                helpState = helpState,
                 onAnimationComplete = onAnimationComplete,
                 onClick = onClick
             )
@@ -337,6 +368,7 @@ fun WellSlotBox(
                 address = SlotAddress(SlotType.EXTERNAL_WELL, BOTTOM_INDEX),
                 cardFactory = cardFactory,
                 gameState = gameState,
+                helpState = helpState,
                 onAnimationComplete = onAnimationComplete,
                 onClick = onClick
             )
@@ -353,6 +385,7 @@ fun WellSlotBox(
                     address = SlotAddress(SlotType.FOUNDATION, LEFT_INDEX),
                     cardFactory = cardFactory,
                     gameState = gameState,
+                    helpState = helpState,
                     onAnimationComplete = onAnimationComplete,
                     onClick = onClick
                 )
@@ -367,6 +400,7 @@ fun WellSlotBox(
                     address = SlotAddress(SlotType.FOUNDATION, TOP_INDEX),
                     cardFactory = cardFactory,
                     gameState = gameState,
+                    helpState = helpState,
                     onAnimationComplete = onAnimationComplete,
                     onClick = onClick
                 )
@@ -377,6 +411,7 @@ fun WellSlotBox(
                     address = SlotAddress(SlotType.EXTERNAL_WELL, LEFT_INDEX),
                     cardFactory = cardFactory,
                     gameState = gameState,
+                    helpState = helpState,
                     onAnimationComplete = onAnimationComplete,
                     onClick = onClick
                 )
@@ -386,6 +421,7 @@ fun WellSlotBox(
                     address = SlotAddress(SlotType.INNER_WELL, LEFT_INDEX),
                     cardFactory = cardFactory,
                     gameState = gameState,
+                    helpState = helpState,
                     onAnimationComplete = onAnimationComplete,
                     onClick = onClick
                 )
@@ -401,6 +437,7 @@ fun WellSlotBox(
                     address = SlotAddress(SlotType.INNER_WELL, RIGHT_INDEX),
                     cardFactory = cardFactory,
                     gameState = gameState,
+                    helpState = helpState,
                     onAnimationComplete = onAnimationComplete,
                     onClick = onClick
                 )
@@ -410,6 +447,7 @@ fun WellSlotBox(
                     address = SlotAddress(SlotType.EXTERNAL_WELL, RIGHT_INDEX),
                     cardFactory = cardFactory,
                     gameState = gameState,
+                    helpState = helpState,
                     onAnimationComplete = onAnimationComplete,
                     onClick = onClick
                 )
@@ -421,6 +459,7 @@ fun WellSlotBox(
                     address = SlotAddress(SlotType.FOUNDATION, BOTTOM_INDEX),
                     cardFactory = cardFactory,
                     gameState = gameState,
+                    helpState = helpState,
                     onAnimationComplete = onAnimationComplete,
                     onClick = onClick
                 )
@@ -435,6 +474,7 @@ fun WellSlotBox(
                     address = SlotAddress(SlotType.FOUNDATION, RIGHT_INDEX),
                     cardFactory = cardFactory,
                     gameState = gameState,
+                    helpState = helpState,
                     onAnimationComplete = onAnimationComplete,
                     onClick = onClick
                 )
@@ -450,12 +490,18 @@ fun CreateCardSlot(
     address: SlotAddress,
     cardFactory: CardResourcesFactory,
     gameState: GameState,
+    helpState: List<GameState>,
     onAnimationComplete: () -> Unit,
     onClick: (GameState) -> Unit,
 ) {
     val stack = stackList.find { it.address == address }
-    val state = if (gameState.address == address) gameState.state
-    else CardState.DEFAULT
+
+    val state = if (helpState.isEmpty()) {
+        if (gameState.address == address) gameState.state
+        else CardState.DEFAULT
+    } else {
+        helpState.find { it.address == address }?.state ?: CardState.DEFAULT
+    }
     val stackSize = stack?.cards?.size ?: 0
 
     val isVisibleCount = when (address.type) {
@@ -475,7 +521,7 @@ fun CreateCardSlot(
             onClick = {
                 onClick(
                     GameState(
-                        cards = null,
+                        card = null,
                         address = address,
                         state = state
                     )
@@ -494,7 +540,7 @@ fun CreateCardSlot(
             onClick = {
                 onClick(
                     GameState(
-                        cards = topCard,
+                        card = topCard,
                         address = address,
                         state = state
                     )
@@ -614,9 +660,10 @@ fun AnimatedBorder(
     }
     val borderColor by animateColorAsState(
         targetValue = when (state) {
-            CardState.SELECTED -> Color.Yellow
+            CardState.SELECTED -> CardColors.selected
             CardState.SUCCESS -> Color.Green
             CardState.ERROR -> Color.Red
+            CardState.HINTED -> Color.Blue
             CardState.DEFAULT -> Color.Transparent
         },
         animationSpec = when (state) {

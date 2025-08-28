@@ -27,7 +27,7 @@ fun NavHost() {
     ) { screen ->
         when (currentScreen) {
             is Screen.WellMainScreen -> WellScreen()
-            is Screen.Settings -> SettingsScreen(currentScreen.data)
+            is Screen.Settings -> SettingsScreen()
         }
     }
 }

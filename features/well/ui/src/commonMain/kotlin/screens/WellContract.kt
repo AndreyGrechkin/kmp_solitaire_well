@@ -11,7 +11,9 @@ object WellContract {
         val stackWells: List<CardStack> = emptyList(),
         val gameState: GameState = GameState.EMPTY,
         val gameMessage: String = "",
-        val isEnabled: Boolean = true
+        val availableHint: Boolean = true,
+        val availableBackMove: Boolean = false,
+        val hintState: List<GameState> = emptyList(),
     ) : UiState
 
     sealed interface WellEvent : UiEvent {
@@ -23,7 +25,5 @@ object WellContract {
         data object OnHelp : WellEvent
     }
 
-    sealed interface WellAction : UiAction {
-
-    }
+    sealed interface WellAction : UiAction
 }

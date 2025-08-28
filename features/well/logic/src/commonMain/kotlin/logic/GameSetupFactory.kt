@@ -7,6 +7,7 @@ import model.StockClickResult
 
 interface GameSetupFactory {
     fun createNewGame(): List<CardStack>
+
     fun handleStockClick(
         currentStacks: List<CardStack>,
         currentDealCount: Int,
@@ -17,4 +18,6 @@ interface GameSetupFactory {
         oldGameState: GameState,
         currentGameState: GameState,
     ): MoveCardResult
+
+    fun handleHint(currentStacks: List<CardStack>): List<GameState>
 }
