@@ -22,5 +22,4 @@ data class Card(
     val suit: Suit,
     val rank: Rank,
     val isFaceUp: Boolean = false,
-//    val deckId: Int = 0
 )

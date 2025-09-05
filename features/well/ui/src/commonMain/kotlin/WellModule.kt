@@ -8,6 +8,6 @@ import setting.SettingsViewModel
 val wellModule
     get() = module {
         includes(wellLogicModule)
-        viewModel { WellViewModel(get(), get(), get()) }
-        viewModel { SettingsViewModel( get()) }
+        viewModel { WellViewModel(get(), get(), get(), get(), get()) }
+        viewModel { SettingsViewModel(get(), get()) }
     }

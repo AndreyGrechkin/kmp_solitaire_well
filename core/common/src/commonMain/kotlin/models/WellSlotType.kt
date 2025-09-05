@@ -1,6 +1,6 @@
-package model
+package models
 
-enum class SlotType {
+enum class WellSlotType {
     FOUNDATION,  // 4 слота для сборки
     STOCK,  // Колода
     STOCK_PLAY, // Колода игры 5 слота

@@ -1,12 +1,12 @@
 package logic
 
 import debugLog
-import model.CardStack
+import models.WellCardStack
 import model.CardState
 import model.GameState
 import model.MoveCardResult
-import model.SlotAddress
-import model.SlotType
+import models.WellSlotAddress
+import models.WellSlotType
 import model.StockClickResult
 import models.Card
 import models.Rank
@@ -14,23 +14,23 @@ import models.Suit
 
 class GameSetupFactoryImpl : GameSetupFactory {
 
-    override fun createNewGame(): List<CardStack> {
+    override fun createNewGame(): List<WellCardStack> {
         val deck = generateDoubleDeck().shuffled().toMutableList()
         val innerWells = createInnerWells(deck)
         val externalWells = createExternalWells(deck)
-        val stock = listOf(CardStack(deck, SlotAddress(SlotType.STOCK)))
+        val stock = listOf(WellCardStack(deck, WellSlotAddress(WellSlotType.STOCK)))
         return innerWells + externalWells + stock
     }
 
     override fun handleStockClick(
-        currentStacks: List<CardStack>,
+        currentStacks: List<WellCardStack>,
         currentDealCount: Int,
     ): StockClickResult {
         val mutableStacks = currentStacks.toMutableList()
 
-        val stockStack = mutableStacks.find { it.address.type == SlotType.STOCK }
-        val stockPlayStacks = mutableStacks.filter { it.address.type == SlotType.STOCK_PLAY }
-
+        val stockStack = mutableStacks.find { it.address.type == WellSlotType.STOCK }
+        val stockPlayStacks = mutableStacks.filter { it.address.type == WellSlotType.STOCK_PLAY }
+        debugLog("deal count: $currentDealCount, play size: ${stockPlayStacks.size}, top card ${stockPlayStacks.map { it.topCard }}, card size${stockPlayStacks.map { it.cards.size }}, card adress ${stockPlayStacks.map { it.address }}")
         return if (stockStack != null && stockStack.cards.isNotEmpty()) {
             val updatedStacks =
                 dealNewCardsOnTop(stockStack, stockPlayStacks, mutableStacks, currentDealCount)
@@ -41,7 +41,7 @@ class GameSetupFactoryImpl : GameSetupFactory {
     }
 
     override fun handleMoveCard(
-        currentStacks: List<CardStack>,
+        currentStacks: List<WellCardStack>,
         oldGameState: GameState,
         currentGameState: GameState,
     ): MoveCardResult {
@@ -62,21 +62,21 @@ class GameSetupFactoryImpl : GameSetupFactory {
         }
     }
 
-    override fun handleHint(currentStacks: List<CardStack>): List<GameState> {
+    override fun handleHint(currentStacks: List<WellCardStack>): List<GameState> {
         val helpCards = mutableListOf<GameState>()
-        val foundations = currentStacks.filter { it.address.type == SlotType.FOUNDATION }
+        val foundations = currentStacks.filter { it.address.type == WellSlotType.FOUNDATION }
         val foundationSuits = foundations.mapNotNull { it.topCard?.suit }
         val emptyFoundationAddresses = (0..3)
-            .map { SlotAddress(SlotType.FOUNDATION, it) }
+            .map { WellSlotAddress(WellSlotType.FOUNDATION, it) }
             .filter { address -> foundations.none { it.address.index == address.index } }
-        val wasteExists = currentStacks.any { it.address.type == SlotType.WASTE }
+        val wasteExists = currentStacks.any { it.address.type == WellSlotType.WASTE }
         currentStacks.forEach { sourceStack ->
             val topCard = sourceStack.topCard ?: return@forEach
 
             when (sourceStack.address.type) {
-                SlotType.FOUNDATION, SlotType.STOCK -> Unit
+                WellSlotType.FOUNDATION, WellSlotType.STOCK -> Unit
 
-                SlotType.INNER_WELL, SlotType.EXTERNAL_WELL, SlotType.STOCK_PLAY -> {
+                WellSlotType.INNER_WELL, WellSlotType.EXTERNAL_WELL, WellSlotType.STOCK_PLAY -> {
                     checkFoundationMoves(
                         sourceStack,
                         topCard,
@@ -90,13 +90,13 @@ class GameSetupFactoryImpl : GameSetupFactory {
                             topCard,
                             sourceStack.address,
                             null,
-                            SlotAddress(SlotType.WASTE)
+                            WellSlotAddress(WellSlotType.WASTE)
                         )
                     }
                     checkOtherMoves(sourceStack, topCard, currentStacks, helpCards)
                 }
 
-                SlotType.WASTE -> {
+                WellSlotType.WASTE -> {
                     checkFoundationMoves(
                         sourceStack,
                         topCard,
@@ -114,10 +114,10 @@ class GameSetupFactoryImpl : GameSetupFactory {
     }
 
     private fun checkFoundationMoves(
-        sourceStack: CardStack,
+        sourceStack: WellCardStack,
         card: Card,
-        foundations: List<CardStack>,
-        emptyFoundations: List<SlotAddress>,
+        foundations: List<WellCardStack>,
+        emptyFoundations: List<WellSlotAddress>,
         foundationSuits: List<Suit>,
         result: MutableList<GameState>,
     ) {
@@ -143,16 +143,16 @@ class GameSetupFactoryImpl : GameSetupFactory {
     }
 
     private fun checkOtherMoves(
-        sourceStack: CardStack,
+        sourceStack: WellCardStack,
         card: Card,
-        allStacks: List<CardStack>,
+        allStacks: List<WellCardStack>,
         result: MutableList<GameState>,
     ) {
         allStacks.forEach { targetStack ->
             if (sourceStack.address == targetStack.address) return@forEach
 
             when (targetStack.address.type) {
-                SlotType.WASTE -> {
+                WellSlotType.WASTE -> {
                     if (validationCardOnWaste(card, targetStack.topCard)) {
                         result.addSelectedPair(
                             card,
@@ -163,7 +163,7 @@ class GameSetupFactoryImpl : GameSetupFactory {
                     }
                 }
 
-                SlotType.EXTERNAL_WELL -> {
+                WellSlotType.EXTERNAL_WELL -> {
                     if (validationCardOnExternal(
                             GameState(card, sourceStack.address, CardState.DEFAULT),
                             GameState(targetStack.topCard, targetStack.address, CardState.DEFAULT)
@@ -178,19 +178,19 @@ class GameSetupFactoryImpl : GameSetupFactory {
                     }
                 }
 
-                SlotType.STOCK,
-                SlotType.STOCK_PLAY,
-                SlotType.INNER_WELL,
-                SlotType.FOUNDATION -> Unit
+                WellSlotType.STOCK,
+                WellSlotType.STOCK_PLAY,
+                WellSlotType.INNER_WELL,
+                WellSlotType.FOUNDATION -> Unit
             }
         }
     }
 
     private fun MutableList<GameState>.addSelectedPair(
         sourceCard: Card?,
-        sourceAddress: SlotAddress,
+        sourceAddress: WellSlotAddress,
         targetCard: Card?,
-        targetAddress: SlotAddress,
+        targetAddress: WellSlotAddress,
     ) {
         this += GameState(card = sourceCard, address = sourceAddress, state = CardState.HINTED)
         this += GameState(card = targetCard, address = targetAddress, state = CardState.HINTED)
@@ -200,49 +200,49 @@ class GameSetupFactoryImpl : GameSetupFactory {
     private fun handleEmptySlotClicked(currentGameState: GameState) : MoveCardResult {
        return if (currentGameState.card != null
             && currentGameState.address.type !in setOf(
-                SlotType.STOCK,
-                SlotType.FOUNDATION
+                WellSlotType.STOCK,
+                WellSlotType.FOUNDATION
             )
         )
             MoveCardResult.Selected else MoveCardResult.Default
     }
 
     private fun handleValidMove(
-        currentDeck: MutableList<CardStack>,
+        currentDeck: MutableList<WellCardStack>,
         oldGameState: GameState,
         gameState: GameState,
     ): MoveCardResult {
         return when (gameState.address.type) {
-            SlotType.FOUNDATION -> {
+            WellSlotType.FOUNDATION -> {
                 val foundSuit = currentDeck
-                    .filter { it.address.type == SlotType.FOUNDATION }
+                    .filter { it.address.type == WellSlotType.FOUNDATION }
                     .mapNotNull { stack -> stack.cards.firstOrNull()?.suit }
                 val valid =
                     validationCardOnFoundation(oldGameState.card, gameState.card, foundSuit)
                 handleCardMove(valid, currentDeck, oldGameState, gameState)
             }
 
-            SlotType.WASTE -> {
+            WellSlotType.WASTE -> {
                 val valid = validationCardOnWaste(oldGameState.card, gameState.card)
                 handleCardMove(valid, currentDeck, oldGameState, gameState)
             }
 
-            SlotType.EXTERNAL_WELL -> {
+            WellSlotType.EXTERNAL_WELL -> {
                 val valid = validationCardOnExternal(oldGameState, gameState)
                 handleCardMove(valid, currentDeck, oldGameState, gameState)
             }
 
-            SlotType.INNER_WELL,
-            SlotType.STOCK_PLAY,
+            WellSlotType.INNER_WELL,
+            WellSlotType.STOCK_PLAY,
                 -> MoveCardResult.Error
 
-            SlotType.STOCK -> MoveCardResult.Default
+            WellSlotType.STOCK -> MoveCardResult.Default
         }
     }
 
     private fun handleCardMove(
         isValid: Boolean,
-        currentDeck: MutableList<CardStack>,
+        currentDeck: MutableList<WellCardStack>,
         oldGameState: GameState,
         gameState: GameState,
     ): MoveCardResult {
@@ -253,10 +253,10 @@ class GameSetupFactoryImpl : GameSetupFactory {
     }
 
     fun moveCardToNewAddress(
-        mutableStacks: MutableList<CardStack>,
+        mutableStacks: MutableList<WellCardStack>,
         oldGameState: GameState,
         gameState: GameState,
-    ): List<CardStack> {
+    ): List<WellCardStack> {
 
         val cardToMove = oldGameState.card ?: return mutableStacks
         val targetAddress = gameState.address
@@ -277,7 +277,7 @@ class GameSetupFactoryImpl : GameSetupFactory {
         }.toMutableList()
 
         if (updatedStacks.none { it.address == targetAddress }) {
-            updatedStacks.add(CardStack(cards = listOf(cardToMove), address = targetAddress))
+            updatedStacks.add(WellCardStack(cards = listOf(cardToMove), address = targetAddress))
         }
 
         mutableStacks.clear()
@@ -305,7 +305,7 @@ class GameSetupFactoryImpl : GameSetupFactory {
         newState: GameState,
     ): Boolean {
         return if (newState.card == null) {
-            oldState.address.type == SlotType.INNER_WELL && oldState.address.index == newState.address.index
+            oldState.address.type == WellSlotType.INNER_WELL && oldState.address.index == newState.address.index
         } else {
             oldState.card?.suit == newState.card.suit
                     && (oldState.card.rank.value == (newState.card.rank.value.plus(1))
@@ -328,11 +328,11 @@ class GameSetupFactoryImpl : GameSetupFactory {
     }
 
     private fun dealNewCardsOnTop(
-        stock: CardStack,
-        stockPlayStacks: List<CardStack>,
-        currentStacks: MutableList<CardStack>,
+        stock: WellCardStack,
+        stockPlayStacks: List<WellCardStack>,
+        currentStacks: MutableList<WellCardStack>,
         dealCount: Int,
-    ): List<CardStack> {
+    ): List<WellCardStack> {
         val cardsToDeal = stock.cards.take(dealCount).map { it.copy(isFaceUp = true) }
         val remainingCardsInStock = stock.cards.drop(dealCount)
 
@@ -340,15 +340,15 @@ class GameSetupFactoryImpl : GameSetupFactory {
         val updatedStockPlay = updateStockPlayStacks(stockPlayStacks, cardsToDeal)
 
         return currentStacks.apply {
-            removeAll { it.address.type == SlotType.STOCK || it.address.type == SlotType.STOCK_PLAY }
+            removeAll { it.address.type == WellSlotType.STOCK || it.address.type == WellSlotType.STOCK_PLAY }
             add(updatedStock)
             addAll(updatedStockPlay)
         }
     }
 
     private fun resetStockToDeck(
-        stockPlayStacks: List<CardStack>,
-        currentStacks: MutableList<CardStack>,
+        stockPlayStacks: List<WellCardStack>,
+        currentStacks: MutableList<WellCardStack>,
         currentDealCount: Int,
     ): StockClickResult {
         val maxCardsInStack = stockPlayStacks.maxOf { it.cards.size }
@@ -380,7 +380,7 @@ class GameSetupFactoryImpl : GameSetupFactory {
         val resetCards = allCardsFromStockPlay.map { it.copy(isFaceUp = false) }
 
         // Создаем новую колоду
-        val newStock = CardStack(cards = resetCards, address = SlotAddress(SlotType.STOCK))
+        val newStock = WellCardStack(cards = resetCards, address = WellSlotAddress(WellSlotType.STOCK))
 
         // НЕМЕДЛЕННО выкладываем карты из новой колоды
         val cardsToDeal = resetCards.take(newDealCount).map { it.copy(isFaceUp = true) }
@@ -394,12 +394,12 @@ class GameSetupFactoryImpl : GameSetupFactory {
 
         // Создаем новые STOCK_PLAY стопки
         val updatedStockPlay = cardsToDeal.mapIndexed { index, card ->
-            CardStack(cards = listOf(card), address = SlotAddress(SlotType.STOCK_PLAY, index))
+            WellCardStack(cards = listOf(card), address = WellSlotAddress(WellSlotType.STOCK_PLAY, index))
         }
 
         // Обновляем общий список стопок
         val updatedStacks = currentStacks.apply {
-            removeAll { it.address.type == SlotType.STOCK || it.address.type == SlotType.STOCK_PLAY }
+            removeAll { it.address.type == WellSlotType.STOCK || it.address.type == WellSlotType.STOCK_PLAY }
             if (finalStock != null) {
                 add(finalStock) // Добавляем колоду если там есть карты
             }
@@ -410,9 +410,9 @@ class GameSetupFactoryImpl : GameSetupFactory {
     }
 
     private fun updateStockPlayStacks(
-        existingStacks: List<CardStack>,
+        existingStacks: List<WellCardStack>,
         newCards: List<Card>,
-    ): List<CardStack> {
+    ): List<WellCardStack> {
         return if (existingStacks.isNotEmpty()) {
             existingStacks.mapIndexed { index, stack ->
                 if (index < newCards.size) {
@@ -424,27 +424,27 @@ class GameSetupFactoryImpl : GameSetupFactory {
             }
         } else {
             newCards.mapIndexed { index, card ->
-                CardStack(cards = listOf(card), address = SlotAddress(SlotType.STOCK_PLAY, index))
+                WellCardStack(cards = listOf(card), address = WellSlotAddress(WellSlotType.STOCK_PLAY, index))
             }
         }
     }
 
-    private fun createInnerWells(deck: MutableList<Card>): List<CardStack> {
+    private fun createInnerWells(deck: MutableList<Card>): List<WellCardStack> {
         val innerWells = List(4) { index ->
-            CardStack(
+            WellCardStack(
                 cards = deck.takeFromDeck(10).map { it.copy(isFaceUp = true) },
-                address = SlotAddress(SlotType.INNER_WELL, index)
+                address = WellSlotAddress(WellSlotType.INNER_WELL, index)
             )
         }
         return innerWells
     }
 
-    private fun createExternalWells(deck: MutableList<Card>): List<CardStack> {
+    private fun createExternalWells(deck: MutableList<Card>): List<WellCardStack> {
         return List(4) { index ->
             val topCard = deck.removeAt(0).copy(isFaceUp = true)
-            CardStack(
+            WellCardStack(
                 cards = listOf(topCard),
-                address = SlotAddress(SlotType.EXTERNAL_WELL, index)
+                address = WellSlotAddress(WellSlotType.EXTERNAL_WELL, index)
             )
         }
     }

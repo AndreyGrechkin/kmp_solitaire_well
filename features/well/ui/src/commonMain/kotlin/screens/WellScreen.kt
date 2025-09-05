@@ -21,11 +21,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -33,36 +35,43 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.defey.solitairewell.data.resources.Res
-import com.defey.solitairewell.data.resources.back_blue
 import com.defey.solitairewell.data.resources.back_move
 import com.defey.solitairewell.data.resources.game_list
 import com.defey.solitairewell.data.resources.help
 import com.defey.solitairewell.data.resources.new_game
 import com.defey.solitairewell.data.resources.rules
 import com.defey.solitairewell.data.resources.settings
-import getScreenMetrics
+import debugLog
+import dialog.CustomDialog
+import dialog.rememberDialogController
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import logic.CardResourcesFactory
-import model.CardStack
+import models.WellCardStack
 import model.CardState
 import model.GameState
-import model.SlotAddress
-import model.SlotType
+import models.WellSlotAddress
+import models.WellSlotType
 import models.CardResource
+import models.Deck
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
+import rememberCardSize
 import screens.WellViewModel.Companion.BOTTOM_INDEX
 import screens.WellViewModel.Companion.LEFT_INDEX
 import screens.WellViewModel.Companion.RIGHT_INDEX
@@ -74,7 +83,55 @@ fun WellScreen() {
     val viewModel: WellViewModel = koinViewModel()
     val cardFactory = koinInject<CardResourcesFactory>()
     val state by viewModel.state.collectAsState()
+    val scope = rememberCoroutineScope()
+//    val action by viewModel.action.collectAsState()
     val scrollState = rememberScrollState()
+    val dialogController = rememberDialogController()
+
+    // Собираем действия из ViewModel
+    LaunchedEffect(Unit) {
+        viewModel.action.collect { action ->
+            when (action) {
+                WellContract.WellAction.ShowRenewalDialog -> {
+                    // Показываем диалог при получении действия
+                    scope.launch {
+                        // Показываем диалог с кастомным содержимым
+                        dialogController.showDialog {
+                            Column(modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(24.dp)) {
+                                Text(
+                                    text = "Старая игра",
+                                    modifier = Modifier
+                                        .align(Alignment.CenterHorizontally),
+                                    style = MaterialTheme.typography.headlineMedium)
+                                Spacer(modifier = Modifier.height(16.dp))
+
+                                Text("Есть не завершеный пасьянс")
+                                Row(modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween) {
+                                    Button(onClick = {
+                                        viewModel.onEvent(WellContract.WellEvent.OnLoadGame)
+                                        dialogController.hideDialog()
+                                    }) {
+                                        Text(text = "Возобновить")
+                                    }
+                                    Button(onClick = {
+                                        viewModel.onEvent(WellContract.WellEvent.OnNewGame)
+                                        dialogController.hideDialog()
+                                    }) {
+                                        Text(text = "Новая игра")
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     Scaffold { paddingValues ->
 
         Box(
@@ -85,11 +142,11 @@ fun WellScreen() {
         ) {
             Column(
                 modifier = Modifier
-                    .verticalScroll(scrollState) // ← Вот и весь секрет!
+                    .verticalScroll(scrollState)
                     .fillMaxWidth()
                     .padding(16.dp),
             ) {
-//            Text(text = state.gameMessage, color = CardColors.black, fontSize = 16.sp)
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
@@ -154,12 +211,24 @@ fun WellScreen() {
                     )
                     Image(
                         painter = painterResource(Res.drawable.rules),
-                        contentDescription = "new game",
+                        contentDescription = "rules",
                         modifier = Modifier
                             .size(48.dp)
                             .clickable(
                                 onClick = {
-
+                                    // Показываем диалог с кастомным содержимым
+                                    dialogController.showDialog {
+                                        RulesContent(
+                                            onConfirm = {
+                                                // Логика подтверждения специфичная для Well модуля
+                                                debugLog("onConfirm")
+                                                dialogController.hideDialog()
+                                            },
+                                            onDismiss = {
+                                                debugLog("onDismiss")
+                                                dialogController.hideDialog() }
+                                        )
+                                    }
                                 }
                             ),
                     )
@@ -174,8 +243,6 @@ fun WellScreen() {
                                 }
                             ),
                     )
-
-
                 }
 
                 TopRow(
@@ -184,8 +251,10 @@ fun WellScreen() {
                         .padding(top = 16.dp),
                     stackWells = state.stackWells,
                     cardFactory = cardFactory,
+                    deck = state.deck,
                     gameState = state.gameState,
                     helpState = state.hintState,
+                    backCardIndex = state.backCardIndex,
                     onAnimationComplete = {
                         viewModel.onEvent(WellContract.WellEvent.OnAnimationFinished)
                     },
@@ -200,6 +269,8 @@ fun WellScreen() {
                         gameState = state.gameState,
                         helpState = state.hintState,
                         message = state.gameMessage,
+                        backCardIndex = state.backCardIndex,
+                        deck = state.deck,
                         onAnimationComplete = {
                             viewModel.onEvent(WellContract.WellEvent.OnAnimationFinished)
                         },
@@ -210,6 +281,8 @@ fun WellScreen() {
                     WellSlotBox(
                         stackWells = state.stackWells,
                         cardFactory = cardFactory,
+                        backCardIndex = state.backCardIndex,
+                        deck = state.deck,
                         gameState = state.gameState,
                         helpState = state.hintState,
                         onAnimationComplete = {
@@ -224,15 +297,21 @@ fun WellScreen() {
 
             }
         }
+        CustomDialog(controller = dialogController,
+            modifier = Modifier.padding(48.dp)
+        )
     }
+
 }
 
 @Composable
 fun TopRow(
-    stackWells: List<CardStack>,
+    stackWells: List<WellCardStack>,
     cardFactory: CardResourcesFactory,
     modifier: Modifier,
     gameState: GameState,
+    backCardIndex: Int,
+    deck: Deck,
     helpState: List<GameState>,
     onAnimationComplete: () -> Unit,
     onClick: (GameState) -> Unit,
@@ -245,10 +324,12 @@ fun TopRow(
         repeat(5) { index ->
             CreateCardSlot(
                 stackList = stackWells,
-                address = SlotAddress(SlotType.STOCK_PLAY, index),
+                address = WellSlotAddress(WellSlotType.STOCK_PLAY, index),
                 cardFactory = cardFactory,
                 gameState = gameState,
                 helpState = helpState,
+                backCardIndex = backCardIndex,
+                deck = deck,
                 onAnimationComplete = onAnimationComplete,
                 onClick = onClick
             )
@@ -258,10 +339,12 @@ fun TopRow(
 
 @Composable
 fun MiddleRow(
-    stackWells: List<CardStack>,
+    stackWells: List<WellCardStack>,
     gameState: GameState,
     helpState: List<GameState>,
     message: String,
+    deck: Deck,
+    backCardIndex: Int,
     cardFactory: CardResourcesFactory,
     onAnimationComplete: () -> Unit,
     onClick: (GameState) -> Unit,
@@ -275,10 +358,12 @@ fun MiddleRow(
             // Колода (слева)
             CreateCardSlot(
                 stackList = stackWells,
-                address = SlotAddress(SlotType.STOCK),
+                address = WellSlotAddress(WellSlotType.STOCK),
                 cardFactory = cardFactory,
                 gameState = gameState,
                 helpState = emptyList(),
+                deck = deck,
+                backCardIndex = backCardIndex,
                 onAnimationComplete = onAnimationComplete,
                 onClick = onClick
             )
@@ -293,14 +378,15 @@ fun MiddleRow(
         }
         Spacer(modifier = Modifier.weight(2f))
 
-        // Склад (справа)
         Column {
             CreateCardSlot(
                 stackList = stackWells,
-                address = SlotAddress(SlotType.WASTE),
+                address = WellSlotAddress(WellSlotType.WASTE),
                 cardFactory = cardFactory,
                 gameState = gameState,
                 helpState = helpState,
+                backCardIndex = backCardIndex,
+                deck = deck,
                 onAnimationComplete = onAnimationComplete,
                 onClick = onClick
             )
@@ -319,10 +405,12 @@ fun MiddleRow(
 
 @Composable
 fun WellSlotBox(
-    stackWells: List<CardStack>,
+    stackWells: List<WellCardStack>,
+    backCardIndex: Int,
     gameState: GameState,
     helpState: List<GameState>,
     cardFactory: CardResourcesFactory,
+    deck: Deck,
     onAnimationComplete: () -> Unit,
     onClick: (GameState) -> Unit,
 ) {
@@ -335,40 +423,48 @@ fun WellSlotBox(
         Column {
             CreateCardSlot(
                 stackList = stackWells,
-                address = SlotAddress(SlotType.EXTERNAL_WELL, TOP_INDEX),
+                address = WellSlotAddress(WellSlotType.EXTERNAL_WELL, TOP_INDEX),
                 cardFactory = cardFactory,
                 gameState = gameState,
                 helpState = helpState,
+                backCardIndex = backCardIndex,
+                deck = deck,
                 onAnimationComplete = onAnimationComplete,
                 onClick = onClick
             )
 
             CreateCardSlot(
                 stackList = stackWells,
-                address = SlotAddress(SlotType.INNER_WELL, TOP_INDEX),
+                address = WellSlotAddress(WellSlotType.INNER_WELL, TOP_INDEX),
                 cardFactory = cardFactory,
                 gameState = gameState,
                 helpState = helpState,
+                backCardIndex = backCardIndex,
+                deck = deck,
                 onAnimationComplete = onAnimationComplete,
                 onClick = onClick
             )
 
             CreateCardSlot(
                 stackList = stackWells,
-                address = SlotAddress(SlotType.INNER_WELL, BOTTOM_INDEX),
+                address = WellSlotAddress(WellSlotType.INNER_WELL, BOTTOM_INDEX),
                 cardFactory = cardFactory,
                 gameState = gameState,
                 helpState = helpState,
+                backCardIndex = backCardIndex,
+                deck = deck,
                 onAnimationComplete = onAnimationComplete,
                 onClick = onClick
             )
 
             CreateCardSlot(
                 stackList = stackWells,
-                address = SlotAddress(SlotType.EXTERNAL_WELL, BOTTOM_INDEX),
+                address = WellSlotAddress(WellSlotType.EXTERNAL_WELL, BOTTOM_INDEX),
                 cardFactory = cardFactory,
                 gameState = gameState,
                 helpState = helpState,
+                backCardIndex = backCardIndex,
+                deck = deck,
                 onAnimationComplete = onAnimationComplete,
                 onClick = onClick
             )
@@ -382,10 +478,12 @@ fun WellSlotBox(
             Row() {
                 CreateCardSlot(
                     stackList = stackWells,
-                    address = SlotAddress(SlotType.FOUNDATION, LEFT_INDEX),
+                    address = WellSlotAddress(WellSlotType.FOUNDATION, LEFT_INDEX),
                     cardFactory = cardFactory,
                     gameState = gameState,
                     helpState = helpState,
+                    backCardIndex = backCardIndex,
+                    deck = deck,
                     onAnimationComplete = onAnimationComplete,
                     onClick = onClick
                 )
@@ -397,10 +495,12 @@ fun WellSlotBox(
                 )
                 CreateCardSlot(
                     stackList = stackWells,
-                    address = SlotAddress(SlotType.FOUNDATION, TOP_INDEX),
+                    address = WellSlotAddress(WellSlotType.FOUNDATION, TOP_INDEX),
                     cardFactory = cardFactory,
                     gameState = gameState,
                     helpState = helpState,
+                    backCardIndex = backCardIndex,
+                    deck = deck,
                     onAnimationComplete = onAnimationComplete,
                     onClick = onClick
                 )
@@ -408,20 +508,24 @@ fun WellSlotBox(
             Row() {
                 CreateCardSlot(
                     stackList = stackWells,
-                    address = SlotAddress(SlotType.EXTERNAL_WELL, LEFT_INDEX),
+                    address = WellSlotAddress(WellSlotType.EXTERNAL_WELL, LEFT_INDEX),
                     cardFactory = cardFactory,
                     gameState = gameState,
+                    backCardIndex = backCardIndex,
                     helpState = helpState,
+                    deck = deck,
                     onAnimationComplete = onAnimationComplete,
                     onClick = onClick
                 )
 
                 CreateCardSlot(
                     stackList = stackWells,
-                    address = SlotAddress(SlotType.INNER_WELL, LEFT_INDEX),
+                    address = WellSlotAddress(WellSlotType.INNER_WELL, LEFT_INDEX),
                     cardFactory = cardFactory,
                     gameState = gameState,
                     helpState = helpState,
+                    backCardIndex = backCardIndex,
+                    deck = deck,
                     onAnimationComplete = onAnimationComplete,
                     onClick = onClick
                 )
@@ -434,20 +538,24 @@ fun WellSlotBox(
                 )
                 CreateCardSlot(
                     stackList = stackWells,
-                    address = SlotAddress(SlotType.INNER_WELL, RIGHT_INDEX),
+                    address = WellSlotAddress(WellSlotType.INNER_WELL, RIGHT_INDEX),
                     cardFactory = cardFactory,
                     gameState = gameState,
                     helpState = helpState,
+                    backCardIndex = backCardIndex,
+                    deck = deck,
                     onAnimationComplete = onAnimationComplete,
                     onClick = onClick
                 )
 
                 CreateCardSlot(
                     stackList = stackWells,
-                    address = SlotAddress(SlotType.EXTERNAL_WELL, RIGHT_INDEX),
+                    address = WellSlotAddress(WellSlotType.EXTERNAL_WELL, RIGHT_INDEX),
                     cardFactory = cardFactory,
                     gameState = gameState,
                     helpState = helpState,
+                    backCardIndex = backCardIndex,
+                    deck = deck,
                     onAnimationComplete = onAnimationComplete,
                     onClick = onClick
                 )
@@ -456,10 +564,12 @@ fun WellSlotBox(
             Row() {
                 CreateCardSlot(
                     stackList = stackWells,
-                    address = SlotAddress(SlotType.FOUNDATION, BOTTOM_INDEX),
+                    address = WellSlotAddress(WellSlotType.FOUNDATION, BOTTOM_INDEX),
                     cardFactory = cardFactory,
                     gameState = gameState,
                     helpState = helpState,
+                    backCardIndex = backCardIndex,
+                    deck = deck,
                     onAnimationComplete = onAnimationComplete,
                     onClick = onClick
                 )
@@ -471,10 +581,12 @@ fun WellSlotBox(
                 )
                 CreateCardSlot(
                     stackList = stackWells,
-                    address = SlotAddress(SlotType.FOUNDATION, RIGHT_INDEX),
+                    address = WellSlotAddress(WellSlotType.FOUNDATION, RIGHT_INDEX),
                     cardFactory = cardFactory,
+                    backCardIndex = backCardIndex,
                     gameState = gameState,
                     helpState = helpState,
+                    deck = deck,
                     onAnimationComplete = onAnimationComplete,
                     onClick = onClick
                 )
@@ -486,11 +598,13 @@ fun WellSlotBox(
 
 @Composable
 fun CreateCardSlot(
-    stackList: List<CardStack>,
-    address: SlotAddress,
+    stackList: List<WellCardStack>,
+    address: WellSlotAddress,
+    backCardIndex: Int,
     cardFactory: CardResourcesFactory,
     gameState: GameState,
     helpState: List<GameState>,
+    deck: Deck,
     onAnimationComplete: () -> Unit,
     onClick: (GameState) -> Unit,
 ) {
@@ -505,13 +619,15 @@ fun CreateCardSlot(
     val stackSize = stack?.cards?.size ?: 0
 
     val isVisibleCount = when (address.type) {
-        SlotType.FOUNDATION -> true
-        SlotType.STOCK -> false
-        SlotType.STOCK_PLAY -> false
-        SlotType.WASTE -> false
-        SlotType.INNER_WELL -> true
-        SlotType.EXTERNAL_WELL -> true
+        WellSlotType.FOUNDATION -> true
+        WellSlotType.STOCK -> false
+        WellSlotType.STOCK_PLAY -> false
+        WellSlotType.WASTE -> false
+        WellSlotType.INNER_WELL -> true
+        WellSlotType.EXTERNAL_WELL -> true
     }
+
+    val backCard = cardFactory.createBackCard(backCardIndex)
     if (stack?.cards.isNullOrEmpty()) {
         EmptyCardSlot(
             state = state,
@@ -531,7 +647,8 @@ fun CreateCardSlot(
     } else {
         val topCard = stack.topCard ?: return
         PlayingCard(
-            cardResource = cardFactory.createCardResources(topCard),
+            cardResource = cardFactory.createCardResources(topCard, deck),
+            backCard = backCard,
             isFaceUp = topCard.isFaceUp,
             state = state,
             stackSize = stackSize,
@@ -583,16 +700,12 @@ fun calculateHalfCardHeight(): Dp {
     return (cardWidth / 0.7f) / 2
 }
 
-@Composable
-fun rememberCardSize(): Dp {
-    val width = getScreenMetrics().widthDp
-    val size = ((width - (16.dp * 7)) / 5)
-    return size
-}
+
 
 @Composable
 fun PlayingCard(
     cardResource: CardResource,
+    backCard: DrawableResource,
     stackSize: Int,
     isFaceUp: Boolean,
     modifier: Modifier = Modifier,
@@ -614,7 +727,7 @@ fun PlayingCard(
                 .background(color = CardColors.cardFront)
         ) {
             if (isFaceUp) {
-                Column(Modifier.fillMaxSize()) {
+                Column(Modifier.fillMaxSize().padding(horizontal = 2.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
                             text = cardResource.rank,
@@ -630,12 +743,13 @@ fun PlayingCard(
                     Image(
                         painter = painterResource(cardResource.image),
                         contentDescription = cardResource.rank,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.FillBounds
                     )
                 }
             } else {
                 Image(
-                    painter = painterResource(Res.drawable.back_blue),
+                    painter = painterResource(backCard),
                     contentDescription = "Card back",
                     modifier = Modifier.fillMaxSize().padding(4.dp),
                 )
@@ -723,3 +837,5 @@ fun AnimatedBorder(
         }
     }
 }
+
+

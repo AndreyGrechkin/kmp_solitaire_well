@@ -3,17 +3,20 @@ package screens
 import base_viewModel.UiAction
 import base_viewModel.UiEvent
 import base_viewModel.UiState
-import model.CardStack
+import models.WellCardStack
 import model.GameState
+import models.Deck
 
 object WellContract {
     data class WellState(
-        val stackWells: List<CardStack> = emptyList(),
+        val stackWells: List<WellCardStack> = emptyList(),
         val gameState: GameState = GameState.EMPTY,
         val gameMessage: String = "",
         val availableHint: Boolean = true,
         val availableBackMove: Boolean = false,
         val hintState: List<GameState> = emptyList(),
+        val deck: Deck = Deck.FIRST,
+        val backCardIndex: Int = 0
     ) : UiState
 
     sealed interface WellEvent : UiEvent {
@@ -23,7 +26,11 @@ object WellContract {
         data object OnNewGame : WellEvent
         data object OnBackMove : WellEvent
         data object OnHelp : WellEvent
+        data object OnLoadGame : WellEvent
     }
 
-    sealed interface WellAction : UiAction
+    sealed interface WellAction : UiAction {
+       data object ShowRenewalDialog : WellAction
+
+    }
 }

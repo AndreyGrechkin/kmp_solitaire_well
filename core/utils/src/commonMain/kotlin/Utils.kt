@@ -4,9 +4,6 @@ import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-
-
-
 @Composable
 fun getScreenMetrics(): ScreenMetrics {
     val density = LocalDensity.current.density
@@ -20,6 +17,9 @@ fun getScreenMetrics(): ScreenMetrics {
         heightDp = (windowInfo.containerSize.height / density).dp
     )
 }
+
+@Composable
+expect fun rememberCardSize(): Dp
 
 data class ScreenMetrics(
     val widthPx: Int,
