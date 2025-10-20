@@ -59,6 +59,7 @@ kotlin {
             implementation(projects.uiKit)
             implementation(projects.core.navigation)
             implementation(projects.features.well.ui)
+            implementation(projects.features.settings.ui)
             implementation(libs.koin.compose)
             implementation(libs.koin.core)
         }

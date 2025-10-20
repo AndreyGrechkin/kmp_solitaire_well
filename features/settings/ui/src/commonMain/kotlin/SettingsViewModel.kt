@@ -1,7 +1,5 @@
-package setting
-
-import base_viewModel.BaseViewModel
 import base.Router
+import base_viewModel.BaseViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch

@@ -1,12 +1,12 @@
-import di.wellLogicModule
+package di
+
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
-import screens.WellViewModel
-import setting.SettingsViewModel
+import WellViewModel
 
 val wellModule
     get() = module {
-        includes(wellLogicModule)
+        includes(wellDomainModule)
         viewModel { WellViewModel(get(), get(), get(), get(), get()) }
-        viewModel { SettingsViewModel(get(), get()) }
+//        viewModel { SettingsViewModel(get(), get()) }
     }

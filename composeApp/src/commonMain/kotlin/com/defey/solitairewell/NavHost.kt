@@ -8,8 +8,8 @@ import base.NavigationLogger
 import base.Router
 import org.koin.compose.koinInject
 import models.Screen
+import screen.SettingsScreen
 import screens.WellScreen
-import setting.SettingsScreen
 
 @Composable
 fun NavHost() {

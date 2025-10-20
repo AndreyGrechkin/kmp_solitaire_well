@@ -1,5 +1,6 @@
 package screens
 
+import WellViewModel
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
@@ -69,10 +70,10 @@ import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import rememberCardSize
-import screens.WellViewModel.Companion.BOTTOM_INDEX
-import screens.WellViewModel.Companion.LEFT_INDEX
-import screens.WellViewModel.Companion.RIGHT_INDEX
-import screens.WellViewModel.Companion.TOP_INDEX
+import WellViewModel.Companion.BOTTOM_INDEX
+import WellViewModel.Companion.LEFT_INDEX
+import WellViewModel.Companion.RIGHT_INDEX
+import WellViewModel.Companion.TOP_INDEX
 import theme.CardColors
 
 @Composable

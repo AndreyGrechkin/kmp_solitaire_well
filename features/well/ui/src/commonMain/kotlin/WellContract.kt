@@ -1,16 +1,14 @@
-package screens
-
 import base_viewModel.UiAction
 import base_viewModel.UiEvent
 import base_viewModel.UiState
-import models.WellCardStack
 import model.GameState
 import models.Deck
+import models.WellCardStack
 
 object WellContract {
     data class WellState(
         val stackWells: List<WellCardStack> = emptyList(),
-        val gameState: GameState = GameState.EMPTY,
+        val gameState: GameState = GameState.Companion.EMPTY,
         val gameMessage: String = "",
         val availableHint: Boolean = true,
         val availableBackMove: Boolean = false,

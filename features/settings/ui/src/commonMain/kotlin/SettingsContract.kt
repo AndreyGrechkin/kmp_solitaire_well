@@ -1,10 +1,7 @@
-package setting
-
 import base_viewModel.UiAction
 import base_viewModel.UiEvent
 import base_viewModel.UiState
 import models.Deck
-import models.UserData
 
 object SettingsContract {
     data class SettingsState(

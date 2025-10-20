@@ -4,9 +4,10 @@ import commonModule
 import dataRepositoryModule
 import databaseModule
 import di.navigationModule
+import di.settingsModule
 import storageModule
 import uiKitModule
-import wellModule
+import di.wellModule
 
 private val coreModules
     get() = listOf(
@@ -24,7 +25,8 @@ private val dataModule
 
 private val featureModules
     get() = listOf(
-        wellModule
+        wellModule,
+        settingsModule
     )
 
 val appModules

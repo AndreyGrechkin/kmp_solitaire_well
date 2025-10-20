@@ -1,25 +1,23 @@
-package screens
-
 import base.Router
 import base.TransitionConfig
 import base_viewModel.BaseViewModel
-import debugLog
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import logic.CommonTimer
 import logic.GameSetupFactory
-import models.WellCardStack
 import model.CardState
 import model.GameState
 import model.MoveCardResult
-import models.WellSlotType
 import models.Deck
 import models.Screen
 import models.UserData
+import models.WellCardStack
 import models.WellGameState
-import repository.WellRepository
+import models.WellSlotType
 import repository.StorageRepository
+import repository.WellRepository
+import WellContract
 
 class WellViewModel(
     private val router: Router,
@@ -99,10 +97,12 @@ class WellViewModel(
 
     private fun saveCardStack() {
         viewModelScope.launch {
-            wellRepository.setWellGameState(WellGameState(
-                countGameStack = cardsToDealCount,
-                step = countStep
-            ))
+            wellRepository.setWellGameState(
+                WellGameState(
+                    countGameStack = cardsToDealCount,
+                    step = countStep
+                )
+            )
             wellRepository.setWellCards(state.value.stackWells)
             debugLog("save card2: ${cardsToDealCount}")
         }
@@ -257,7 +257,7 @@ class WellViewModel(
     }
 
     private fun createHintTimer() {
-        CommonTimer.create()
+        CommonTimer.Companion.create()
         timer.start(
             60000,
             onTick = {
@@ -275,7 +275,7 @@ class WellViewModel(
 
     fun openSettings() {
         val settingsData = UserData("Player1", 100)
-        router.navigateTo(Screen.Settings(settingsData), TransitionConfig.SLIDE_VERTICAL)
+        router.navigateTo(Screen.Settings(settingsData), TransitionConfig.Companion.SLIDE_VERTICAL)
     }
 
     override fun onCleared() {
