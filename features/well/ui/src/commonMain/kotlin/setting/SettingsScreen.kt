@@ -42,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.defey.solitairewell.data.resources.Res
@@ -90,18 +91,32 @@ fun SettingsScreen() {
 //                verticalArrangement = Arrangement.Center,
 //                horizontalAlignment = Alignment.CenterHorizontally
             ) {
+Box() {
+    Image(
+        painter = painterResource(Res.drawable.back_move),
+        contentDescription = "back",
+        modifier = Modifier
+            .size(48.dp)
+            .clickable(
+                onClick = {
+                    vm.onEvent(SettingsContract.SettingsEvent.GoBack)
+                }
+            ),
+    )
 
-                Image(
-                    painter = painterResource(Res.drawable.back_move),
-                    contentDescription = "back",
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clickable(
-                            onClick = {
-                                vm.onEvent(SettingsContract.SettingsEvent.GoBack)
-                            }
-                        ),
-                )
+    Text(
+        modifier = Modifier
+            .fillMaxWidth()
+            .align(Alignment.Center),
+
+        textAlign = TextAlign.Center,
+        text = "Настройки",
+        color = CardColors.black,
+        fontSize = 32.sp,
+        fontWeight = FontWeight.Bold
+    )
+}
+
 
                 Text(
                     text = "Колода",

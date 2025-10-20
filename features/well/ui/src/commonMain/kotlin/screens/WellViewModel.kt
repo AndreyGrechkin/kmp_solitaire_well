@@ -142,6 +142,7 @@ class WellViewModel(
 
     private fun createNewGame() {
         cardsToDealCount = 5
+        deleteCardStack()
         timer.dispose()
         updateState {
             this.copy(

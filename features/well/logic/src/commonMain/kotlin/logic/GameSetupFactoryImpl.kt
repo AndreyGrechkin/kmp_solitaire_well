@@ -45,6 +45,7 @@ class GameSetupFactoryImpl : GameSetupFactory {
         oldGameState: GameState,
         currentGameState: GameState,
     ): MoveCardResult {
+        currentStacks.sortedBy { it.address.index }
         return when (currentGameState.state) {
             CardState.DEFAULT -> {
                 if (currentGameState.state == oldGameState.state) {

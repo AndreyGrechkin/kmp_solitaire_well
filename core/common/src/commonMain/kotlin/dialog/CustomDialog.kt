@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import theme.CardColors
 
 /**
  * Кастомный диалог для использования во всех модулях приложения.
@@ -31,7 +32,7 @@ import androidx.compose.ui.window.DialogProperties
 fun CustomDialog(
     controller: DialogController,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colorScheme.surface,
+    backgroundColor: Color = CardColors.dialogColor,
     overlayColor: Color = Color.Black.copy(alpha = 0.5f),
     dismissOnBackPress: Boolean = true,
     dismissOnClickOutside: Boolean = true,

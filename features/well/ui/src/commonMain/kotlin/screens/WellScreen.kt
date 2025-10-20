@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -28,6 +29,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -110,13 +113,30 @@ fun WellScreen() {
                                 Text("Есть не завершеный пасьянс")
                                 Row(modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
                                     horizontalArrangement = Arrangement.SpaceBetween) {
-                                    Button(onClick = {
+                                    Button(
+                                        modifier = Modifier
+                                            .padding(end = 4.dp)
+                                            .weight(1f),
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = Color(0xFFA5D6A7), // светлый зелёный
+                                            contentColor = Color(0xFF2E7D32)
+                                        ),
+                                        contentPadding = PaddingValues(horizontal = 2.dp),
+                                        onClick = {
                                         viewModel.onEvent(WellContract.WellEvent.OnLoadGame)
                                         dialogController.hideDialog()
                                     }) {
                                         Text(text = "Возобновить")
                                     }
-                                    Button(onClick = {
+                                    Button(
+                                        modifier = Modifier
+                                            .weight(1f),
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = Color(0xFFA5D6A7), // светлый зелёный
+                                            contentColor = Color(0xFF2E7D32)
+                                        ),
+                                        contentPadding = PaddingValues(horizontal = 2.dp),
+                                        onClick = {
                                         viewModel.onEvent(WellContract.WellEvent.OnNewGame)
                                         dialogController.hideDialog()
                                     }) {

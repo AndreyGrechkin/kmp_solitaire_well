@@ -20,6 +20,7 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.ui)
             implementation(compose.material)
+//            implementation(compos)
         }
         androidMain.dependencies {
             implementation(libs.androidx.core.ktx)
