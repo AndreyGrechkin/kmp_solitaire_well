@@ -18,9 +18,9 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.features.well.logic)
-            implementation(projects.data.resources)
-            implementation(projects.core.utils)
+            implementation(projects.features.well.domain)
+            implementation(projects.resources)
+            implementation(projects.uiKit)
             implementation(projects.core.common)
             implementation(projects.core.navigation)
             implementation(libs.kotlinx.coroutines.core)

@@ -15,7 +15,6 @@ import models.WellSlotType
 import tables.WellCardEntity
 import tables.WellGameStateEntity
 
-
 class WellRepositoryImpl(
     private val wellCardDao: WellCardDao,
     private val wellGameStateDao: WellGameStateDao,

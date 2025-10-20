@@ -1,5 +1,4 @@
 import di.wellLogicModule
-import models.UserData
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 import screens.WellViewModel

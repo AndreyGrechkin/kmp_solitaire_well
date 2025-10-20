@@ -7,7 +7,7 @@ plugins {
 
 compose.resources {
     publicResClass = true
-    packageOfResClass = "com.defey.solitairewell.data.resources"
+    packageOfResClass = "com.defey.solitairewell.resources"
     generateResClass = auto
 }
 
@@ -32,7 +32,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.defey.solitairewell.data.resources"
+    namespace = "com.defey.solitairewell.resources"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     defaultConfig { minSdk = libs.versions.android.minSdk.get().toInt() }
     compileOptions {

@@ -1,7 +1,7 @@
-package logic
+package factories
 
 import models.Card
-import models.CardResource
+import factories.CardResource
 import models.Deck
 import org.jetbrains.compose.resources.DrawableResource
 

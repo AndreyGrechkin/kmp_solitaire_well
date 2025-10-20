@@ -18,7 +18,7 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
             implementation(projects.core.common)
-            implementation(projects.core.utils)
+            implementation(projects.uiKit)
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
         }
@@ -26,7 +26,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.defey.solitairewell.features.well.logic"
+    namespace = "com.defey.solitairewell.features.well.domain"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     defaultConfig { minSdk = libs.versions.android.minSdk.get().toInt() }
     compileOptions {

@@ -33,10 +33,10 @@ plugins {
 }
 
 include(":composeApp")
-include(":core:utils")
+include(":uiKit")
 include(":core:common")
 include(":core:navigation")
-include(":data:resources")
+include(":resources")
 include(":data:database")
 include(":features:well:ui")
-include(":features:well:logic")
+include(":features:well:domain")

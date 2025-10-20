@@ -14,13 +14,16 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            implementation(projects.resources)
+            implementation(projects.core.common)
             implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.koin.core)
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.ui)
             implementation(compose.material)
-//            implementation(compos)
+            implementation(compose.components.resources)
         }
         androidMain.dependencies {
             implementation(libs.androidx.core.ktx)
@@ -30,7 +33,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.defey.solitairewell.core.utils"
+    namespace = "com.defey.solitairewell.uiKit"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
     defaultConfig { minSdk = libs.versions.android.minSdk.get().toInt() }
     compileOptions {

@@ -1,21 +1,25 @@
 package com.defey.solitairewell
 
 import commonModule
+import dataRepositoryModule
 import databaseModule
 import di.navigationModule
 import storageModule
+import uiKitModule
 import wellModule
 
 private val coreModules
     get() = listOf(
         commonModule,
-        navigationModule
+        navigationModule,
+        uiKitModule
     )
 
 private val dataModule
     get() = listOf(
         databaseModule,
-        storageModule
+        storageModule,
+        dataRepositoryModule
     )
 
 private val featureModules

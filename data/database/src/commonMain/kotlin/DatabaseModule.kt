@@ -2,6 +2,10 @@ import dao.WellCardDao
 import dao.WellGameStateDao
 import org.koin.core.module.Module
 import org.koin.dsl.module
+import repository.StorageRepository
+import repository.StorageRepositoryImpl
+import repository.WellRepository
+import repository.WellRepositoryImpl
 
 
 val databaseModule
@@ -10,6 +14,12 @@ val databaseModule
             single<WellCardDao> { get<AppDatabase>().wellCardDao() }
             single<WellGameStateDao> { get<AppDatabase>().wellGameStateDao() }
         }
+
+val dataRepositoryModule
+    get() = module {
+        single<StorageRepository>{ StorageRepositoryImpl(get()) }
+        factory<WellRepository> { WellRepositoryImpl(get(), get()) }
+    }
 
 val storageModule
     get() = module {

@@ -18,14 +18,10 @@ kotlin {
             implementation(libs.kotlinx.coroutines.android)
         }
         commonMain.dependencies {
-            implementation(projects.data.resources)
-            implementation(projects.data.database)
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
-            implementation(compose.components.resources)
-            implementation(compose.material3)
         }
     }
 }

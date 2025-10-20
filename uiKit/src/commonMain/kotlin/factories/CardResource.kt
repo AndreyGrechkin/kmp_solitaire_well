@@ -1,4 +1,4 @@
-package models
+package factories
 
 import org.jetbrains.compose.resources.DrawableResource
 
