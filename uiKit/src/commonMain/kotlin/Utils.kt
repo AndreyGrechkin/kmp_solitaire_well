@@ -43,4 +43,10 @@ fun getDensity(): Float {
     return LocalDensity.current.density
 }
 
+@Composable
+fun calculateHalfCardHeight(): Dp {
+    val cardWidth = rememberCardSize()
+    return (cardWidth / 0.7f) / 2
+}
+
 

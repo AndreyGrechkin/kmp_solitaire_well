@@ -1,6 +1,9 @@
+package com.defey.solitairewell
+
 import base.Router
 import base.TransitionConfig
 import base_viewModel.BaseViewModel
+import debugLog
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -17,7 +20,6 @@ import models.WellGameState
 import models.WellSlotType
 import repository.StorageRepository
 import repository.WellRepository
-import WellContract
 
 class WellViewModel(
     private val router: Router,
@@ -40,35 +42,49 @@ class WellViewModel(
         observeDeck()
         observeBackCard()
         handleLoadCardStack()
-//        createNewGame()
     }
 
     override suspend fun handleEvent(event: WellContract.WellEvent) {
         when (event) {
-            WellContract.WellEvent.OnNewGame -> createNewGame()
-            WellContract.WellEvent.OnBackMove -> {
-                countStep = countStep + 1
-                updateState {
-                    this.copy(
-                        stackWells = prevStackWells,
-                        gameState = gameState.copy(state = CardState.DEFAULT),
-                        gameMessage = "Ход: $countStep",
-                        availableBackMove = prevStackWells == state.value.stackWells,
-                        hintState = emptyList()
-                    )
-                }
-                saveCardStack()
-            }
-
-            is WellContract.WellEvent.NavigateToSettings -> openSettings()
             is WellContract.WellEvent.OnClickCard -> handleClickCard(event.state)
             is WellContract.WellEvent.OnAnimationFinished -> handleFinishedAnimation()
-            WellContract.WellEvent.OnHelp -> handleClickHelp()
             WellContract.WellEvent.OnLoadGame -> loadCardStack()
+            is WellContract.WellEvent.OnMenu -> handleClickMenu(event.menu)
         }
     }
 
-    private fun handleLoadCardStack(){
+    private fun handleClickMenu(menu: WellMenu) {
+        when (menu) {
+            WellMenu.NEW_GAME -> createNewGame()
+            WellMenu.BACK_MOVE -> handleBackMove()
+            WellMenu.HELP -> handleClickHelp()
+            WellMenu.SETTINGS -> openSettings()
+            WellMenu.RULES -> showRules()
+            WellMenu.OTHER_GAMES -> {}
+        }
+    }
+
+    private fun handleBackMove() {
+        countStep = countStep + 1
+        updateState {
+            this.copy(
+                stackWells = prevStackWells,
+                gameState = gameState.copy(state = CardState.DEFAULT),
+                gameMessage = "Ход: $countStep",
+                availableBackMove = prevStackWells == state.value.stackWells,
+                hintState = emptyList()
+            )
+        }
+        saveCardStack()
+    }
+
+    private fun showRules() {
+        viewModelScope.launch {
+            sendAction(WellContract.WellAction.ShowRulesDialog)
+        }
+    }
+
+    private fun handleLoadCardStack() {
         viewModelScope.launch {
             val cardStack = wellRepository.getWellCards()
             if (cardStack.isEmpty()) createNewGame()
@@ -115,13 +131,13 @@ class WellViewModel(
             cardsToDealCount = gameState.countGameStack ?: 5
             countStep = gameState.step ?: 0
             debugLog("load card2: ${cardsToDealCount}, ${cardStack.filter { it.address.type == WellSlotType.STOCK_PLAY }}")
-                updateState {
-                    this.copy(stackWells = cardStack)
-                }
+            updateState {
+                this.copy(stackWells = cardStack)
+            }
         }
     }
 
-    private fun deleteCardStack(){
+    private fun deleteCardStack() {
         viewModelScope.launch {
             wellRepository.deleteWellGameState()
             wellRepository.deleteWellCards()
@@ -234,12 +250,22 @@ class WellViewModel(
 
     private fun handleClickedStock() {
         val currentStacks = state.value.stackWells
-        debugLog("stock click: ${currentStacks.filter { it.address.type == WellSlotType.STOCK_PLAY }.map { it.address }}")
+        debugLog(
+            "stock click: ${
+                currentStacks.filter { it.address.type == WellSlotType.STOCK_PLAY }
+                    .map { it.address }
+            }"
+        )
         val result = gameSetupFactory.handleStockClick(currentStacks, cardsToDealCount)
         cardsToDealCount = result.newDealCount
         prevStackWells = state.value.stackWells
         prevGameState = state.value.gameState
-        debugLog("stock click2: ${result.updatedStacks.filter { it.address.type == WellSlotType.STOCK_PLAY }.map { it.address }}")
+        debugLog(
+            "stock click2: ${
+                result.updatedStacks.filter { it.address.type == WellSlotType.STOCK_PLAY }
+                    .map { it.address }
+            }"
+        )
         updateState {
             this.copy(
                 stackWells = result.updatedStacks,
@@ -249,7 +275,7 @@ class WellViewModel(
                 hintState = emptyList()
             )
         }
-        if (cardsToDealCount == 0) deleteCardStack() else  saveCardStack()
+        if (cardsToDealCount == 0) deleteCardStack() else saveCardStack()
         if (cardsToDealCount == 0) {
             debugLog("Пасьянс завершен")
 
@@ -279,11 +305,8 @@ class WellViewModel(
     }
 
     override fun onCleared() {
-        debugLog("onCleared1")
         saveCardStack()
-        debugLog("onCleared2")
         super.onCleared()
-        debugLog("onCleared3")
         timer.dispose()
     }
 

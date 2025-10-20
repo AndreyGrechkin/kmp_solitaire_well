@@ -1,3 +1,5 @@
+package com.defey.solitairewell
+
 import base_viewModel.UiAction
 import base_viewModel.UiEvent
 import base_viewModel.UiState
@@ -18,17 +20,19 @@ object WellContract {
     ) : UiState
 
     sealed interface WellEvent : UiEvent {
-        data object NavigateToSettings : WellEvent
+//        data object NavigateToSettings : WellEvent
         data class OnClickCard(val state: GameState) : WellEvent
+        data class OnMenu(val menu: WellMenu) : WellEvent
         data object OnAnimationFinished : WellEvent
-        data object OnNewGame : WellEvent
-        data object OnBackMove : WellEvent
-        data object OnHelp : WellEvent
+//        data object OnNewGame : WellEvent
+//        data object OnBackMove : WellEvent
+//        data object OnHelp : WellEvent
         data object OnLoadGame : WellEvent
     }
 
     sealed interface WellAction : UiAction {
        data object ShowRenewalDialog : WellAction
+       data object ShowRulesDialog : WellAction
 
     }
 }

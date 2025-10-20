@@ -7,7 +7,7 @@ import di.navigationModule
 import di.settingsModule
 import storageModule
 import uiKitModule
-import di.wellModule
+import com.defey.solitairewell.di.wellModule
 
 private val coreModules
     get() = listOf(
