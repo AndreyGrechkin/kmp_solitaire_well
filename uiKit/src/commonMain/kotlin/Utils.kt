@@ -1,8 +1,12 @@
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.painter.ColorPainter
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import factories.BackgroundItem
+import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun getScreenMetrics(): ScreenMetrics {
@@ -49,4 +53,11 @@ fun calculateHalfCardHeight(): Dp {
     return (cardWidth / 0.7f) / 2
 }
 
+@Composable
+fun BackgroundItem.toPainter(): Painter {
+    return when (this) {
+        is BackgroundItem.ImageRes -> painterResource( resource)
+        is BackgroundItem.ColorVal -> ColorPainter(color)
+    }
+}
 

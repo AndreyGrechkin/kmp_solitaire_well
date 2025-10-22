@@ -41,6 +41,15 @@ internal class JvmKeyValueStorage(
         _updates.emit(key to null)
     }
 
+    override fun setString(key: String, value: String) {
+        properties.setProperty(key, value)
+        saveProperties()
+    }
+
+    override fun getStringTab(key: String): String? {
+        return properties.getProperty(key)
+    }
+
     override fun getStringFlow(key: String): Flow<String?> {
         return _updates
             .filter { it.first == key }

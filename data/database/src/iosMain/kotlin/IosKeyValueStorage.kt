@@ -27,6 +27,15 @@ internal class IosKeyValueStorage : KeyValueStorage {
         _updates.emit(key to null)
     }
 
+    override fun setString(key: String, value: String) {
+        userDefaults.setObject(value, forKey = key)
+        userDefaults.synchronize()
+    }
+
+    override fun getStringTab(key: String): String? {
+        return userDefaults.stringForKey(key)
+    }
+
     override fun getStringFlow(key: String): Flow<String?> {
         return _updates
             .filter { it.first == key }

@@ -1,12 +1,8 @@
 package di
 
-import base.NavigationLogger
-import base.NavigationLoggerImpl
-import base.Router
-import base.RouterImpl
+import base.NavigationManager
 import org.koin.dsl.module
 
 val navigationModule = module {
-    single<Router> { RouterImpl(get()) }
-    single<NavigationLogger> { NavigationLoggerImpl() }
+    single<NavigationManager> { NavigationManager() }
 }

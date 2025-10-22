@@ -11,4 +11,11 @@ interface StorageRepository {
     suspend fun setBackCard(index: Int)
     suspend fun getBackCard(): Int
     fun getBackCardFlow(): Flow<Int>
+
+    suspend fun setBackgroundIndex(index: Int)
+    suspend fun getBackgroundIndex(): Int
+    fun getBackgroundIndexFlow(): Flow<Int>
+
+    fun setLanguage(iso: String)
+    fun getLanguage(): String
 }

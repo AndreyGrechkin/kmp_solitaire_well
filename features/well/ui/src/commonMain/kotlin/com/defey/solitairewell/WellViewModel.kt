@@ -1,7 +1,6 @@
 package com.defey.solitairewell
 
-import base.Router
-import base.TransitionConfig
+import base.NavigationManager
 import base_viewModel.BaseViewModel
 import debugLog
 import kotlinx.coroutines.flow.launchIn
@@ -22,7 +21,7 @@ import repository.StorageRepository
 import repository.WellRepository
 
 class WellViewModel(
-    private val router: Router,
+    private val navigationManager: NavigationManager,
     private val gameSetupFactory: GameSetupFactory,
     private val timer: CommonTimer,
     private val wellRepository: WellRepository,
@@ -41,6 +40,7 @@ class WellViewModel(
     init {
         observeDeck()
         observeBackCard()
+        observeBackgroundIndex()
         handleLoadCardStack()
     }
 
@@ -107,6 +107,14 @@ class WellViewModel(
         storageRepository.getBackCardFlow().onEach { response ->
             updateState {
                 this.copy(backCardIndex = response)
+            }
+        }.launchIn(viewModelScope)
+    }
+
+    private fun observeBackgroundIndex() {
+        storageRepository.getBackgroundIndexFlow().onEach { response ->
+            updateState {
+                this.copy(backgroundItemIndex = response)
             }
         }.launchIn(viewModelScope)
     }
@@ -301,7 +309,7 @@ class WellViewModel(
 
     fun openSettings() {
         val settingsData = UserData("Player1", 100)
-        router.navigateTo(Screen.Settings(settingsData), TransitionConfig.Companion.SLIDE_VERTICAL)
+        navigationManager.navigate(Screen.Settings(settingsData))
     }
 
     override fun onCleared() {

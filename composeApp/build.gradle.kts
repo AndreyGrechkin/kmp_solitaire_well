@@ -62,6 +62,7 @@ kotlin {
             implementation(projects.features.settings.ui)
             implementation(libs.koin.compose)
             implementation(libs.koin.core)
+            implementation(libs.androidx.navigation)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

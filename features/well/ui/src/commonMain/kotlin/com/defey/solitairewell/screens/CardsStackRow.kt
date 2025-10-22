@@ -12,12 +12,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.defey.solitairewell.resources.Res
+import com.defey.solitairewell.resources.well_waste
 import factories.CardResourcesFactory
 import model.GameState
 import models.Deck
 import models.WellCardStack
 import models.WellSlotAddress
 import models.WellSlotType
+import org.jetbrains.compose.resources.stringResource
 import theme.CardColors
 
 @Composable
@@ -74,7 +77,7 @@ fun CardsStackRow(
                 onClick = onClick
             )
             Text(
-                text = "СКЛАД",
+                text = stringResource(Res.string.well_waste),
                 color = CardColors.black,
                 fontSize = 16.sp,
                 modifier = Modifier

@@ -1,26 +1,32 @@
 package managers
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import repository.StorageRepository
 
-class LanguageManagerImpl : LanguageManager {
-    override var currentLanguage by mutableStateOf(AppLanguage.SYSTEM)
-        private set
+class LanguageManagerImpl(
+    private val localization: Localization,
+    private val repository: StorageRepository,
+) : LanguageManager {
+    override val currentLanguage : AppLanguage
+        get() = AppLanguage.fromLanguageCode(repository.getLanguage())
 
     override fun setLanguage(language: AppLanguage) {
-        currentLanguage = language
+        repository.setLanguage(language.iso)
+
+        if (language != AppLanguage.SYSTEM) {
+            localization.applyLanguage(language.iso)
+        } else {
+            localization.applyLanguage(localization.getSystemLanguageCode())
+        }
     }
 
-    override fun getCurrentAppLocale(): AppLocale {
-        return when (currentLanguage) {
-            AppLanguage.SYSTEM -> createSystemAppLocale()
-            AppLanguage.ENGLISH -> createAppLocale("en")
-            AppLanguage.RUSSIAN -> createAppLocale("ru")
+    init {
+        when (currentLanguage) {
+            AppLanguage.SYSTEM -> localization.applyLanguage(localization.getSystemLanguageCode())
+            else -> localization.applyLanguage(currentLanguage.iso)
         }
     }
 
     override fun getAvailableLanguages(): List<AppLanguage> {
-        return AppLanguage.entries.toList()
+        return AppLanguage.entries
     }
 }

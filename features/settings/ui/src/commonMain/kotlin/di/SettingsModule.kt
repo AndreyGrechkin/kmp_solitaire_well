@@ -7,5 +7,5 @@ import SettingsViewModel
 val settingsModule
     get() = module {
         includes(settingsDomainModule)
-        viewModel { SettingsViewModel(get(), get()) }
+        viewModel { SettingsViewModel(get(), get(), get()) }
     }

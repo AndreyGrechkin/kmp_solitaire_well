@@ -9,6 +9,8 @@ class StorageRepositoryImpl(private val storage: KeyValueStorage): StorageReposi
     companion object {
         private const val DECK_KEY = "deck"
         private const val BACK_CARD_KEY = "back_card_key"
+        private const val LANGUAGE_KEY = "language_key"
+        private const val BACKGROUND_INDEX_KEY = "background_index_key"
         private const val DEAL_COUNT_KEY = "deal_count_key"
     }
 
@@ -40,5 +42,27 @@ class StorageRepositoryImpl(private val storage: KeyValueStorage): StorageReposi
         return storage.getStringFlow(BACK_CARD_KEY).map { value ->
             value?.toInt() ?: 0
         }
+    }
+
+    override suspend fun setBackgroundIndex(index: Int) {
+        storage.putString(BACKGROUND_INDEX_KEY, index.toString())
+    }
+
+    override suspend fun getBackgroundIndex(): Int {
+        return storage.getString(BACKGROUND_INDEX_KEY)?.toInt() ?: 0
+    }
+
+    override fun getBackgroundIndexFlow(): Flow<Int> {
+        return storage.getStringFlow(BACKGROUND_INDEX_KEY).map { value ->
+            value?.toInt() ?: 0
+        }
+    }
+
+    override fun setLanguage(iso: String) {
+        storage.setString(LANGUAGE_KEY, iso)
+    }
+
+    override fun getLanguage(): String {
+        return storage.getStringTab(LANGUAGE_KEY) ?: ""
     }
 }

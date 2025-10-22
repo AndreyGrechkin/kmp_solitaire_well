@@ -1,5 +1,6 @@
 package screen
 
+import SettingsContract
 import SettingsViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -46,18 +47,22 @@ import com.defey.solitairewell.resources.Res
 import debugLog
 import dialog.CustomDialog
 import dialog.rememberDialogController
+import factories.BackgroundItem
 import factories.CardResourcesFactory
 import models.Card
 import factories.CardResource
+import managers.AppLanguage
 import models.Deck
 import models.Rank
 import models.Suit
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 import rememberCardSize
 import theme.CardColors
+import toPainter
 
 @Composable
 fun SettingsScreen() {
@@ -67,13 +72,22 @@ fun SettingsScreen() {
     val dialogController = rememberDialogController()
 
     val state by vm.state.collectAsState()
+
     Scaffold { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .background(CardColors.defaultBackground)
+//                .painterBackground(background)
+//                .background(background)
         ) {
+
+            Image(
+                painter =  cardFactory.backGround[state.backgroundItemIndex].toPainter(),
+                contentDescription = null,
+                modifier = Modifier.matchParentSize(),
+                contentScale = ContentScale.Crop
+            )
             Column(
                 modifier = Modifier.fillMaxSize()
                     .padding(16.dp),
@@ -165,7 +179,7 @@ Box() {
                                         state.backCardIndex,
                                         onConfirm = {
                                             // Логика подтверждения специфичная для Well модуля
-                                            debugLog("onConfirm")
+                                            debugLog("onConfirm card")
                                             dialogController.hideDialog()
                                             vm.onEvent(
                                                 SettingsContract.SettingsEvent.SaveBackCard(
@@ -192,15 +206,67 @@ Box() {
                     fontWeight = FontWeight.Bold
                 )
 
+                CardBackGroundSlot(
+                    backCard = cardFactory.createBackGround(state.backgroundItemIndex),
+                    modifier = Modifier
+                        .padding(vertical = 16.dp)
+                        .clickable(
+                            onClick = {
+                                dialogController.showDialog {
+                                    BackGround(
+                                        cardFactory,
+                                        state.backgroundItemIndex,
+                                        onConfirm = {
+                                            // Логика подтверждения специфичная для Well модуля
+                                            debugLog("onConfirm bacground")
+                                            dialogController.hideDialog()
+                                            vm.onEvent(
+                                                SettingsContract.SettingsEvent.SaveBackgroundItem(
+                                                    it
+                                                )
+                                            )
+                                        },
+                                        onDismiss = {
+                                            debugLog("onDismiss")
+                                            dialogController.hideDialog()
+                                        }
+                                    )
+                                }
+                            }
+                        )
+                )
+
 
                 Text(
-                    text = "Отключение рекламы",
+                    text = stringResource(Res.string.settings_language_title),
                     modifier = Modifier,
                     color = CardColors.black,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold
                 )
 
+                Text(
+                    text = state.currentLanguage.displayName,
+                    modifier = Modifier.clickable(
+                        onClick = {
+                            dialogController.showDialog {
+                                LanguageDialog(
+                                    currentLanguage = state.currentLanguage,
+                                    onConfirm = {
+                                        vm.onEvent(SettingsContract.SettingsEvent.SaveLanguage(it))
+                                        dialogController.hideDialog()
+                                    },
+                                    onDismiss = {
+                                        dialogController.hideDialog()
+                                    }
+                                )
+                            }
+                        }
+                    ),
+                    color = CardColors.black,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium
+                )
             }
         }
         CustomDialog(controller = dialogController,
@@ -208,6 +274,7 @@ Box() {
         )
     }
 }
+
 
 @Composable
 fun CardFaceRow(
@@ -325,6 +392,33 @@ fun CardBackSlot(
                 modifier = Modifier.fillMaxSize().padding(4.dp),
             )
         }
+
+}
+
+@Composable
+fun CardBackGroundSlot(
+    backCard: BackgroundItem,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .width(rememberCardSize())
+            .aspectRatio(0.7f)
+            .padding(end = 2.dp)
+            .clip(MaterialTheme.shapes.medium)
+            .background(color = CardColors.cardFront)
+            .border(
+                width =  1.dp ,
+                color = CardColors.black,
+                shape = MaterialTheme.shapes.medium
+            )
+    ) {
+        Image(
+            painter = backCard.toPainter(),
+            contentDescription = "Card back",
+            modifier = Modifier.fillMaxSize().padding(4.dp),
+        )
+    }
 
 }
 
@@ -486,3 +580,137 @@ fun BackCard(
         }
 }
 
+
+@Composable
+fun LanguageDialog(
+    currentLanguage: AppLanguage,
+    onConfirm: (AppLanguage) -> Unit,
+    onDismiss: () -> Unit
+) {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .padding(8.dp)) {
+        Icon(
+            painter = painterResource(Res.drawable.ic_cancel_24),
+            contentDescription = "Закрыть",
+            tint = CardColors.heart,
+            modifier = Modifier
+                .size(24.dp)
+                .align(Alignment.End)
+                .clickable(
+                    onClick = onDismiss
+                ),
+
+            )
+        Text(
+            text = "Выберите фон",
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            style = MaterialTheme.typography.headlineMedium
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        LazyColumn {
+            items(AppLanguage.entries) { item ->
+                Text(
+                    text = item.displayName,
+                    modifier = Modifier
+                        .clickable{ onConfirm(item) }
+                        .background(if (currentLanguage == item) {
+                            Color.Green
+                        } else {
+                            CardColors.cardFront
+                        }),
+                    color = CardColors.black,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun BackGround(
+    cardFactory: CardResourcesFactory,
+    selectedBack: Int? = null,
+    modifier: Modifier = Modifier,
+    onConfirm: (Int) -> Unit,
+    onDismiss: () -> Unit
+){
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .padding(8.dp)) {
+        Icon(
+            painter = painterResource(Res.drawable.ic_cancel_24),
+            contentDescription = "Закрыть",
+            tint = CardColors.heart,
+            modifier = Modifier
+                .size(24.dp)
+                .align(Alignment.End)
+                .clickable(
+                    onClick = onDismiss
+                ),
+
+            )
+        Text(
+            text = "Выберите фон",
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            style = MaterialTheme.typography.headlineMedium
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(4),
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            itemsIndexed(cardFactory.backGround) { index, item ->
+                val isSelected = index == selectedBack
+                Box(
+                    modifier = modifier
+                        .width(rememberCardSize())
+                        .aspectRatio(0.7f)
+                        .padding(end = 2.dp)
+                        .clickable { onConfirm(index) }
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(color = CardColors.cardFront)
+                        .border(
+                            width =  1.dp ,
+                            color = CardColors.black,
+                            shape = MaterialTheme.shapes.medium
+                        )
+                ) {
+
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth().align(Alignment.Center),
+                        elevation = CardDefaults.cardElevation(
+                            defaultElevation = if (isSelected) 4.dp else 4.dp
+                        ),
+                        colors = CardDefaults.cardColors(
+                            containerColor = if (isSelected) {
+                                Color.Green
+                            } else {
+                                CardColors.cardFront
+                            }
+                        )
+                    ) {
+                        Box(
+                            modifier = Modifier.padding(4.dp),
+                            contentAlignment = Alignment.Center
+
+                        ) {
+                            Image(
+                                painter = item.toPainter(),
+                                contentDescription = "Card back",
+                                modifier = Modifier.fillMaxSize().padding(0.dp),
+                            )
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+}

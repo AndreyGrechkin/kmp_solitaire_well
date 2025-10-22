@@ -31,6 +31,14 @@ internal class AndroidKeyValueStorage(
         _updates.emit(key to null)
     }
 
+    override fun setString(key: String, value: String) {
+        sharedPreferences.edit { putString(key, value) }
+    }
+
+    override fun getStringTab(key: String): String? {
+        return sharedPreferences.getString(key, null)
+    }
+
     override fun getStringFlow(key: String): Flow<String?> {
         return _updates
             .filter { it.first == key }

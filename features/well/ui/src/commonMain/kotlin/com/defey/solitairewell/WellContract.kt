@@ -16,17 +16,14 @@ object WellContract {
         val availableBackMove: Boolean = false,
         val hintState: List<GameState> = emptyList(),
         val deck: Deck = Deck.FIRST,
-        val backCardIndex: Int = 0
+        val backCardIndex: Int = 0,
+        val backgroundItemIndex: Int = 0,
     ) : UiState
 
     sealed interface WellEvent : UiEvent {
-//        data object NavigateToSettings : WellEvent
         data class OnClickCard(val state: GameState) : WellEvent
         data class OnMenu(val menu: WellMenu) : WellEvent
         data object OnAnimationFinished : WellEvent
-//        data object OnNewGame : WellEvent
-//        data object OnBackMove : WellEvent
-//        data object OnHelp : WellEvent
         data object OnLoadGame : WellEvent
     }
 

@@ -8,12 +8,14 @@ import di.settingsModule
 import storageModule
 import uiKitModule
 import com.defey.solitairewell.di.wellModule
+import languageModule
 
 private val coreModules
     get() = listOf(
         commonModule,
         navigationModule,
-        uiKitModule
+        uiKitModule,
+        languageModule
     )
 
 private val dataModule

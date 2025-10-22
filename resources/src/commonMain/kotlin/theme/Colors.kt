@@ -39,6 +39,11 @@ object CardColors {
     val spade = Color(0xFF000000)
     val selected = Color(0xFFFF8000)
     val defaultBackground = Color(0xFF2E7D32)
+    val lightBlue = Color(0xFF0052BD)
+    val lightYellow = Color(0xFFDFF029)
+    val lightRed = Color(0xFFFF5B5B)
+    val lightBlueGreen = Color(0xFF5BEFFF)
+    val lightBrown = Color(0xFF987D70)
     val dialogColor = Color(0xFFE8F5E9)
     val defaultEmptyCardSlot = Color(0x55212121)
 }
