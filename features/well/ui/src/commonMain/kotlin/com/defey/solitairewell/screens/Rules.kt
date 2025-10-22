@@ -11,132 +11,163 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.defey.solitairewell.resources.Res
+import com.defey.solitairewell.resources.well_rules_close_button_title
+import com.defey.solitairewell.resources.well_rules_deck_first
+import com.defey.solitairewell.resources.well_rules_deck_second
+import com.defey.solitairewell.resources.well_rules_deck_third
+import com.defey.solitairewell.resources.well_rules_deck_title
+import com.defey.solitairewell.resources.well_rules_end_game_lose
+import com.defey.solitairewell.resources.well_rules_end_game_title
+import com.defey.solitairewell.resources.well_rules_end_game_win
+import com.defey.solitairewell.resources.well_rules_how_playing_build_first
+import com.defey.solitairewell.resources.well_rules_how_playing_build_second
+import com.defey.solitairewell.resources.well_rules_how_playing_build_third
+import com.defey.solitairewell.resources.well_rules_how_playing_build_title
+import com.defey.solitairewell.resources.well_rules_how_playing_title
+import com.defey.solitairewell.resources.well_rules_moved_wells_first
+import com.defey.solitairewell.resources.well_rules_moved_wells_second
+import com.defey.solitairewell.resources.well_rules_moved_wells_title
+import com.defey.solitairewell.resources.well_rules_purpose_game_desc
+import com.defey.solitairewell.resources.well_rules_purpose_game_title
+import com.defey.solitairewell.resources.well_rules_title
+import com.defey.solitairewell.resources.well_rules_waste_first
+import com.defey.solitairewell.resources.well_rules_waste_second
+import com.defey.solitairewell.resources.well_rules_waste_title
+import org.jetbrains.compose.resources.stringResource
 import theme.AppTypography
+import theme.CardColors
 
 @Composable
 fun RulesContent(
     onConfirm: () -> Unit,
 ) {
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .verticalScroll(rememberScrollState())
-        .padding(24.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+            .padding(24.dp)
+    ) {
         Text(
-            text = "Правила пасьянса \"Колодец\"",
+            text = stringResource(Res.string.well_rules_title),
             modifier = Modifier
                 .align(Alignment.CenterHorizontally),
-            style = AppTypography.headlineMedium)
+            style = AppTypography.headlineMedium
+        )
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Цель игры",
+            text = stringResource(Res.string.well_rules_purpose_game_title),
             style = AppTypography.titleMedium
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Собрать 4 фундамента - в каждый нужно сложить все карты одной масти (по 2 экземпляра от Короля до Туза).",
+            text = stringResource(Res.string.well_rules_purpose_game_desc),
             style = AppTypography.bodyMedium
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Как играть",
+            text = stringResource(Res.string.well_rules_how_playing_title),
             style = AppTypography.titleMedium
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "1. Сборка фундаментов",
+            text = stringResource(Res.string.well_rules_how_playing_build_title),
             style = AppTypography.titleSmall
         )
         Text(
-            text = "- На пустой фундамент можно положить Короля).",
+            text = stringResource(Res.string.well_rules_how_playing_build_first),
             style = AppTypography.bodyMedium
         )
         Text(
-            text = "- Далее кладите карты той же масти по убыванию: Дама, Валет, 10... 2, Туз).",
+            text = stringResource(Res.string.well_rules_how_playing_build_second),
             style = AppTypography.bodyMedium
         )
         Text(
-            text = "- После Туза снова кладите Короля, затем Даму, Валета... и так пока не соберете все 26 карт масти).",
+            text = stringResource(Res.string.well_rules_how_playing_build_third),
             style = AppTypography.bodyMedium
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "2. Склад",
+            text = stringResource(Res.string.well_rules_waste_title),
             style = AppTypography.titleSmall
-            )
+        )
         Text(
-            text = "- На склад можно класть карты одной масти по возрастанию, начиная с Туза).",
+            text = stringResource(Res.string.well_rules_waste_first),
             style = AppTypography.bodyMedium
         )
         Text(
-            text = "- На пустой склад можно положить только Туза",
+            text = stringResource(Res.string.well_rules_waste_second),
             style = AppTypography.bodyMedium
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "3. Перемещение между колодцами",
+            text = stringResource(Res.string.well_rules_moved_wells_title),
             style = AppTypography.titleSmall
         )
         Text(
-            text = "- Во внешние колодцы можно класть карты той же масти по возрастанию",
+            text = stringResource(Res.string.well_rules_moved_wells_first),
             style = AppTypography.bodyMedium
         )
         Text(
-            text = "- На пустой внешний колодец можно положить карту только из внутреннего колодца который рядом.",
+            text = stringResource(Res.string.well_rules_moved_wells_second),
             style = AppTypography.bodyMedium
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "- 4. Работа с запасом",
+            text = stringResource(Res.string.well_rules_deck_title),
             style = AppTypography.titleSmall
         )
         Text(
-            text = "- Нажимайте на запас, чтобы выложить карты (сначала выкладывается по 5 карт)",
+            text = stringResource(Res.string.well_rules_deck_first),
             style = AppTypography.bodyMedium
         )
         Text(
-            text = "- Когда запас полностью разложен, он собирается обратно",
+            text = stringResource(Res.string.well_rules_deck_second),
             style = AppTypography.bodyMedium
         )
         Text(
-            text = "- При следующем раскладе выкладывается на 1 карту меньше (4, потом 3, и т.д.)",
+            text = stringResource(Res.string.well_rules_deck_third),
             style = AppTypography.bodyMedium
         )
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "Конец игры",
+            text = stringResource(Res.string.well_rules_end_game_title),
             style = AppTypography.titleMedium
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Вы выиграли: если собрали все 4 фундамента (по 26 карт в каждом)",
+            text = stringResource(Res.string.well_rules_end_game_win),
             style = AppTypography.bodyMedium
-            )
+        )
         Text(
-            text = "Игра проиграна: если нет возможных ходов, но карты остались в колодцах",
+            text = stringResource(Res.string.well_rules_end_game_lose),
             style = AppTypography.bodyMedium
         )
 
 
-        Row(modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
-            horizontalArrangement = Arrangement.Center) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(top = 16.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
             Button(
                 onClick = onConfirm,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFA5D6A7), // светлый зелёный
-                    contentColor = Color(0xFF2E7D32)
+                    containerColor = CardColors.containerButtonColor,
+                    contentColor = CardColors.contentButtonColor
                 )
             ) {
-                Text(text = "Понятно")
+                Text(
+                    text = stringResource(Res.string.well_rules_close_button_title),
+                    style = AppTypography.titleSmall
+                )
             }
         }
     }

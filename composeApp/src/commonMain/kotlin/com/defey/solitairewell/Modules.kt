@@ -4,7 +4,7 @@ import commonModule
 import dataRepositoryModule
 import databaseModule
 import di.navigationModule
-import di.settingsModule
+import com.defey.solitairewell.di.settingsModule
 import storageModule
 import uiKitModule
 import com.defey.solitairewell.di.wellModule

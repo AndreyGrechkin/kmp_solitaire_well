@@ -42,7 +42,8 @@ fun WellSlotBox(
         Column {
             CreateCardSlot(
                 stackList = stackWells,
-                address = WellSlotAddress(WellSlotType.EXTERNAL_WELL,
+                address = WellSlotAddress(
+                    WellSlotType.EXTERNAL_WELL,
                     WellViewModel.Companion.TOP_INDEX
                 ),
                 cardFactory = cardFactory,
@@ -56,7 +57,8 @@ fun WellSlotBox(
 
             CreateCardSlot(
                 stackList = stackWells,
-                address = WellSlotAddress(WellSlotType.INNER_WELL,
+                address = WellSlotAddress(
+                    WellSlotType.INNER_WELL,
                     WellViewModel.Companion.TOP_INDEX
                 ),
                 cardFactory = cardFactory,
@@ -70,7 +72,8 @@ fun WellSlotBox(
 
             CreateCardSlot(
                 stackList = stackWells,
-                address = WellSlotAddress(WellSlotType.INNER_WELL,
+                address = WellSlotAddress(
+                    WellSlotType.INNER_WELL,
                     WellViewModel.Companion.BOTTOM_INDEX
                 ),
                 cardFactory = cardFactory,
@@ -84,7 +87,8 @@ fun WellSlotBox(
 
             CreateCardSlot(
                 stackList = stackWells,
-                address = WellSlotAddress(WellSlotType.EXTERNAL_WELL,
+                address = WellSlotAddress(
+                    WellSlotType.EXTERNAL_WELL,
                     WellViewModel.Companion.BOTTOM_INDEX
                 ),
                 cardFactory = cardFactory,
@@ -102,10 +106,11 @@ fun WellSlotBox(
                 .padding(top = calculateHalfCardHeight()),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row() {
+            Row {
                 CreateCardSlot(
                     stackList = stackWells,
-                    address = WellSlotAddress(WellSlotType.FOUNDATION,
+                    address = WellSlotAddress(
+                        WellSlotType.FOUNDATION,
                         WellViewModel.Companion.LEFT_INDEX
                     ),
                     cardFactory = cardFactory,
@@ -124,7 +129,8 @@ fun WellSlotBox(
                 )
                 CreateCardSlot(
                     stackList = stackWells,
-                    address = WellSlotAddress(WellSlotType.FOUNDATION,
+                    address = WellSlotAddress(
+                        WellSlotType.FOUNDATION,
                         WellViewModel.Companion.TOP_INDEX
                     ),
                     cardFactory = cardFactory,
@@ -136,10 +142,11 @@ fun WellSlotBox(
                     onClick = onClick
                 )
             }
-            Row() {
+            Row {
                 CreateCardSlot(
                     stackList = stackWells,
-                    address = WellSlotAddress(WellSlotType.EXTERNAL_WELL,
+                    address = WellSlotAddress(
+                        WellSlotType.EXTERNAL_WELL,
                         WellViewModel.Companion.LEFT_INDEX
                     ),
                     cardFactory = cardFactory,
@@ -153,7 +160,8 @@ fun WellSlotBox(
 
                 CreateCardSlot(
                     stackList = stackWells,
-                    address = WellSlotAddress(WellSlotType.INNER_WELL,
+                    address = WellSlotAddress(
+                        WellSlotType.INNER_WELL,
                         WellViewModel.Companion.LEFT_INDEX
                     ),
                     cardFactory = cardFactory,
@@ -173,7 +181,8 @@ fun WellSlotBox(
                 )
                 CreateCardSlot(
                     stackList = stackWells,
-                    address = WellSlotAddress(WellSlotType.INNER_WELL,
+                    address = WellSlotAddress(
+                        WellSlotType.INNER_WELL,
                         WellViewModel.Companion.RIGHT_INDEX
                     ),
                     cardFactory = cardFactory,
@@ -187,7 +196,8 @@ fun WellSlotBox(
 
                 CreateCardSlot(
                     stackList = stackWells,
-                    address = WellSlotAddress(WellSlotType.EXTERNAL_WELL,
+                    address = WellSlotAddress(
+                        WellSlotType.EXTERNAL_WELL,
                         WellViewModel.Companion.RIGHT_INDEX
                     ),
                     cardFactory = cardFactory,
@@ -200,10 +210,11 @@ fun WellSlotBox(
                 )
 
             }
-            Row() {
+            Row {
                 CreateCardSlot(
                     stackList = stackWells,
-                    address = WellSlotAddress(WellSlotType.FOUNDATION,
+                    address = WellSlotAddress(
+                        WellSlotType.FOUNDATION,
                         WellViewModel.Companion.BOTTOM_INDEX
                     ),
                     cardFactory = cardFactory,
@@ -222,7 +233,8 @@ fun WellSlotBox(
                 )
                 CreateCardSlot(
                     stackList = stackWells,
-                    address = WellSlotAddress(WellSlotType.FOUNDATION,
+                    address = WellSlotAddress(
+                        WellSlotType.FOUNDATION,
                         WellViewModel.Companion.RIGHT_INDEX
                     ),
                     cardFactory = cardFactory,
@@ -237,4 +249,3 @@ fun WellSlotBox(
         }
     }
 }
-

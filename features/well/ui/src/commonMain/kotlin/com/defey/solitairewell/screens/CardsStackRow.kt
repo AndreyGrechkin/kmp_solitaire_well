@@ -41,7 +41,6 @@ fun CardsStackRow(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Column {
-            // Колода (слева)
             CreateCardSlot(
                 stackList = stackWells,
                 address = WellSlotAddress(WellSlotType.STOCK),

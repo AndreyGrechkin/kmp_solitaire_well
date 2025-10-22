@@ -52,7 +52,7 @@ fun AnimatedBorder(
             CardState.SUCCESS -> Color.Green
             CardState.ERROR -> Color.Red
             CardState.HINTED -> Color.Blue
-            CardState.DEFAULT -> Color.Transparent
+            CardState.DEFAULT -> if (stackSize == 0) Color.Transparent else Color.Black
         },
         animationSpec = when (state) {
             CardState.SUCCESS,
@@ -102,7 +102,7 @@ fun AnimatedBorder(
                 .aspectRatio(0.7f)
                 .clip(MaterialTheme.shapes.medium)
                 .border(
-                    width = if (state != CardState.DEFAULT) 2.dp else 0.dp,
+                    width = if (state != CardState.DEFAULT) 2.dp else 1.dp,
                     color = actualBorderColor,
                     shape = MaterialTheme.shapes.medium
                 )

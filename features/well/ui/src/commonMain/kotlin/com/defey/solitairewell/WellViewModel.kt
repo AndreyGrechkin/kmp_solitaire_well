@@ -309,7 +309,7 @@ class WellViewModel(
 
     fun openSettings() {
         val settingsData = UserData("Player1", 100)
-        navigationManager.navigate(Screen.Settings(settingsData))
+        navigationManager.navigate(Screen.Settings.createRoute(userName = settingsData.username, score = settingsData.score))
     }
 
     override fun onCleared() {

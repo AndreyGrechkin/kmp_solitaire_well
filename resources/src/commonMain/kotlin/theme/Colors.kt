@@ -38,6 +38,9 @@ object CardColors {
     val club = Color(0xFF000000)
     val spade = Color(0xFF000000)
     val selected = Color(0xFFFF8000)
+    val selectedDialog = Color.Green
+    val containerButtonColor = Color(0xFFA5D6A7)
+    val contentButtonColor = Color(0xFF2E7D32)
     val defaultBackground = Color(0xFF2E7D32)
     val lightBlue = Color(0xFF0052BD)
     val lightYellow = Color(0xFFDFF029)

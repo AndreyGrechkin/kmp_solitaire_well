@@ -13,6 +13,13 @@ val AppTypography = Typography(
         fontSize = 57.sp
     ),
     // Добавляем все необходимые стили для правил
+    headlineLarge =  TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 32.sp,
+        lineHeight = 40.0.sp,
+        letterSpacing = 0.sp
+    ),
     headlineMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.SemiBold,

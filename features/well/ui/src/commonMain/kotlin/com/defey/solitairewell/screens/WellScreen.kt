@@ -75,11 +75,19 @@ fun WellScreen() {
         }
     }
 
-    Scaffold { paddingValues ->
+    Scaffold(
+        topBar = {
+            GameNavigationBar(
+                availableBackMove = state.availableBackMove,
+                availableHint = state.availableHint
+            ) {
+                viewModel.onEvent(OnMenu(it))
+            }
+        }
+    ) { paddingValues ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
         ) {
             Image(
                 painter =  cardFactory.backGround[state.backgroundItemIndex].toPainter(),
@@ -92,15 +100,9 @@ fun WellScreen() {
                 modifier = Modifier
                     .verticalScroll(scrollState)
                     .fillMaxWidth()
+                    .padding(paddingValues)
                     .padding(16.dp),
             ) {
-
-                GameNavigationBar(
-                    availableBackMove = state.availableBackMove,
-                    availableHint = state.availableHint
-                ) {
-                    viewModel.onEvent(OnMenu(it))
-                }
 
                 ActiveCardsStackRow(
                     modifier = Modifier
@@ -119,6 +121,7 @@ fun WellScreen() {
                         viewModel.onEvent(OnClickCard(state = state))
                     }
                 )
+
                 Box {
                     CardsStackRow(
                         stackWells = state.stackWells,

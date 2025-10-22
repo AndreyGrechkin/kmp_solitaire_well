@@ -1,7 +1,8 @@
+package com.defey.solitairewell
+
 import base_viewModel.UiAction
 import base_viewModel.UiEvent
 import base_viewModel.UiState
-import factories.BackgroundItem
 import managers.AppLanguage
 import models.Deck
 
@@ -20,7 +21,6 @@ object SettingsContract {
         data class SaveBackgroundItem(val index: Int) : SettingsEvent
         data class SaveLanguage(val language: AppLanguage) : SettingsEvent
     }
-    sealed interface SettingsAction : UiAction {
 
-    }
+    sealed interface SettingsAction : UiAction
 }

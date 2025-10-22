@@ -5,16 +5,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import base.NavigationCommand
 import base.NavigationManager
 import com.defey.solitairewell.screens.WellScreen
 import models.Screen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
-import screen.SettingsScreen
+import com.defey.solitairewell.screen.SettingsScreen
 import theme.AppTheme
 
 @Composable
@@ -60,14 +62,21 @@ fun App() {
             composable(Screen.WellMainScreen.route) {
                 WellScreen()
             }
-            composable(Screen.Settings.ROUTE) { backStackEntry ->
+
+            composable(
+                route = Screen.Settings.ROUTE,
+                arguments = listOf(
+                    navArgument("userName") {
+                        type = NavType.StringType
+                    },
+                    navArgument("score") {
+                        type = NavType.IntType
+                        defaultValue = 0
+                    }
+                )
+            ) {
                 SettingsScreen()
             }
-
-//        composable(Screen.Game.ROUTE) { backStackEntry ->
-//            val gameId = backStackEntry.arguments?.getString("gameId") ?: ""
-//            GameScreen(gameId = gameId)
-//        }
         }
     }
 }

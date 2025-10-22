@@ -1,3 +1,6 @@
+package com.defey.solitairewell
+
+import androidx.lifecycle.SavedStateHandle
 import base.NavigationManager
 import base_viewModel.BaseViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -9,6 +12,7 @@ import models.Deck
 import repository.StorageRepository
 
 class SettingsViewModel(
+    savedStateHandle: SavedStateHandle,
     private val navigationManager: NavigationManager,
     private val storageRepository: StorageRepository,
     private val languageManager: LanguageManager,
@@ -20,7 +24,8 @@ class SettingsViewModel(
 ) {
 
     init {
-        debugLog("Setting init")
+        val userName = savedStateHandle.get<String>("userName") ?: ""
+        val score = savedStateHandle.get<Int>("score") ?: 0
         observeDeck()
         observeBackCard()
         observeBackgroundIndex()
@@ -51,7 +56,6 @@ class SettingsViewModel(
 
     private fun getCurrentLanguage() {
         val currentLanguage = languageManager.currentLanguage
-        debugLog("curLang: ${currentLanguage}")
         updateState {
             this.copy(currentLanguage = currentLanguage)
         }
@@ -95,11 +99,6 @@ class SettingsViewModel(
 
     fun openWell() {
         navigationManager.popBackStack()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        debugLog("Setting clear")
     }
 
 }
