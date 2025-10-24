@@ -12,15 +12,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import calculateHalfCardHeight
+import com.defey.solitairewell.calculateHalfCardHeight
 import com.defey.solitairewell.WellViewModel
-import factories.CardResourcesFactory
-import model.GameState
+import com.defey.solitairewell.factories.CardResourcesFactory
+import com.defey.solitairewell.model.GameState
 import models.Deck
 import models.WellCardStack
 import models.WellSlotAddress
 import models.WellSlotType
-import rememberCardSize
+import com.defey.solitairewell.rememberCardSize
 
 @Composable
 fun WellSlotBox(

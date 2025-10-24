@@ -10,11 +10,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.defey.solitairewell.resources.Res
 import com.defey.solitairewell.resources.settings_face_card_title
-import dialog.DialogController
-import factories.CardResourcesFactory
+import com.defey.solitairewell.dialog.DialogController
+import com.defey.solitairewell.factories.CardResourcesFactory
 import models.Deck
 import org.jetbrains.compose.resources.stringResource
-import theme.AppTypography
+import com.defey.solitairewell.theme.AppTypography
 
 @Composable
 fun CardFaceSetting(

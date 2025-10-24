@@ -21,8 +21,8 @@ import com.defey.solitairewell.resources.help
 import com.defey.solitairewell.resources.new_game
 import com.defey.solitairewell.resources.rules
 import com.defey.solitairewell.resources.settings
+import com.defey.solitairewell.statusBarPadding
 import org.jetbrains.compose.resources.painterResource
-import statusBarPadding
 
 @Composable
 fun GameNavigationBar(

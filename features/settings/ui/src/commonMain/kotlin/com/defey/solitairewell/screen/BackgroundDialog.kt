@@ -33,13 +33,13 @@ import androidx.compose.ui.unit.dp
 import com.defey.solitairewell.resources.Res
 import com.defey.solitairewell.resources.ic_cancel_24
 import com.defey.solitairewell.resources.settings_background_dialog_title
-import factories.CardResourcesFactory
+import com.defey.solitairewell.factories.CardResourcesFactory
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import rememberCardSize
-import theme.AppTypography
-import theme.CardColors
-import toPainter
+import com.defey.solitairewell.rememberCardSize
+import com.defey.solitairewell.toPainter
+import com.defey.solitairewell.theme.AppTypography
+import com.defey.solitairewell.theme.CardColors
 
 @Composable
 fun BackgroundDialog(

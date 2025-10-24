@@ -24,8 +24,8 @@ import com.defey.solitairewell.resources.settings_language_dialog_title
 import managers.AppLanguage
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import theme.AppTypography
-import theme.CardColors
+import com.defey.solitairewell.theme.AppTypography
+import com.defey.solitairewell.theme.CardColors
 
 @Composable
 fun LanguageDialog(

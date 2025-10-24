@@ -14,16 +14,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.defey.solitairewell.resources.Res
 import com.defey.solitairewell.resources.well_restore_dialog_message
 import com.defey.solitairewell.resources.well_restore_dialog_new_game_button_title
 import com.defey.solitairewell.resources.well_restore_dialog_restore_button_title
 import com.defey.solitairewell.resources.well_restore_dialog_title
-import dialog.DialogController
+import com.defey.solitairewell.dialog.DialogController
 import org.jetbrains.compose.resources.stringResource
-import theme.AppTypography
-import theme.CardColors
+import com.defey.solitairewell.theme.AppTypography
+import com.defey.solitairewell.theme.CardColors
 
 @Composable
 fun ReGameDialog(
@@ -34,7 +35,7 @@ fun ReGameDialog(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(24.dp)
+            .padding(16.dp)
     ) {
         Text(
             text = stringResource(Res.string.well_restore_dialog_title),
@@ -85,7 +86,9 @@ fun ReGameDialog(
             ) {
                 Text(
                     text = stringResource(Res.string.well_restore_dialog_new_game_button_title),
-                    style = AppTypography.titleSmall
+                    style = AppTypography.titleSmall,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center
                 )
             }
         }

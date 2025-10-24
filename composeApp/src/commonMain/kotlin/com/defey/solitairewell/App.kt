@@ -17,7 +17,8 @@ import models.Screen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 import com.defey.solitairewell.screen.SettingsScreen
-import theme.AppTheme
+import managers.LanguageManager
+import com.defey.solitairewell.theme.AppTheme
 
 @Composable
 @Preview
@@ -25,8 +26,11 @@ fun App() {
     AppTheme(darkTheme = false) {
         val navController = rememberNavController()
         val navigationManager: NavigationManager = koinInject<NavigationManager>()
+        val languageManager: LanguageManager = koinInject<LanguageManager>()
         val navigationState by navigationManager.navigationState.collectAsState()
-        LaunchedEffect(navigationState) {
+        val languageState by languageManager.languageFlow.collectAsState()
+
+        LaunchedEffect(navigationState, languageState) {
             when (val command = navigationState) {
                 is NavigationCommand.Navigate -> {
                     navController.navigate(command.route) {

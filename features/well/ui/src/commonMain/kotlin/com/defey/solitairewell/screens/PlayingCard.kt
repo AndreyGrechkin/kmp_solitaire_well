@@ -16,11 +16,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import factories.CardResource
-import model.CardState
+import com.defey.solitairewell.factories.CardResource
+import com.defey.solitairewell.model.CardState
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
-import theme.CardColors
+import com.defey.solitairewell.theme.CardColors
 
 @Composable
 fun PlayingCard(

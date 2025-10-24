@@ -15,8 +15,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
-import rememberCardSize
-import theme.CardColors
+import com.defey.solitairewell.rememberCardSize
+import com.defey.solitairewell.theme.CardColors
 
 @Composable
 fun CardBackSlot(

@@ -13,10 +13,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import factories.BackgroundItem
-import rememberCardSize
-import theme.CardColors
-import toPainter
+import com.defey.solitairewell.factories.BackgroundItem
+import com.defey.solitairewell.rememberCardSize
+import com.defey.solitairewell.toPainter
+import com.defey.solitairewell.theme.CardColors
 
 @Composable
 fun CardBackgroundSlot(
@@ -31,7 +31,7 @@ fun CardBackgroundSlot(
             .clip(MaterialTheme.shapes.medium)
             .background(color = CardColors.cardFront)
             .border(
-                width =  1.dp ,
+                width = 1.dp,
                 color = CardColors.black,
                 shape = MaterialTheme.shapes.medium
             )

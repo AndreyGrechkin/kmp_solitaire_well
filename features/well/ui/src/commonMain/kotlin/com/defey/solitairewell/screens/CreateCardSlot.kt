@@ -1,9 +1,9 @@
 package com.defey.solitairewell.screens
 
 import androidx.compose.runtime.Composable
-import factories.CardResourcesFactory
-import model.CardState
-import model.GameState
+import com.defey.solitairewell.factories.CardResourcesFactory
+import com.defey.solitairewell.model.CardState
+import com.defey.solitairewell.model.GameState
 import models.Deck
 import models.WellCardStack
 import models.WellSlotAddress

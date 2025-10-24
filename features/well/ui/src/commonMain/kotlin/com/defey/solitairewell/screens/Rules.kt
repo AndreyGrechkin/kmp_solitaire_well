@@ -40,8 +40,8 @@ import com.defey.solitairewell.resources.well_rules_waste_first
 import com.defey.solitairewell.resources.well_rules_waste_second
 import com.defey.solitairewell.resources.well_rules_waste_title
 import org.jetbrains.compose.resources.stringResource
-import theme.AppTypography
-import theme.CardColors
+import com.defey.solitairewell.theme.AppTypography
+import com.defey.solitairewell.theme.CardColors
 
 @Composable
 fun RulesContent(

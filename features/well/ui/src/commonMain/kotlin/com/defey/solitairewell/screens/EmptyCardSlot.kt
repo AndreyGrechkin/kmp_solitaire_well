@@ -6,8 +6,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import model.CardState
-import theme.CardColors
+import com.defey.solitairewell.model.CardState
+import com.defey.solitairewell.theme.CardColors
 
 @Composable
 fun EmptyCardSlot(

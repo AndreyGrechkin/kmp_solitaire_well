@@ -3,15 +3,16 @@ package com.defey.solitairewell
 import base_viewModel.UiAction
 import base_viewModel.UiEvent
 import base_viewModel.UiState
-import model.GameState
+import com.defey.solitairewell.model.GameState
 import models.Deck
+import models.GameFinishStatus
 import models.WellCardStack
 
 object WellContract {
     data class WellState(
         val stackWells: List<WellCardStack> = emptyList(),
         val gameState: GameState = GameState.Companion.EMPTY,
-        val gameMessage: String = "",
+        val gameStep: Int = 0,
         val availableHint: Boolean = true,
         val availableBackMove: Boolean = false,
         val hintState: List<GameState> = emptyList(),
@@ -28,8 +29,9 @@ object WellContract {
     }
 
     sealed interface WellAction : UiAction {
-       data object ShowRenewalDialog : WellAction
-       data object ShowRulesDialog : WellAction
+        data object ShowRenewalDialog : WellAction
+        data object ShowRulesDialog : WellAction
+        data class ShowWinDialog(val status: GameFinishStatus) : WellAction
 
     }
 }

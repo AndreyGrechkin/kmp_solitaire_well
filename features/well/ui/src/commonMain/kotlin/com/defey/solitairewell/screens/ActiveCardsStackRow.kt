@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import factories.CardResourcesFactory
-import model.GameState
+import com.defey.solitairewell.factories.CardResourcesFactory
+import com.defey.solitairewell.model.GameState
 import models.Deck
 import models.WellCardStack
 import models.WellSlotAddress

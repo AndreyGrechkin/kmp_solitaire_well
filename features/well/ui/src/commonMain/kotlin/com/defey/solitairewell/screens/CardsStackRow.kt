@@ -13,22 +13,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.defey.solitairewell.resources.Res
+import com.defey.solitairewell.resources.well_game_step
 import com.defey.solitairewell.resources.well_waste
-import factories.CardResourcesFactory
-import model.GameState
+import com.defey.solitairewell.factories.CardResourcesFactory
+import com.defey.solitairewell.model.GameState
 import models.Deck
 import models.WellCardStack
 import models.WellSlotAddress
 import models.WellSlotType
 import org.jetbrains.compose.resources.stringResource
-import theme.CardColors
+import com.defey.solitairewell.theme.CardColors
 
 @Composable
 fun CardsStackRow(
     stackWells: List<WellCardStack>,
     gameState: GameState,
     helpState: List<GameState>,
-    message: String,
+    step: Int,
     deck: Deck,
     backCardIndex: Int,
     cardFactory: CardResourcesFactory,
@@ -40,6 +41,7 @@ fun CardsStackRow(
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
+        val stepMessage = stringResource(Res.string.well_game_step)
         Column {
             CreateCardSlot(
                 stackList = stackWells,
@@ -53,7 +55,7 @@ fun CardsStackRow(
                 onClick = onClick
             )
             Text(
-                text = message,
+                text = "$stepMessage $step",
                 color = CardColors.black,
                 fontSize = 16.sp,
                 modifier = Modifier

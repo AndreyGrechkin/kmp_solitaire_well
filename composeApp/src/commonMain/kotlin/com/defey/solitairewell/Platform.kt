@@ -7,5 +7,6 @@ interface Platform {
 }
 
 expect fun getPlatform(): Platform
+
 @Composable
 expect fun BackHandler(enabled: Boolean, onBack: () -> Unit)

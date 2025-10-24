@@ -28,9 +28,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.delay
-import model.CardState
-import rememberCardSize
-import theme.CardColors
+import com.defey.solitairewell.model.CardState
+import com.defey.solitairewell.rememberCardSize
+import com.defey.solitairewell.theme.CardColors
 
 @Composable
 fun AnimatedBorder(

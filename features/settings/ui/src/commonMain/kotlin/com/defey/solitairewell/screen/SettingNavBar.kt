@@ -15,10 +15,10 @@ import androidx.compose.ui.unit.dp
 import com.defey.solitairewell.resources.Res
 import com.defey.solitairewell.resources.back_move
 import com.defey.solitairewell.resources.settings_title
+import com.defey.solitairewell.statusBarPadding
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import statusBarPadding
-import theme.AppTypography
+import com.defey.solitairewell.theme.AppTypography
 
 @Composable
 fun SettingNavBar(

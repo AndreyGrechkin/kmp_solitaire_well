@@ -24,14 +24,13 @@ import com.defey.solitairewell.WellContract.WellEvent.OnLoadGame
 import com.defey.solitairewell.WellContract.WellEvent.OnMenu
 import com.defey.solitairewell.WellMenu
 import com.defey.solitairewell.WellViewModel
-import debugLog
-import dialog.CustomDialog
-import dialog.rememberDialogController
-import factories.CardResourcesFactory
+import com.defey.solitairewell.toPainter
+import com.defey.solitairewell.dialog.CustomDialog
+import com.defey.solitairewell.dialog.rememberDialogController
+import com.defey.solitairewell.factories.CardResourcesFactory
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
-import toPainter
 
 @Composable
 fun WellScreen() {
@@ -47,6 +46,7 @@ fun WellScreen() {
             when (action) {
                 WellContract.WellAction.ShowRenewalDialog -> {
                     scope.launch {
+
                         dialogController.showDialog {
                             ReGameDialog(
                                 dialogController = dialogController,
@@ -65,10 +65,17 @@ fun WellScreen() {
                     dialogController.showDialog {
                         RulesContent(
                             onConfirm = {
-                                debugLog("onConfirm")
                                 dialogController.hideDialog()
                             }
                         )
+                    }
+                }
+
+                is WellContract.WellAction.ShowWinDialog -> {
+                    dialogController.showDialog {
+                        GameFinishAnimation(action.status) {
+                            dialogController.hideDialog()
+                        }
                     }
                 }
             }
@@ -90,7 +97,7 @@ fun WellScreen() {
                 .fillMaxSize()
         ) {
             Image(
-                painter =  cardFactory.backGround[state.backgroundItemIndex].toPainter(),
+                painter = cardFactory.backGround[state.backgroundItemIndex].toPainter(),
                 contentDescription = null,
                 modifier = Modifier.matchParentSize(),
                 contentScale = ContentScale.Crop
@@ -128,7 +135,7 @@ fun WellScreen() {
                         cardFactory = cardFactory,
                         gameState = state.gameState,
                         helpState = state.hintState,
-                        message = state.gameMessage,
+                        step = state.gameStep,
                         backCardIndex = state.backCardIndex,
                         deck = state.deck,
                         onAnimationComplete = {

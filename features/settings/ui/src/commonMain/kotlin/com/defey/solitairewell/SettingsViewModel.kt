@@ -29,7 +29,7 @@ class SettingsViewModel(
         observeDeck()
         observeBackCard()
         observeBackgroundIndex()
-        getCurrentLanguage()
+        observeLanguage()
     }
 
     override suspend fun handleEvent(event: SettingsContract.SettingsEvent) {
@@ -54,16 +54,16 @@ class SettingsViewModel(
         }
     }
 
-    private fun getCurrentLanguage() {
-        val currentLanguage = languageManager.currentLanguage
-        updateState {
-            this.copy(currentLanguage = currentLanguage)
-        }
+    private fun observeLanguage() {
+        languageManager.languageFlow.onEach { language ->
+            updateState {
+                this.copy(currentLanguage = language)
+            }
+        }.launchIn(viewModelScope)
     }
 
     private fun saveLanguage(language: AppLanguage) {
         languageManager.setLanguage(language)
-        getCurrentLanguage()
     }
 
     private fun observeBackCard() {

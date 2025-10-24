@@ -22,10 +22,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.defey.solitairewell.resources.BC_1
 import com.defey.solitairewell.resources.Res
-import factories.CardResource
+import com.defey.solitairewell.factories.CardResource
 import org.jetbrains.compose.resources.painterResource
-import rememberCardSize
-import theme.CardColors
+import com.defey.solitairewell.rememberCardSize
+import com.defey.solitairewell.theme.CardColors
 
 @Composable
 fun CardRankSlot(
@@ -41,7 +41,7 @@ fun CardRankSlot(
             .clip(MaterialTheme.shapes.medium)
             .background(color = CardColors.cardFront)
             .border(
-                width =  1.dp ,
+                width = 1.dp,
                 color = CardColors.black,
                 shape = MaterialTheme.shapes.medium
             )

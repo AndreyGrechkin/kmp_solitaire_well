@@ -1,12 +1,8 @@
 package com.defey.solitairewell
 
 import commonModule
-import dataRepositoryModule
-import databaseModule
 import di.navigationModule
 import com.defey.solitairewell.di.settingsModule
-import storageModule
-import uiKitModule
 import com.defey.solitairewell.di.wellModule
 import languageModule
 

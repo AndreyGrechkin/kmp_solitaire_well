@@ -10,16 +10,14 @@ import java.awt.event.KeyListener
 import javax.swing.JComponent
 import javax.swing.KeyStroke
 
-
-
-class JVMPlatform: Platform {
+class JVMPlatform : Platform {
     override val name: String = "Java ${System.getProperty("java.version")}"
 }
 
 actual fun getPlatform(): Platform = JVMPlatform()
+
 @Composable
 actual fun BackHandler(enabled: Boolean, onBack: () -> Unit) {
-    // Используем DisposableEffect для управления слушателем
     val currentOnBack by rememberUpdatedState(onBack)
 
     DisposableEffect(enabled) {
@@ -30,6 +28,7 @@ actual fun BackHandler(enabled: Boolean, onBack: () -> Unit) {
                     currentOnBack()
                 }
             }
+
             override fun keyReleased(e: KeyEvent?) {}
         }
 
