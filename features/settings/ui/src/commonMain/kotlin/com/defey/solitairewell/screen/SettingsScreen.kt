@@ -15,12 +15,13 @@ import androidx.compose.runtime.key
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import com.defey.solitairewell.LocalOrientationController
 import com.defey.solitairewell.SettingsContract
 import com.defey.solitairewell.SettingsViewModel
-import com.defey.solitairewell.toPainter
 import com.defey.solitairewell.dialog.CustomDialog
 import com.defey.solitairewell.dialog.rememberDialogController
 import com.defey.solitairewell.factories.CardResourcesFactory
+import com.defey.solitairewell.toPainter
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -31,6 +32,8 @@ fun SettingsScreen() {
     val dialogController = rememberDialogController()
     val scrollState = rememberScrollState()
     val state by viewModel.state.collectAsState()
+    val orientationController = LocalOrientationController.current
+    orientationController.LockPortraitOrientation()
 
     key(state.currentLanguage) {
         Scaffold(

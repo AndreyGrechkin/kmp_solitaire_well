@@ -17,6 +17,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import com.defey.solitairewell.LocalOrientationController
 import com.defey.solitairewell.WellContract
 import com.defey.solitairewell.WellContract.WellEvent.OnAnimationFinished
 import com.defey.solitairewell.WellContract.WellEvent.OnClickCard
@@ -40,6 +41,8 @@ fun WellScreen() {
     val scope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
     val dialogController = rememberDialogController()
+    val orientationController = LocalOrientationController.current
+    orientationController.LockPortraitOrientation()
 
     LaunchedEffect(Unit) {
         viewModel.action.collect { action ->

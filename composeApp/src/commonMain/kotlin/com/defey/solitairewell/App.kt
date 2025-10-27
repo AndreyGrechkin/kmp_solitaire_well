@@ -2,6 +2,7 @@ package com.defey.solitairewell
 
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -12,13 +13,14 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import base.NavigationCommand
 import base.NavigationManager
+import com.defey.solitairewell.screen.SettingsScreen
 import com.defey.solitairewell.screens.WellScreen
+import com.defey.solitairewell.theme.AppTheme
+import com.defey.solitairewell.utils.createOrientationController
+import managers.LanguageManager
 import models.Screen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
-import com.defey.solitairewell.screen.SettingsScreen
-import managers.LanguageManager
-import com.defey.solitairewell.theme.AppTheme
 
 @Composable
 @Preview
@@ -29,6 +31,7 @@ fun App() {
         val languageManager: LanguageManager = koinInject<LanguageManager>()
         val navigationState by navigationManager.navigationState.collectAsState()
         val languageState by languageManager.languageFlow.collectAsState()
+        val orientationController = createOrientationController()
 
         LaunchedEffect(navigationState, languageState) {
             when (val command = navigationState) {
@@ -59,27 +62,32 @@ fun App() {
             }
         }
 
-        NavHost(
-            navController = navController,
-            startDestination = Screen.WellMainScreen.route
+        CompositionLocalProvider(
+            LocalOrientationController provides orientationController
         ) {
-            composable(Screen.WellMainScreen.route) {
-                WellScreen()
-            }
 
-            composable(
-                route = Screen.Settings.ROUTE,
-                arguments = listOf(
-                    navArgument("userName") {
-                        type = NavType.StringType
-                    },
-                    navArgument("score") {
-                        type = NavType.IntType
-                        defaultValue = 0
-                    }
-                )
+            NavHost(
+                navController = navController,
+                startDestination = Screen.WellMainScreen.route
             ) {
-                SettingsScreen()
+                composable(Screen.WellMainScreen.route) {
+                    WellScreen()
+                }
+
+                composable(
+                    route = Screen.Settings.ROUTE,
+                    arguments = listOf(
+                        navArgument("userName") {
+                            type = NavType.StringType
+                        },
+                        navArgument("score") {
+                            type = NavType.IntType
+                            defaultValue = 0
+                        }
+                    )
+                ) {
+                    SettingsScreen()
+                }
             }
         }
     }
