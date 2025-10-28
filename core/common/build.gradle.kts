@@ -34,4 +34,17 @@ android {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
+    buildTypes {
+        debug {
+            buildConfigField("boolean", "SHOW_ADS", "false")
+            buildConfigField("String", "AD_NETWORK", "\"MOCK\"")
+        }
+        release {
+            buildConfigField("boolean", "SHOW_ADS", "true")
+            buildConfigField("String", "AD_NETWORK", "\"VK\"")
+        }
+    }
+    buildFeatures {
+        buildConfig = true
+    }
 }

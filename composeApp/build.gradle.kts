@@ -1,6 +1,8 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.io.FileInputStream
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -76,6 +78,8 @@ kotlin {
     }
 }
 
+
+
 android {
     namespace = "com.defey.solitairewell"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
@@ -93,14 +97,65 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    signingConfigs {
+        val keystorePropertiesFile = rootProject.file("keystore.properties")
+        val keystoreProperties = Properties()
+        if (keystorePropertiesFile.exists()) {
+           keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+        }
+
+        create("release") {
+            storeFile = file(keystoreProperties.getProperty("storeFile") ?: "debug.keystore")
+            storePassword = keystoreProperties.getProperty("storePassword") ?: ""
+            keyAlias = keystoreProperties.getProperty("keyAlias") ?: ""
+            keyPassword = keystoreProperties.getProperty("keyPassword") ?: ""
+        }
+    }
     buildTypes {
-        getByName("release") {
+        getByName("debug") {
+            // Настройки для отладки
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-DEBUG"
+            isDebuggable = true
             isMinifyEnabled = false
+            isShrinkResources = false
+
+            // Отключаем рекламу в debug
+            buildConfigField("boolean", "SHOW_ADS", "false")
+            buildConfigField("String", "AD_NETWORK", "\"MOCK\"")
+
+            // Для manifest placeholders
+            manifestPlaceholders["adsEnabled"] = "false"
+        }
+
+        getByName("release") {
+            // Настройки для продакшена
+            isMinifyEnabled = true
+            isShrinkResources = true
+            isDebuggable = false
+
+            // Включаем рекламу в release
+            buildConfigField("boolean", "SHOW_ADS", "true")
+            buildConfigField("String", "AD_NETWORK", "\"VK\"")
+
+            // Для manifest placeholders
+            manifestPlaceholders["adsEnabled"] = "true"
+
+            // Proguard правила
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 }
 
