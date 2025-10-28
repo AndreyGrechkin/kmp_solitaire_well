@@ -1,3 +1,4 @@
+import com.defey.solitairewell.managers.analytics.AnalyticsManager
 import logic.CommonTimer
 import logic.TimerFactory
 import managers.LanguageManager
@@ -14,6 +15,14 @@ val commonModule
 val languageModule
     get() = module {
         includes(platformLanguageModule())
+    }
+
+expect val analyticsModule: Module
+
+val commonAnalyticsModule
+    get() = module {
+        includes(analyticsModule)
+        single<AnalyticsManager> { AnalyticsManager(get()) }
     }
 
 internal expect fun platformLanguageModule(): Module

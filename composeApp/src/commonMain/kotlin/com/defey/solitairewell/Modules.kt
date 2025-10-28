@@ -1,9 +1,11 @@
 package com.defey.solitairewell
 
+import analyticsModule
 import commonModule
 import di.navigationModule
 import com.defey.solitairewell.di.settingsModule
 import com.defey.solitairewell.di.wellModule
+import commonAnalyticsModule
 import languageModule
 
 private val coreModules
@@ -11,7 +13,8 @@ private val coreModules
         commonModule,
         navigationModule,
         uiKitModule,
-        languageModule
+        languageModule,
+        commonAnalyticsModule
     )
 
 private val dataModule

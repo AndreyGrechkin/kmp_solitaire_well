@@ -44,6 +44,8 @@ kotlin {
             implementation(libs.koin.android)
             implementation(libs.koin.android.compose)
             implementation(libs.koin.android.navigation)
+            implementation(libs.yandex.appmetrica)
+            implementation(libs.yandex.appmetrica.analytics)
         }
         commonMain.dependencies {
             implementation(compose.runtime)

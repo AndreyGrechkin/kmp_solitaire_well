@@ -16,6 +16,7 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.androidx.core.ktx)
             implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.yandex.appmetrica)
         }
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
