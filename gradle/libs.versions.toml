@@ -24,6 +24,7 @@ navigation-compose = "2.9.1"
 androidxRoom = "2.7.2"
 sqlite = "2.5.2"
 lottie = "2.0.2"
+vk-android = "4.1.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -43,6 +44,8 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
 androidx-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigation-compose" }
 android-lottie = { module = "io.github.alexzhirkevich:compottie", version.ref = "lottie"}
+vk-ads-android-core = { module = "com.vk:android-sdk-core", version.ref = "vk-android"}
+vk-ads-android-api = { module = "com.vk:android-sdk-api", version.ref = "vk-android"}
 
 # Room
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "androidxRoom" }

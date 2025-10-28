@@ -10,5 +10,14 @@ package com.defey.solitairewell.managers.ads
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 expect class AdConfig {
     val showAds: Boolean
-    // Остальные поля (adNetwork, adIds) добавим позже
+    val adNetwork: String
+
+    // ✅ Рекламные ID
+    val bannerAdId: String
+    val interstitialAdId: String
+    val rewardedAdId: String
+
+    // ✅ Настройки частоты
+    val interstitialFrequency: Int
+    val initialCredits: Int
 }

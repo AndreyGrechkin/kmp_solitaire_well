@@ -5,13 +5,15 @@ import di.navigationModule
 import com.defey.solitairewell.di.settingsModule
 import com.defey.solitairewell.di.wellModule
 import languageModule
+import monetizationModule
 
 private val coreModules
     get() = listOf(
         commonModule,
         navigationModule,
         uiKitModule,
-        languageModule
+        languageModule,
+        monetizationModule
     )
 
 private val dataModule

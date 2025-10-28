@@ -16,6 +16,8 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.androidx.core.ktx)
             implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.vk.ads.android.core)
+            implementation(libs.vk.ads.android.api)
         }
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
