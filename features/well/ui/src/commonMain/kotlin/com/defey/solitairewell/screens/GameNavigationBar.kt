@@ -91,13 +91,13 @@ fun GameNavigationBar(
                 .size(48.dp)
                 .clickable(onClick = { onClickMenu(WellMenu.RULES) }),
         )
-
-        Image(
-            painter = painterResource(Res.drawable.game_list),
-            contentDescription = "List games",
-            modifier = Modifier
-                .size(48.dp)
-                .clickable(onClick = { onClickMenu(WellMenu.OTHER_GAMES) }),
-        )
+            //TODO: раскомментировать при добавлении нового пасьянса
+//        Image(
+//            painter = painterResource(Res.drawable.game_list),
+//            contentDescription = "List games",
+//            modifier = Modifier
+//                .size(48.dp)
+//                .clickable(onClick = { onClickMenu(WellMenu.OTHER_GAMES) }),
+//        )
     }
 }

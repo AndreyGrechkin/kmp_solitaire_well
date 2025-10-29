@@ -4,7 +4,7 @@ import com.defey.solitairewell.managers.analytics.DesktopAnalytics
 import com.defey.solitairewell.managers.analytics.PlatformAnalytics
 import com.defey.solitairewell.managers.update.DesktopUpdateManager
 import com.defey.solitairewell.managers.update.UpdateManager
-import managers.JvmLocalization
+import com.defey.solitairewell.managers.JvmLocalization
 import com.defey.solitairewell.managers.Localization
 import org.koin.core.module.Module
 import org.koin.dsl.module

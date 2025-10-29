@@ -1,12 +1,11 @@
-package managers
+package com.defey.solitairewell.managers
 
-import com.defey.solitairewell.managers.Localization
 import java.util.Locale
 import java.util.ResourceBundle
 
 internal class JvmLocalization : Localization {
     override fun applyLanguage(iso: String) {
-        val locale = Locale(iso)
+        val locale = Locale.forLanguageTag(iso)
         Locale.setDefault(locale)
         try {
             val bundle = ResourceBundle.getBundle("messages", locale)
