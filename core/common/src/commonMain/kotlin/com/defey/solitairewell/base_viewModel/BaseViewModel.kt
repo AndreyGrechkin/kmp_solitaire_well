@@ -1,4 +1,4 @@
-package base_viewModel
+package com.defey.solitairewell.base_viewModel
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.CoroutineScope

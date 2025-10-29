@@ -4,14 +4,12 @@ import com.defey.solitairewell.model.CardState
 import com.defey.solitairewell.model.GameState
 import com.defey.solitairewell.model.MoveCardResult
 import com.defey.solitairewell.model.StockClickResult
-import logic.generateDoubleDeck
-import logic.takeFromDeck
-import models.Card
-import models.Rank
-import models.Suit
-import models.WellCardStack
-import models.WellSlotAddress
-import models.WellSlotType
+import com.defey.solitairewell.models.Card
+import com.defey.solitairewell.models.Rank
+import com.defey.solitairewell.models.Suit
+import com.defey.solitairewell.models.WellCardStack
+import com.defey.solitairewell.models.WellSlotAddress
+import com.defey.solitairewell.models.WellSlotType
 
 class GameSetupFactoryImpl : GameSetupFactory {
 

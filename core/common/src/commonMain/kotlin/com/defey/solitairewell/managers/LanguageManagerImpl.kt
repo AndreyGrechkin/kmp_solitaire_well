@@ -1,4 +1,4 @@
-package managers
+package com.defey.solitairewell.managers
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +12,7 @@ class LanguageManagerImpl(
 
     private val _languageFlow = MutableStateFlow(currentLanguage)
     override val currentLanguage : AppLanguage
-        get() = AppLanguage.fromLanguageCode(repository.getLanguage())
+        get() = AppLanguage.Companion.fromLanguageCode(repository.getLanguage())
 
     override val languageFlow: StateFlow<AppLanguage>
         get() = _languageFlow

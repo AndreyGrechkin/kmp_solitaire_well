@@ -1,4 +1,4 @@
-package managers
+package com.defey.solitairewell.managers
 
 import androidx.compose.runtime.Stable
 import kotlinx.coroutines.flow.StateFlow

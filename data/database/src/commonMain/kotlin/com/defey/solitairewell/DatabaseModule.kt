@@ -6,7 +6,7 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 import com.defey.solitairewell.repository.StorageRepository
 import com.defey.solitairewell.repository.StorageRepositoryImpl
-import repository.WellRepository
+import com.defey.solitairewell.repository.WellRepository
 import com.defey.solitairewell.repository.WellRepositoryImpl
 
 

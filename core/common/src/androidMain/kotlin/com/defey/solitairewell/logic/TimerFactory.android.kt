@@ -1,4 +1,4 @@
-package logic
+package com.defey.solitairewell.logic
 
 import android.os.CountDownTimer
 

@@ -1,4 +1,4 @@
-package managers
+package com.defey.solitairewell.managers
 
 enum class AppLanguage(val iso: String, val displayName: String) {
     SYSTEM("system","System"),

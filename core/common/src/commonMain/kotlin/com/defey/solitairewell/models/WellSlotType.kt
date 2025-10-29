@@ -1,4 +1,4 @@
-package models
+package com.defey.solitairewell.models
 
 enum class WellSlotType {
     FOUNDATION,  // 4 слота для сборки

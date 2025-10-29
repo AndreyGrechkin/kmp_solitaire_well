@@ -1,8 +1,8 @@
-package base
+package com.defey.solitairewell.base
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import models.Screen
+import com.defey.solitairewell.models.Screen
 
 class NavigationManager {
     private val _navigationState = MutableStateFlow<NavigationCommand>(NavigationCommand.Idle)

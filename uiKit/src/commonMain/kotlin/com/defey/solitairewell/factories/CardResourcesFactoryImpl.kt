@@ -131,10 +131,10 @@ import com.defey.solitairewell.resources.heart_3
 import com.defey.solitairewell.resources.spade
 import com.defey.solitairewell.resources.spade_2
 import com.defey.solitairewell.resources.spade_3
-import models.Card
-import models.Deck
-import models.Rank
-import models.Suit
+import com.defey.solitairewell.models.Card
+import com.defey.solitairewell.models.Deck
+import com.defey.solitairewell.models.Rank
+import com.defey.solitairewell.models.Suit
 import org.jetbrains.compose.resources.DrawableResource
 import com.defey.solitairewell.theme.CardColors
 

@@ -11,14 +11,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import base.NavigationCommand
-import base.NavigationManager
+import com.defey.solitairewell.base.NavigationCommand
+import com.defey.solitairewell.base.NavigationManager
 import com.defey.solitairewell.screen.SettingsScreen
 import com.defey.solitairewell.screens.WellScreen
 import com.defey.solitairewell.theme.AppTheme
 import com.defey.solitairewell.utils.createOrientationController
-import managers.LanguageManager
-import models.Screen
+import com.defey.solitairewell.managers.LanguageManager
+import com.defey.solitairewell.models.Screen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 

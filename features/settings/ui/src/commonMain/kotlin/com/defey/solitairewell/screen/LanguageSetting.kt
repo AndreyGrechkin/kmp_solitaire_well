@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.defey.solitairewell.resources.Res
 import com.defey.solitairewell.resources.settings_language_title
 import com.defey.solitairewell.dialog.DialogController
-import managers.AppLanguage
+import com.defey.solitairewell.managers.AppLanguage
 import org.jetbrains.compose.resources.stringResource
 import com.defey.solitairewell.theme.AppTypography
 import com.defey.solitairewell.theme.CardColors

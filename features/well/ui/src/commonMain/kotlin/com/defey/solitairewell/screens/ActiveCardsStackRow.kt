@@ -7,10 +7,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.defey.solitairewell.factories.CardResourcesFactory
 import com.defey.solitairewell.model.GameState
-import models.Deck
-import models.WellCardStack
-import models.WellSlotAddress
-import models.WellSlotType
+import com.defey.solitairewell.models.Deck
+import com.defey.solitairewell.models.WellCardStack
+import com.defey.solitairewell.models.WellSlotAddress
+import com.defey.solitairewell.models.WellSlotType
 
 @Composable
 fun ActiveCardsStackRow(

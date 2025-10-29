@@ -2,11 +2,7 @@ package com.defey.solitairewell
 
 import com.defey.solitairewell.di.settingsModule
 import com.defey.solitairewell.di.wellModule
-import commonAnalyticsModule
-import commonModule
-import di.navigationModule
-import languageModule
-import updateModule
+import com.defey.solitairewell.di.navigationModule
 
 private val coreModules
     get() = listOf(

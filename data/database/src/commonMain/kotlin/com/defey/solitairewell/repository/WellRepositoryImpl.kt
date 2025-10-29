@@ -5,16 +5,15 @@ import com.defey.solitairewell.dao.WellGameStateDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
-import models.Card
-import models.Rank
-import models.Suit
-import models.WellCardStack
-import models.WellGameState
-import models.WellSlotAddress
-import models.WellSlotType
+import com.defey.solitairewell.models.Card
+import com.defey.solitairewell.models.Rank
+import com.defey.solitairewell.models.Suit
+import com.defey.solitairewell.models.WellCardStack
+import com.defey.solitairewell.models.WellGameState
+import com.defey.solitairewell.models.WellSlotAddress
+import com.defey.solitairewell.models.WellSlotType
 import com.defey.solitairewell.tables.WellCardEntity
 import com.defey.solitairewell.tables.WellGameStateEntity
-import repository.WellRepository
 
 class WellRepositoryImpl(
     private val wellCardDao: WellCardDao,

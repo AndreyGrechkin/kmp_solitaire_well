@@ -1,4 +1,4 @@
-package managers
+package com.defey.solitairewell.managers
 
 @Suppress("EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING")
 interface Localization {

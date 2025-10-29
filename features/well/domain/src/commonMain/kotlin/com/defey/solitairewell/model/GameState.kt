@@ -1,8 +1,8 @@
 package com.defey.solitairewell.model
 
-import models.Card
-import models.WellSlotAddress
-import models.WellSlotType
+import com.defey.solitairewell.models.Card
+import com.defey.solitairewell.models.WellSlotAddress
+import com.defey.solitairewell.models.WellSlotType
 
 data class GameState(
     val card: Card?,

@@ -1,12 +1,12 @@
 package com.defey.solitairewell
 
-import base_viewModel.UiAction
-import base_viewModel.UiEvent
-import base_viewModel.UiState
+import com.defey.solitairewell.base_viewModel.UiAction
+import com.defey.solitairewell.base_viewModel.UiEvent
+import com.defey.solitairewell.base_viewModel.UiState
 import com.defey.solitairewell.model.GameState
-import models.Deck
-import models.GameFinishStatus
-import models.WellCardStack
+import com.defey.solitairewell.models.Deck
+import com.defey.solitairewell.models.GameFinishStatus
+import com.defey.solitairewell.models.WellCardStack
 
 object WellContract {
     data class WellState(

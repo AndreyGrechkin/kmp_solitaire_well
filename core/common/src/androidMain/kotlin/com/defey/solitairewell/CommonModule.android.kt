@@ -1,9 +1,11 @@
+package com.defey.solitairewell
+
 import com.defey.solitairewell.managers.analytics.AndroidAnalytics
 import com.defey.solitairewell.managers.analytics.PlatformAnalytics
 import com.defey.solitairewell.managers.update.RuStoreUpdateManager
 import com.defey.solitairewell.managers.update.UpdateManager
-import managers.AndroidLocalization
-import managers.Localization
+import com.defey.solitairewell.managers.AndroidLocalization
+import com.defey.solitairewell.managers.Localization
 import org.koin.core.module.Module
 import org.koin.dsl.module
 

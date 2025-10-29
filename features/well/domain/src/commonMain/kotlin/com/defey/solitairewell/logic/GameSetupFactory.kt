@@ -1,6 +1,6 @@
 package com.defey.solitairewell.logic
 
-import models.WellCardStack
+import com.defey.solitairewell.models.WellCardStack
 import com.defey.solitairewell.model.GameState
 import com.defey.solitairewell.model.MoveCardResult
 import com.defey.solitairewell.model.StockClickResult

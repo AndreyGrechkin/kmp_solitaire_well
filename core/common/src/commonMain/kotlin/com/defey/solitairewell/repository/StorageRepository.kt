@@ -1,7 +1,7 @@
 package com.defey.solitairewell.repository
 
 import kotlinx.coroutines.flow.Flow
-import models.Deck
+import com.defey.solitairewell.models.Deck
 
 interface StorageRepository {
     suspend fun setDeck(deck: Deck)

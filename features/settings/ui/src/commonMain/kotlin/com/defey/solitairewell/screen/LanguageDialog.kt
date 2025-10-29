@@ -21,7 +21,7 @@ import com.defey.solitairewell.resources.Res
 import com.defey.solitairewell.resources.ic_cancel_24
 import com.defey.solitairewell.resources.ic_check_24
 import com.defey.solitairewell.resources.settings_language_dialog_title
-import managers.AppLanguage
+import com.defey.solitairewell.managers.AppLanguage
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import com.defey.solitairewell.theme.AppTypography

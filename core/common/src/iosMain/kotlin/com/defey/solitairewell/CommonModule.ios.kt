@@ -1,9 +1,11 @@
+package com.defey.solitairewell
+
 import com.defey.solitairewell.managers.analytics.IosAnalytics
 import com.defey.solitairewell.managers.analytics.PlatformAnalytics
 import com.defey.solitairewell.managers.update.IosUpdateManager
 import com.defey.solitairewell.managers.update.UpdateManager
 import managers.IosLocalization
-import managers.Localization
+import com.defey.solitairewell.managers.Localization
 import org.koin.core.module.Module
 import org.koin.dsl.module
 

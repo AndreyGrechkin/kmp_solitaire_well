@@ -7,9 +7,6 @@ import ru.rustore.sdk.appupdate.model.AppUpdateOptions
 import ru.rustore.sdk.appupdate.model.AppUpdateType
 import ru.rustore.sdk.appupdate.model.UpdateAvailability
 
-/**
- * ✅ Проверяльщик обновлений для RuStore
- */
 class RuStoreUpdateManager(context: Context) : UpdateManager {
 
     private val ruStoreAppUpdateManager = RuStoreAppUpdateManagerFactory.create(context)

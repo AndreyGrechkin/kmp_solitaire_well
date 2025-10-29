@@ -1,6 +1,6 @@
 package com.defey.solitairewell.model
 
-import models.WellCardStack
+import com.defey.solitairewell.models.WellCardStack
 
 data class StockClickResult(
     val updatedStacks: List<WellCardStack>,

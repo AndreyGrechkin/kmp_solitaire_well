@@ -1,4 +1,4 @@
-package logic
+package com.defey.solitairewell.logic
 
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.darwin.DISPATCH_SOURCE_TYPE_TIMER

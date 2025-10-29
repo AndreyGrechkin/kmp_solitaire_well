@@ -1,4 +1,4 @@
-package models
+package com.defey.solitairewell.models
 
 data class WellSlotAddress(
     val type: WellSlotType,

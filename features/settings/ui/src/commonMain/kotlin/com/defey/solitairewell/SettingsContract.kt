@@ -1,10 +1,10 @@
 package com.defey.solitairewell
 
-import base_viewModel.UiAction
-import base_viewModel.UiEvent
-import base_viewModel.UiState
-import managers.AppLanguage
-import models.Deck
+import com.defey.solitairewell.base_viewModel.UiAction
+import com.defey.solitairewell.base_viewModel.UiEvent
+import com.defey.solitairewell.base_viewModel.UiState
+import com.defey.solitairewell.managers.AppLanguage
+import com.defey.solitairewell.models.Deck
 
 object SettingsContract {
     data class SettingsState(

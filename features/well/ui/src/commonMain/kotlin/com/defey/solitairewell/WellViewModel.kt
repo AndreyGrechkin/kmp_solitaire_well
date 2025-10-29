@@ -1,24 +1,24 @@
 package com.defey.solitairewell
 
-import base.NavigationManager
-import base_viewModel.BaseViewModel
+import com.defey.solitairewell.base.NavigationManager
+import com.defey.solitairewell.base_viewModel.BaseViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import logic.CommonTimer
+import com.defey.solitairewell.logic.CommonTimer
 import com.defey.solitairewell.logic.GameSetupFactory
 import com.defey.solitairewell.model.CardState
 import com.defey.solitairewell.model.GameState
 import com.defey.solitairewell.model.MoveCardResult
-import models.Deck
-import models.GameFinishStatus
-import models.Screen
-import models.UserData
-import models.WellCardStack
-import models.WellGameState
-import models.WellSlotType
+import com.defey.solitairewell.models.Deck
+import com.defey.solitairewell.models.GameFinishStatus
+import com.defey.solitairewell.models.Screen
+import com.defey.solitairewell.models.UserData
+import com.defey.solitairewell.models.WellCardStack
+import com.defey.solitairewell.models.WellGameState
+import com.defey.solitairewell.models.WellSlotType
 import com.defey.solitairewell.repository.StorageRepository
-import repository.WellRepository
+import com.defey.solitairewell.repository.WellRepository
 
 class WellViewModel(
     private val navigationManager: NavigationManager,

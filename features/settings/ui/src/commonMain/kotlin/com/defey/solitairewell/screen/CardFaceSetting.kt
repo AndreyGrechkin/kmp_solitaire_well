@@ -12,7 +12,7 @@ import com.defey.solitairewell.resources.Res
 import com.defey.solitairewell.resources.settings_face_card_title
 import com.defey.solitairewell.dialog.DialogController
 import com.defey.solitairewell.factories.CardResourcesFactory
-import models.Deck
+import com.defey.solitairewell.models.Deck
 import org.jetbrains.compose.resources.stringResource
 import com.defey.solitairewell.theme.AppTypography
 

@@ -24,7 +24,7 @@ import com.defey.solitairewell.resources.Res
 import com.defey.solitairewell.resources.ic_cancel_24
 import com.defey.solitairewell.resources.settings_face_card_dialog_title
 import com.defey.solitairewell.factories.CardResourcesFactory
-import models.Deck
+import com.defey.solitairewell.models.Deck
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import com.defey.solitairewell.theme.AppTypography

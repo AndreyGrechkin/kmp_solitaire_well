@@ -1,14 +1,14 @@
 package com.defey.solitairewell
 
 import androidx.lifecycle.SavedStateHandle
-import base.NavigationManager
-import base_viewModel.BaseViewModel
+import com.defey.solitairewell.base.NavigationManager
+import com.defey.solitairewell.base_viewModel.BaseViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import managers.AppLanguage
-import managers.LanguageManager
-import models.Deck
+import com.defey.solitairewell.managers.AppLanguage
+import com.defey.solitairewell.managers.LanguageManager
+import com.defey.solitairewell.models.Deck
 import com.defey.solitairewell.repository.StorageRepository
 
 class SettingsViewModel(

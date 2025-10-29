@@ -1,4 +1,4 @@
-package managers
+package com.defey.solitairewell.managers
 
 import android.content.Context
 import android.content.res.Resources
@@ -10,7 +10,7 @@ internal class AndroidLocalization(
     private val context: Context
 ) : Localization {
    override fun applyLanguage(iso: String) {
-        val locale = Locale(iso)
+        val locale = Locale.forLanguageTag(iso)
         Locale.setDefault(locale)
         val config = context.resources.configuration
         config.setLocales(LocaleList(locale))

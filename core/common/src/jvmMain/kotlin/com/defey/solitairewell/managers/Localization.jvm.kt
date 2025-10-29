@@ -1,5 +1,6 @@
 package managers
 
+import com.defey.solitairewell.managers.Localization
 import java.util.Locale
 import java.util.ResourceBundle
 

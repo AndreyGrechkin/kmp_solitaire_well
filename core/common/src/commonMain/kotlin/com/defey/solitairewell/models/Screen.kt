@@ -1,4 +1,4 @@
-package models
+package com.defey.solitairewell.models
 
 sealed class Screen(val route: String) {
     data object WellMainScreen : Screen("well")

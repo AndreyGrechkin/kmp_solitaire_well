@@ -3,7 +3,7 @@ package com.defey.solitairewell.repository
 import com.defey.solitairewell.KeyValueStorage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import models.Deck
+import com.defey.solitairewell.models.Deck
 
 class StorageRepositoryImpl(private val storage: KeyValueStorage) : StorageRepository {
 

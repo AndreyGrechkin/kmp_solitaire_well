@@ -1,7 +1,7 @@
-package repository
+package com.defey.solitairewell.repository
 
-import models.WellCardStack
-import models.WellGameState
+import com.defey.solitairewell.models.WellCardStack
+import com.defey.solitairewell.models.WellGameState
 
 interface WellRepository {
     suspend fun setWellCards(stacks: List<WellCardStack>)

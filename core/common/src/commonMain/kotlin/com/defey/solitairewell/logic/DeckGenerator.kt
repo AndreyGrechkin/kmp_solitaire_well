@@ -1,8 +1,8 @@
-package logic
+package com.defey.solitairewell.logic
 
-import models.Card
-import models.Rank
-import models.Suit
+import com.defey.solitairewell.models.Card
+import com.defey.solitairewell.models.Rank
+import com.defey.solitairewell.models.Suit
 
 fun generateDoubleDeck(): List<Card> {
     return (0..1).flatMap { deckId ->

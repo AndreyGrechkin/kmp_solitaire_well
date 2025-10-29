@@ -1,6 +1,6 @@
-package di
+package com.defey.solitairewell.di
 
-import base.NavigationManager
+import com.defey.solitairewell.base.NavigationManager
 import org.koin.dsl.module
 
 val navigationModule = module {

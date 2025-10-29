@@ -1,7 +1,7 @@
 package com.defey.solitairewell.factories
 
-import models.Card
-import models.Deck
+import com.defey.solitairewell.models.Card
+import com.defey.solitairewell.models.Deck
 import org.jetbrains.compose.resources.DrawableResource
 
 interface CardResourcesFactory {

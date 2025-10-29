@@ -6,10 +6,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.defey.solitairewell.factories.CardResourcesFactory
-import models.Card
-import models.Deck
-import models.Rank
-import models.Suit
+import com.defey.solitairewell.models.Card
+import com.defey.solitairewell.models.Deck
+import com.defey.solitairewell.models.Rank
+import com.defey.solitairewell.models.Suit
 
 @Composable
 fun CardFaceRow(

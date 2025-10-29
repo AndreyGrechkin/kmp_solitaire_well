@@ -1,3 +1,3 @@
-package base_viewModel
+package com.defey.solitairewell.base_viewModel
 
 interface UiEvent

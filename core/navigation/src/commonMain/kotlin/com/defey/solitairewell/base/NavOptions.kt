@@ -1,4 +1,4 @@
-package base
+package com.defey.solitairewell.base
 
 data class NavOptions(
     val popUpToRoute: String? = null,

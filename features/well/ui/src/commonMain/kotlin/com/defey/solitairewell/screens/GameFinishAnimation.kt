@@ -8,7 +8,7 @@ import io.github.alexzhirkevich.compottie.LottieCompositionSpec
 import io.github.alexzhirkevich.compottie.animateLottieCompositionAsState
 import io.github.alexzhirkevich.compottie.rememberLottieComposition
 import io.github.alexzhirkevich.compottie.rememberLottiePainter
-import models.GameFinishStatus
+import com.defey.solitairewell.models.GameFinishStatus
 
 @Composable
 fun GameFinishAnimation(

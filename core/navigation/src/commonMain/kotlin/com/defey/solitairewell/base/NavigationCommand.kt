@@ -1,4 +1,4 @@
-package base
+package com.defey.solitairewell.base
 
 sealed class NavigationCommand {
     object Idle : NavigationCommand()
