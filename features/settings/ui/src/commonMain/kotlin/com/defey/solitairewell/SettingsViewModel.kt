@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import managers.AppLanguage
 import managers.LanguageManager
 import models.Deck
-import repository.StorageRepository
+import com.defey.solitairewell.repository.StorageRepository
 
 class SettingsViewModel(
     savedStateHandle: SavedStateHandle,

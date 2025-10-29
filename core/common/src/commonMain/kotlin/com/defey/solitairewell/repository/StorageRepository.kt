@@ -1,4 +1,4 @@
-package repository
+package com.defey.solitairewell.repository
 
 import kotlinx.coroutines.flow.Flow
 import models.Deck
@@ -18,4 +18,7 @@ interface StorageRepository {
 
     fun setLanguage(iso: String)
     fun getLanguage(): String
+
+    fun getLastUpdateNotificationTime(): Long
+    fun setLastUpdateNotificationTime(time: Long)
 }

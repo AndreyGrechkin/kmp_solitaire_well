@@ -1,12 +1,12 @@
 package com.defey.solitairewell
 
-import analyticsModule
-import commonModule
-import di.navigationModule
 import com.defey.solitairewell.di.settingsModule
 import com.defey.solitairewell.di.wellModule
 import commonAnalyticsModule
+import commonModule
+import di.navigationModule
 import languageModule
+import updateModule
 
 private val coreModules
     get() = listOf(
@@ -14,7 +14,8 @@ private val coreModules
         navigationModule,
         uiKitModule,
         languageModule,
-        commonAnalyticsModule
+        commonAnalyticsModule,
+        updateModule
     )
 
 private val dataModule

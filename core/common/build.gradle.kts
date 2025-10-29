@@ -17,12 +17,14 @@ kotlin {
             implementation(libs.androidx.core.ktx)
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.yandex.appmetrica)
+            implementation(libs.rustore.appupdate)
         }
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
+            implementation(libs.kotlinx.datetime)
         }
     }
 }

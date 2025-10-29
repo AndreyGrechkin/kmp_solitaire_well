@@ -52,6 +52,15 @@ internal class JvmKeyValueStorage(
         return properties.getProperty(key)
     }
 
+    override fun setLong(key: String, value: Long) {
+        properties .setProperty(key, value.toString())
+        saveProperties()
+    }
+
+    override fun getLong(key: String): Long {
+        return properties.getProperty(key)?.toLong() ?: 0L
+    }
+
     override fun getStringFlow(key: String): Flow<String?> {
         return _updates
             .filter { it.first == key }

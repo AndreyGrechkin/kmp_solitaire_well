@@ -17,7 +17,7 @@ import models.UserData
 import models.WellCardStack
 import models.WellGameState
 import models.WellSlotType
-import repository.StorageRepository
+import com.defey.solitairewell.repository.StorageRepository
 import repository.WellRepository
 
 class WellViewModel(

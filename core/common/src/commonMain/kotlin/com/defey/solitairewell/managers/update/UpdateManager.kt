@@ -8,6 +8,14 @@ package com.defey.solitairewell.managers.update
  * - Перенаправление в магазин для обновления
  */
 interface UpdateManager {
-    suspend fun checkForUpdate(): Boolean
-    // ✅ Детальную логику добавим на этапе реализации
+    fun checkForUpdates(
+        onUpdateReady: () -> Unit,
+        onNoUpdate: () -> Unit,
+        onError: (Throwable) -> Unit
+    )
+
+    fun completeUpdate(
+        onComplete: () -> Unit,
+        onError: (Throwable) -> Unit
+    )
 }

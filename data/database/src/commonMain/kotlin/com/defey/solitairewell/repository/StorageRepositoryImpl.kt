@@ -4,7 +4,6 @@ import com.defey.solitairewell.KeyValueStorage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import models.Deck
-import repository.StorageRepository
 
 class StorageRepositoryImpl(private val storage: KeyValueStorage) : StorageRepository {
 
@@ -60,10 +59,19 @@ class StorageRepositoryImpl(private val storage: KeyValueStorage) : StorageRepos
         return storage.getStringTab(LANGUAGE_KEY) ?: ""
     }
 
+    override fun getLastUpdateNotificationTime(): Long {
+       return storage.getLong(LAST_UPDATE_TIME)
+    }
+
+    override fun setLastUpdateNotificationTime(time: Long) {
+        storage.setLong(LAST_UPDATE_TIME, time)
+    }
+
     companion object {
         private const val DECK_KEY = "deck"
         private const val BACK_CARD_KEY = "back_card_key"
         private const val LANGUAGE_KEY = "language_key"
         private const val BACKGROUND_INDEX_KEY = "background_index_key"
+        private const val LAST_UPDATE_TIME = "last_update_time_key"
     }
 }

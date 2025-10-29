@@ -3,7 +3,7 @@ package managers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import repository.StorageRepository
+import com.defey.solitairewell.repository.StorageRepository
 
 class LanguageManagerImpl(
     private val localization: Localization,

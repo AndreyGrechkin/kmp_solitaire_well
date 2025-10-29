@@ -41,7 +41,7 @@ class AnalyticsManager(
         logEvent(event, params)
     }
 
-    private fun logEvent(event: String, params: Map<String, Any> = emptyMap()) {
+    fun logEvent(event: String, params: Map<String, Any> = emptyMap()) {
         platformAnalytics.logEvent(event, params)
     }
 }

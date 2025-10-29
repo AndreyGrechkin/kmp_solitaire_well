@@ -26,6 +26,8 @@ sqlite = "2.5.2"
 lottie = "2.0.2"
 appmetrica = "5.3.8"
 appmetrica-analytics = "7.13.0"
+datetime = "0.7.1"
+rustore-sdk = "7.0.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -43,10 +45,13 @@ kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-c
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
 androidx-navigation = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigation-compose" }
 android-lottie = { module = "io.github.alexzhirkevich:compottie", version.ref = "lottie"}
 yandex-appmetrica = { module = "com.yandex.android:mobmetricalib", version.ref = "appmetrica"}
 yandex-appmetrica-analytics = { module = "io.appmetrica.analytics:analytics", version.ref = "appmetrica-analytics"}
+rustore-appupdate = { group = "ru.rustore.sdk", name = "appupdate", version.ref = "rustore-sdk" }
+
 # Room
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "androidxRoom" }
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "androidxRoom" }

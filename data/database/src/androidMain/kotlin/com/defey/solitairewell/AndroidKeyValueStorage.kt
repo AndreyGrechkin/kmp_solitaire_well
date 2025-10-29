@@ -41,6 +41,14 @@ internal class AndroidKeyValueStorage(
         return sharedPreferences.getString(key, null)
     }
 
+    override fun setLong(key: String, value: Long) {
+        sharedPreferences.edit { putLong(key, value) }
+    }
+
+    override fun getLong(key: String): Long {
+        return sharedPreferences.getLong(key, 0L)
+    }
+
     override fun getStringFlow(key: String): Flow<String?> {
         return _updates
             .filter { it.first == key }

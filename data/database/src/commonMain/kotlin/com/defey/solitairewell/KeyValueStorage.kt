@@ -11,5 +11,8 @@ interface KeyValueStorage {
     fun setString(key: String, value: String)
     fun getStringTab(key: String): String?
 
+    fun setLong(key: String, value: Long)
+    fun getLong(key: String): Long
+
     fun getStringFlow(key: String): Flow<String?>
 }

@@ -4,7 +4,7 @@ import com.defey.solitairewell.dao.WellCardDao
 import com.defey.solitairewell.dao.WellGameStateDao
 import org.koin.core.module.Module
 import org.koin.dsl.module
-import repository.StorageRepository
+import com.defey.solitairewell.repository.StorageRepository
 import com.defey.solitairewell.repository.StorageRepositoryImpl
 import repository.WellRepository
 import com.defey.solitairewell.repository.WellRepositoryImpl

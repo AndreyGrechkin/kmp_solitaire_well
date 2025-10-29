@@ -38,6 +38,15 @@ internal class IosKeyValueStorage : KeyValueStorage {
         return userDefaults.stringForKey(key)
     }
 
+    override fun setLong(key: String, value: Long) {
+        userDefaults.setObject(value, forKey = key)
+        userDefaults.synchronize()
+    }
+
+    override fun getLong(key: String): Long {
+        return userDefaults.integerForKey(key)
+    }
+
     override fun getStringFlow(key: String): Flow<String?> {
         return _updates
             .filter { it.first == key }
