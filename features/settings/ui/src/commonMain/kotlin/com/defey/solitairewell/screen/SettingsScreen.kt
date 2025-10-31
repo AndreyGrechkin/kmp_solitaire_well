@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -21,6 +23,8 @@ import com.defey.solitairewell.SettingsViewModel
 import com.defey.solitairewell.dialog.CustomDialog
 import com.defey.solitairewell.dialog.rememberDialogController
 import com.defey.solitairewell.factories.CardResourcesFactory
+import com.defey.solitairewell.managers.ads.AdManager
+import com.defey.solitairewell.managers.billing.PurchaseManager
 import com.defey.solitairewell.toPainter
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -35,6 +39,11 @@ fun SettingsScreen() {
     val orientationController = LocalOrientationController.current
     orientationController.LockPortraitOrientation()
 
+    val adManager: AdManager = koinInject<AdManager>()
+//    val purchaseManager: PurchaseManager =  koinInject<PurchaseManager>()
+
+
+
     key(state.currentLanguage) {
         Scaffold(
             topBar = {
@@ -43,6 +52,21 @@ fun SettingsScreen() {
                 }
             }
         ) { paddingValues ->
+
+//            Column {
+//                // Баннерная реклама
+//                if (purchaseManager.areAdsEnabled()) {
+//                    // TODO: Баннерный компонент
+//                }
+//
+//                // Кнопка покупки
+//                Button(onClick = {
+//                    purchaseManager.purchaseRemoveAds()
+//                }) {
+//                    Text("Убрать рекламу")
+//                }
+//            }
+
             Box(
                 modifier = Modifier
                     .fillMaxSize()

@@ -10,16 +10,30 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.defey.solitairewell.managers.analytics.AnalyticsManager
 import com.defey.solitairewell.managers.update.UpdateManager
 import org.koin.android.ext.android.inject
+import com.defey.solitairewell.managers.ads.AdConfig
+import com.defey.solitairewell.managers.ads.AdManager
+import managers.LanguageManager
+import org.koin.android.ext.android.inject
+import org.koin.compose.koinInject
+import org.koin.java.KoinJavaComponent.inject
 
 class MainActivity : ComponentActivity() {
 
     private val updateManager: UpdateManager by inject()
     private val analytics: AnalyticsManager by inject()
+
+    private val adManager: AdManager by inject()
+    private val adConfig: AdConfig by inject()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
         analytics.logAppLaunch()
+
+        if (adConfig.showAds) {
+            adManager.initialize()
+        }
 
         setContent {
             App()

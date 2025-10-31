@@ -9,5 +9,21 @@ package com.defey.solitairewell.managers.ads
  */
 interface AdManager {
     fun initialize()
-    // Конкретные методы добавим на этапе реализации
+
+    // Баннеры
+    fun showBanner(placement: String)
+    fun hideBanner()
+
+    // Интерстишиалы
+    suspend fun showInterstitial(placement: String): Boolean
+    val isInterstitialReady: Boolean
+
+    // Rewarded Video
+    suspend fun showRewardedVideo(
+        placement: String,
+        onReward: (reward: Int) -> Unit
+    ): Boolean
+    val isRewardedReady: Boolean
+
+
 }

@@ -5,6 +5,12 @@ import com.defey.solitairewell.logic.CommonTimer
 import com.defey.solitairewell.logic.TimerFactory
 import com.defey.solitairewell.managers.LanguageManager
 import com.defey.solitairewell.managers.LanguageManagerImpl
+import com.defey.solitairewell.managers.ads.AdConfig
+import com.defey.solitairewell.managers.analytics.AnalyticsManager
+import logic.CommonTimer
+import logic.TimerFactory
+import managers.LanguageManager
+import managers.LanguageManagerImpl
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
@@ -27,5 +33,20 @@ val commonAnalyticsModule
         includes(analyticsModule)
         single<AnalyticsManager> { AnalyticsManager(get()) }
     }
+
+expect val monetizationModule: Module
+
+/**
+ * ✅ Общие зависимости для монетизации
+ */
+val commonMonetizationModule = module {
+    // ✅ AdConfig - единый для всех платформ
+
+    // ✅ AdCreditSystem - система кредитов
+//    single { AdCreditSystem() }
+
+    // ✅ AnalyticsManager - аналитика
+    single { AnalyticsManager() }
+}
 
 internal expect fun platformLanguageModule(): Module
