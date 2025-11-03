@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
@@ -28,6 +31,7 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.androidx.core.ktx)
             implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.yandex.ads.mobileads)
         }
     }
 }
@@ -35,9 +39,22 @@ kotlin {
 android {
     namespace = "com.defey.solitairewell.uiKit"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
-    defaultConfig { minSdk = libs.versions.android.minSdk.get().toInt() }
+    val keystorePropertiesFile = rootProject.file("keystore.properties")
+    val keystoreProperties = Properties()
+    if (keystorePropertiesFile.exists()) {
+        keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+    }
+
+    defaultConfig {
+        minSdk = libs.versions.android.minSdk.get().toInt()
+
+        buildConfigField("String", "YANDEX_BANNER_AD_ID", "\"${keystoreProperties.getProperty("YANDEX_BANNER_AD_ID", "demo-banner-yandex")}\"")
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
+    }
+    buildFeatures {
+        buildConfig = true
     }
 }

@@ -3,8 +3,6 @@ package com.defey.solitairewell
 import com.defey.solitairewell.di.settingsModule
 import com.defey.solitairewell.di.wellModule
 import com.defey.solitairewell.di.navigationModule
-import languageModule
-import monetizationModule
 
 private val coreModules
     get() = listOf(
@@ -14,7 +12,7 @@ private val coreModules
         languageModule,
         commonAnalyticsModule,
         updateModule,
-        monetizationModule
+        adsModule
     )
 
 private val dataModule

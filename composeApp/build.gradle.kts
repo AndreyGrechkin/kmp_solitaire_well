@@ -46,6 +46,7 @@ kotlin {
             implementation(libs.koin.android.navigation)
             implementation(libs.yandex.appmetrica)
             implementation(libs.yandex.appmetrica.analytics)
+            implementation(libs.yandex.ads.mobileads)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -86,6 +87,12 @@ android {
     namespace = "com.defey.solitairewell"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
+    val keystorePropertiesFile = rootProject.file("keystore.properties")
+    val keystoreProperties = Properties()
+    if (keystorePropertiesFile.exists()) {
+        keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+    }
+
     defaultConfig {
         applicationId = "com.defey.solitairewell"
         minSdk = libs.versions.android.minSdk.get().toInt()
@@ -93,6 +100,11 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+
+        buildConfigField("String", "YANDEX_BANNER_AD_ID", "\"${keystoreProperties.getProperty("YANDEX_BANNER_AD_ID", "demo-banner-yandex")}\"")
+        buildConfigField("String", "YANDEX_INTERSTITIAL_AD_ID", "\"${keystoreProperties.getProperty("YANDEX_INTERSTITIAL_AD_ID", "demo-interstitial-yandex")}\"")
+        buildConfigField("String", "YANDEX_REWARDED_AD_ID", "\"${keystoreProperties.getProperty("YANDEX_REWARDED_AD_ID", "demo-rewarded-yandex")}\"")
+        buildConfigField("String", "YANDEX_METRICA", "\"${keystoreProperties.getProperty("YANDEX_METRICA", "")}\"")
     }
     packaging {
         resources {
@@ -100,12 +112,6 @@ android {
         }
     }
     signingConfigs {
-        val keystorePropertiesFile = rootProject.file("keystore.properties")
-        val keystoreProperties = Properties()
-        if (keystorePropertiesFile.exists()) {
-           keystoreProperties.load(FileInputStream(keystorePropertiesFile))
-        }
-
         create("release") {
             storeFile = file(keystoreProperties.getProperty("storeFile") ?: "debug.keystore")
             storePassword = keystoreProperties.getProperty("storePassword") ?: ""
@@ -115,35 +121,21 @@ android {
     }
     buildTypes {
         getByName("debug") {
-            // Настройки для отладки
             applicationIdSuffix = ".debug"
             versionNameSuffix = "-DEBUG"
             isDebuggable = true
             isMinifyEnabled = false
             isShrinkResources = false
 
-            // Отключаем рекламу в debug
-            buildConfigField("boolean", "SHOW_ADS", "false")
-            buildConfigField("String", "AD_NETWORK", "\"MOCK\"")
-
-            // Для manifest placeholders
             manifestPlaceholders["adsEnabled"] = "false"
         }
 
         getByName("release") {
-            // Настройки для продакшена
             isMinifyEnabled = true
             isShrinkResources = true
             isDebuggable = false
 
-            // Включаем рекламу в release
-            buildConfigField("boolean", "SHOW_ADS", "true")
-            buildConfigField("String", "AD_NETWORK", "\"VK\"")
-
-            // Для manifest placeholders
             manifestPlaceholders["adsEnabled"] = "true"
-
-            // Proguard правила
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

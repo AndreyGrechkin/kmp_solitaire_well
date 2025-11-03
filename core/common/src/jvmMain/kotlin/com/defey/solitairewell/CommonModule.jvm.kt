@@ -6,12 +6,8 @@ import com.defey.solitairewell.managers.update.DesktopUpdateManager
 import com.defey.solitairewell.managers.update.UpdateManager
 import com.defey.solitairewell.managers.JvmLocalization
 import com.defey.solitairewell.managers.Localization
-import com.defey.solitairewell.managers.ads.AdConfig
 import com.defey.solitairewell.managers.ads.AdManager
 import com.defey.solitairewell.managers.ads.MockAdManager
-import com.defey.solitairewell.managers.billing.PurchaseManager
-import managers.JvmLocalization
-import managers.Localization
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
@@ -28,18 +24,7 @@ actual val updateModule: Module
         single<UpdateManager> { DesktopUpdateManager() }
     }
 
-actual val monetizationModule: Module = module {
+actual val adsModule: Module = module {
     includes(commonMonetizationModule)
-
-    single<AdConfig> { AdConfig() }
-
-    // ✅ AdManager для Desktop (заглушка)
-    single<AdManager> {
-        MockAdManager()
-    }
-
-    // ✅ PurchaseManager для Desktop (заглушка)
-//    single<PurchaseManager> {
-//        MockPurchaseManager()
-//    }
+    single<AdManager> { MockAdManager() }
 }

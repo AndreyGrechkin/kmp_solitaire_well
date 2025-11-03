@@ -28,7 +28,7 @@ appmetrica = "5.3.8"
 appmetrica-analytics = "7.13.0"
 datetime = "0.7.1"
 rustore-sdk = "7.0.0"
-vk-android = "4.1.0"
+yandex-mobileads = "7.16.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -52,8 +52,7 @@ android-lottie = { module = "io.github.alexzhirkevich:compottie", version.ref = 
 yandex-appmetrica = { module = "com.yandex.android:mobmetricalib", version.ref = "appmetrica"}
 yandex-appmetrica-analytics = { module = "io.appmetrica.analytics:analytics", version.ref = "appmetrica-analytics"}
 rustore-appupdate = { group = "ru.rustore.sdk", name = "appupdate", version.ref = "rustore-sdk" }
-vk-ads-android-core = { module = "com.vk:android-sdk-core", version.ref = "vk-android"}
-vk-ads-android-api = { module = "com.vk:android-sdk-api", version.ref = "vk-android"}
+yandex-ads-mobileads = { module = "com.yandex.android:mobileads", version.ref = "yandex-mobileads"}
 
 # Room
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "androidxRoom" }
@@ -68,6 +67,7 @@ koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", ver
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-android-navigation = { module = "io.insert-koin:koin-androidx-navigation", version.ref = "koin" }
 koin-android-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
+
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

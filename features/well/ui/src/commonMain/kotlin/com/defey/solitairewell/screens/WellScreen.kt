@@ -25,10 +25,11 @@ import com.defey.solitairewell.WellContract.WellEvent.OnLoadGame
 import com.defey.solitairewell.WellContract.WellEvent.OnMenu
 import com.defey.solitairewell.WellMenu
 import com.defey.solitairewell.WellViewModel
-import com.defey.solitairewell.toPainter
+import com.defey.solitairewell.ads.BannerAd
 import com.defey.solitairewell.dialog.CustomDialog
 import com.defey.solitairewell.dialog.rememberDialogController
 import com.defey.solitairewell.factories.CardResourcesFactory
+import com.defey.solitairewell.toPainter
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 import org.koin.compose.viewmodel.koinViewModel
@@ -77,6 +78,7 @@ fun WellScreen() {
                 is WellContract.WellAction.ShowWinDialog -> {
                     dialogController.showDialog {
                         GameFinishAnimation(action.status) {
+                            viewModel.onEvent(WellContract.WellEvent.OnFinishGame)
                             dialogController.hideDialog()
                         }
                     }
@@ -93,7 +95,8 @@ fun WellScreen() {
             ) {
                 viewModel.onEvent(OnMenu(it))
             }
-        }
+        },
+        bottomBar = { BannerAd() }
     ) { paddingValues ->
         Box(
             modifier = Modifier

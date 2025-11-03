@@ -3,6 +3,8 @@ package com.defey.solitairewell
 import android.app.Application
 import com.yandex.metrica.YandexMetrica
 import com.yandex.metrica.YandexMetricaConfig
+import com.yandex.mobile.ads.common.MobileAds
+import com.yandex.mobile.ads.instream.MobileInstreamAds
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 
@@ -11,6 +13,11 @@ class SolitaireApp : Application() {
         super.onCreate()
 
         initializeAppMetrica()
+        MobileAds.initialize(this) {
+            MobileInstreamAds.setAdGroupPreloading(true)
+          if (BuildConfig.DEBUG)
+            MobileAds.enableLogging(true)
+        }
         startKoin {
             androidContext(this@SolitaireApp)
             modules(
@@ -20,7 +27,7 @@ class SolitaireApp : Application() {
     }
 
     private fun initializeAppMetrica() {
-        val config = YandexMetricaConfig.newConfigBuilder("b1e1ff7f-89ac-4090-b69d-3a671a4adb69")
+        val config = YandexMetricaConfig.newConfigBuilder(BuildConfig.YANDEX_METRICA)
             .withLogs()
             .withStatisticsSending(true)
             .build()

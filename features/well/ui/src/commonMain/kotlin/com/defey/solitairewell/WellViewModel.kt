@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import com.defey.solitairewell.logic.CommonTimer
 import com.defey.solitairewell.logic.GameSetupFactory
+import com.defey.solitairewell.managers.ads.AdManager
 import com.defey.solitairewell.model.CardState
 import com.defey.solitairewell.model.GameState
 import com.defey.solitairewell.model.MoveCardResult
@@ -26,6 +27,7 @@ class WellViewModel(
     private val timer: CommonTimer,
     private val wellRepository: WellRepository,
     private val storageRepository: StorageRepository,
+    private val adManager: AdManager,
 ) : BaseViewModel<
         WellContract.WellEvent,
         WellContract.WellState,
@@ -50,6 +52,7 @@ class WellViewModel(
             is WellContract.WellEvent.OnClickCard -> handleClickCard(event.state)
             is WellContract.WellEvent.OnAnimationFinished -> handleFinishedAnimation()
             is WellContract.WellEvent.OnMenu -> handleClickMenu(event.menu)
+            WellContract.WellEvent.OnFinishGame -> adManager.onGameFinished()
         }
     }
 

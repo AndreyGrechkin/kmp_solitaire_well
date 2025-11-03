@@ -9,19 +9,19 @@ package com.defey.solitairewell.managers.billing
  * - Восстановление покупок
  */
 interface PurchaseManager {
-    fun initialize()
-
-    // ✅ Проверка, включена ли реклама (покупка не совершена)
-    fun areAdsEnabled(): Boolean
-
-    // ✅ Покупка удаления рекламы
-    suspend fun purchaseRemoveAds(): PurchaseResult
-
-    // ✅ Восстановление покупок
-    suspend fun restorePurchases(): RestoreResult
-
-    // ✅ Получение информации о продуктах
-    suspend fun getProducts(): List<ProductInfo>
+//    fun initialize()
+//
+//    // ✅ Проверка, включена ли реклама (покупка не совершена)
+//    fun areAdsEnabled(): Boolean
+//
+//    // ✅ Покупка удаления рекламы
+//    suspend fun purchaseRemoveAds(): PurchaseResult
+//
+//    // ✅ Восстановление покупок
+//    suspend fun restorePurchases(): RestoreResult
+//
+//    // ✅ Получение информации о продуктах
+//    suspend fun getProducts(): List<ProductInfo>
 }
 
 /**

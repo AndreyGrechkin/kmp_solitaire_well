@@ -26,6 +26,7 @@ object WellContract {
         data class OnMenu(val menu: WellMenu) : WellEvent
         data object OnAnimationFinished : WellEvent
         data object OnLoadGame : WellEvent
+        data object OnFinishGame : WellEvent
     }
 
     sealed interface WellAction : UiAction {

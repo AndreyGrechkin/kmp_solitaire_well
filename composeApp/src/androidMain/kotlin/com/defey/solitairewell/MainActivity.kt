@@ -7,33 +7,33 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import com.defey.solitairewell.managers.ads.AdEventBus
 import com.defey.solitairewell.managers.analytics.AnalyticsManager
 import com.defey.solitairewell.managers.update.UpdateManager
+import com.yandex.mobile.ads.common.AdError
+import com.yandex.mobile.ads.common.AdRequestConfiguration
+import com.yandex.mobile.ads.common.AdRequestError
+import com.yandex.mobile.ads.common.ImpressionData
+import com.yandex.mobile.ads.interstitial.InterstitialAd
+import com.yandex.mobile.ads.interstitial.InterstitialAdEventListener
+import com.yandex.mobile.ads.interstitial.InterstitialAdLoadListener
+import com.yandex.mobile.ads.interstitial.InterstitialAdLoader
 import org.koin.android.ext.android.inject
-import com.defey.solitairewell.managers.ads.AdConfig
-import com.defey.solitairewell.managers.ads.AdManager
-import managers.LanguageManager
-import org.koin.android.ext.android.inject
-import org.koin.compose.koinInject
-import org.koin.java.KoinJavaComponent.inject
 
 class MainActivity : ComponentActivity() {
 
     private val updateManager: UpdateManager by inject()
     private val analytics: AnalyticsManager by inject()
 
-    private val adManager: AdManager by inject()
-    private val adConfig: AdConfig by inject()
+    private var interstitialAd: InterstitialAd? = null
+    private var interstitialAdLoader: InterstitialAdLoader? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
         analytics.logAppLaunch()
-
-        if (adConfig.showAds) {
-            adManager.initialize()
-        }
+        AdEventBus.setOnShowAdListener { showAd() }
 
         setContent {
             App()
@@ -51,6 +51,64 @@ class MainActivity : ComponentActivity() {
             onNoUpdate = {},
             onError = {}
         )
+
+        interstitialAdLoader = InterstitialAdLoader(this).apply {
+            setAdLoadListener(object : InterstitialAdLoadListener {
+                override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                    this@MainActivity.interstitialAd = interstitialAd
+                }
+
+                override fun onAdFailedToLoad(error: AdRequestError) {
+                }
+            })
+        }
+        loadInterstitialAd()
+    }
+
+    private fun showAd() {
+        interstitialAd?.apply {
+            setAdEventListener(object : InterstitialAdEventListener {
+                override fun onAdShown() {
+
+                }
+
+                override fun onAdFailedToShow(adError: AdError) {
+                    destroyInterstitialAd()
+                    loadInterstitialAd()
+                }
+
+                override fun onAdDismissed() {
+                    destroyInterstitialAd()
+                    loadInterstitialAd()
+                }
+
+                override fun onAdClicked() {
+                }
+
+                override fun onAdImpression(impressionData: ImpressionData?) {
+                }
+            })
+            show(this@MainActivity)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        AdEventBus.clear()
+        interstitialAdLoader?.setAdLoadListener(null)
+        interstitialAdLoader = null
+        destroyInterstitialAd()
+    }
+
+    private fun loadInterstitialAd() {
+        val adRequestConfiguration =
+            AdRequestConfiguration.Builder(BuildConfig.YANDEX_INTERSTITIAL_AD_ID).build()
+        interstitialAdLoader?.loadAd(adRequestConfiguration)
+    }
+
+    private fun destroyInterstitialAd() {
+        interstitialAd?.setAdEventListener(null)
+        interstitialAd = null
     }
 }
 
