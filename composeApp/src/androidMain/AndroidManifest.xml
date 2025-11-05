@@ -9,6 +9,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_main"
         android:label="@string/app_name"
+        android:launchMode="singleTop"
         android:roundIcon="@mipmap/ic_main_round"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Material.Light.NoActionBar">
@@ -20,9 +21,26 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="ru.com.defey.solitairewell.rustore.scheme" />
+            </intent-filter>
         </activity>
+
         <meta-data
             android:name="com.yandex.mobile.ads.AUTOMATIC_SDK_INITIALIZATION"
             android:value="false" />
+
+        <meta-data
+            android:name="console_app_id_value"
+            android:value="@string/app_console_id"
+            />
+
+        <meta-data
+            android:name="sdk_pay_scheme_value"
+            android:value="ru.com.defey.solitairewell.rustore.scheme" />
     </application>
 </manifest>

@@ -1,5 +1,6 @@
 package com.defey.solitairewell
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -19,11 +20,14 @@ import com.yandex.mobile.ads.interstitial.InterstitialAdEventListener
 import com.yandex.mobile.ads.interstitial.InterstitialAdLoadListener
 import com.yandex.mobile.ads.interstitial.InterstitialAdLoader
 import org.koin.android.ext.android.inject
+import ru.rustore.sdk.pay.RuStorePayClient
 
 class MainActivity : ComponentActivity() {
 
     private val updateManager: UpdateManager by inject()
     private val analytics: AnalyticsManager by inject()
+
+    private val payClient: RuStorePayClient by inject()
 
     private var interstitialAd: InterstitialAd? = null
     private var interstitialAdLoader: InterstitialAdLoader? = null
@@ -32,6 +36,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
+        if (savedInstanceState == null) {
+            payClient.getIntentInteractor().proceedIntent(intent)
+        }
         analytics.logAppLaunch()
         AdEventBus.setOnShowAdListener { showAd() }
 
@@ -109,6 +116,11 @@ class MainActivity : ComponentActivity() {
     private fun destroyInterstitialAd() {
         interstitialAd?.setAdEventListener(null)
         interstitialAd = null
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        payClient.getIntentInteractor().proceedIntent(intent)
     }
 }
 

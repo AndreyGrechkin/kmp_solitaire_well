@@ -4,6 +4,7 @@ import com.defey.solitairewell.KeyValueStorage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import com.defey.solitairewell.models.Deck
+import com.defey.solitairewell.models.ProductArticle
 
 class StorageRepositoryImpl(private val storage: KeyValueStorage) : StorageRepository {
 
@@ -60,11 +61,25 @@ class StorageRepositoryImpl(private val storage: KeyValueStorage) : StorageRepos
     }
 
     override fun getLastUpdateNotificationTime(): Long {
-       return storage.getLong(LAST_UPDATE_TIME)
+        return storage.getLong(LAST_UPDATE_TIME)
     }
 
     override fun setLastUpdateNotificationTime(time: Long) {
         storage.setLong(LAST_UPDATE_TIME, time)
+    }
+
+    override suspend fun setRemoveAds() {
+        storage.putString(ProductArticle.REMOVE_ADS.id, ProductArticle.REMOVE_ADS.id)
+    }
+
+    override suspend fun getRemoveAds(): Boolean {
+        return storage.getString(ProductArticle.REMOVE_ADS.id) == ProductArticle.REMOVE_ADS.id
+    }
+
+    override fun getRemoveAdsFlow(): Flow<Boolean> {
+        return storage.getStringFlow(ProductArticle.REMOVE_ADS.id).map { value ->
+            value == ProductArticle.REMOVE_ADS.id
+        }
     }
 
     companion object {

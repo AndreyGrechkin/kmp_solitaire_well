@@ -43,7 +43,7 @@ fun SettingsScreen() {
                     viewModel.onEvent(SettingsContract.SettingsEvent.GoBack)
                 }
             },
-            bottomBar = { BannerAd() }
+            bottomBar = { if (state.shouldShowAds) BannerAd() }
         ) { paddingValues ->
 
             Box(
@@ -93,6 +93,12 @@ fun SettingsScreen() {
                     ) {
                         viewModel.onEvent(SettingsContract.SettingsEvent.SaveLanguage(it))
                     }
+
+                    if (state.shouldShowAds)
+                        AdsSetting {
+                            viewModel.onEvent(SettingsContract.SettingsEvent.OnRemoveAds)
+                        }
+
                 }
             }
             CustomDialog(

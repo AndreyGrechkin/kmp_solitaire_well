@@ -2,4 +2,5 @@
 <resources>
     <string name="app_name">Редкие Пасьянсы: Гробница Наполеона</string>
     <string name="app_update_complete">Обновление установлено</string>
+    <string name="app_console_id">2063667701</string>
 </resources>

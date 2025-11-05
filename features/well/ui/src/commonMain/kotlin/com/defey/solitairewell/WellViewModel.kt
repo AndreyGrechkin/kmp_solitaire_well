@@ -8,11 +8,13 @@ import kotlinx.coroutines.launch
 import com.defey.solitairewell.logic.CommonTimer
 import com.defey.solitairewell.logic.GameSetupFactory
 import com.defey.solitairewell.managers.ads.AdManager
+import com.defey.solitairewell.managers.billing.ProductsRepository
 import com.defey.solitairewell.model.CardState
 import com.defey.solitairewell.model.GameState
 import com.defey.solitairewell.model.MoveCardResult
 import com.defey.solitairewell.models.Deck
 import com.defey.solitairewell.models.GameFinishStatus
+import com.defey.solitairewell.models.ProductArticle
 import com.defey.solitairewell.models.Screen
 import com.defey.solitairewell.models.UserData
 import com.defey.solitairewell.models.WellCardStack
@@ -28,6 +30,7 @@ class WellViewModel(
     private val wellRepository: WellRepository,
     private val storageRepository: StorageRepository,
     private val adManager: AdManager,
+    private val productsRepository: ProductsRepository,
 ) : BaseViewModel<
         WellContract.WellEvent,
         WellContract.WellState,
@@ -43,6 +46,7 @@ class WellViewModel(
         observeDeck()
         observeBackCard()
         observeBackgroundIndex()
+        observeAds()
         handleLoadCardStack()
     }
 
@@ -52,7 +56,9 @@ class WellViewModel(
             is WellContract.WellEvent.OnClickCard -> handleClickCard(event.state)
             is WellContract.WellEvent.OnAnimationFinished -> handleFinishedAnimation()
             is WellContract.WellEvent.OnMenu -> handleClickMenu(event.menu)
-            WellContract.WellEvent.OnFinishGame -> adManager.onGameFinished()
+            WellContract.WellEvent.OnFinishGame -> {
+                if (state.value.shouldShowAds) adManager.onGameFinished()
+            }
         }
     }
 
@@ -78,6 +84,16 @@ class WellViewModel(
             updateState {
                 this.copy(backgroundItemIndex = response)
             }
+        }.launchIn(viewModelScope)
+    }
+
+    private fun observeAds() {
+        storageRepository.getRemoveAdsFlow().onEach { response ->
+            if (!response) {
+                val isCheck = productsRepository.checkPurchasedProduct(ProductArticle.REMOVE_ADS)
+                if (isCheck) storageRepository.setRemoveAds()
+            }
+            updateState { this.copy(shouldShowAds = !response) }
         }.launchIn(viewModelScope)
     }
 

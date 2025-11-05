@@ -18,7 +18,6 @@ kotlin {
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.yandex.appmetrica)
             implementation(libs.rustore.appupdate)
-            implementation(libs.yandex.ads.mobileads)
         }
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)

@@ -9,6 +9,13 @@ val settingsModule
     get() = module {
         includes(settingsDomainModule)
         viewModel { (savedStateHandle: SavedStateHandle) ->
-            SettingsViewModel(savedStateHandle, get(), get(), get())
+            SettingsViewModel(
+                savedStateHandle,
+                get(),
+                get(),
+                get(),
+                get(),
+                get(),
+            )
         }
     }

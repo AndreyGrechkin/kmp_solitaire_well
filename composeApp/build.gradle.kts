@@ -39,6 +39,8 @@ kotlin {
     
     sourceSets {
         androidMain.dependencies {
+            implementation(project.dependencies.platform("ru.rustore.sdk:bom:2025.08.01"))
+            implementation(libs.pay)
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.android)
@@ -59,6 +61,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
             implementation(projects.data.database)
+            implementation(projects.data.store)
             implementation(projects.resources)
             implementation(projects.core.common)
             implementation(projects.uiKit)

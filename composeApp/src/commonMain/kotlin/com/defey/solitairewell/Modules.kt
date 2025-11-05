@@ -3,6 +3,7 @@ package com.defey.solitairewell
 import com.defey.solitairewell.di.settingsModule
 import com.defey.solitairewell.di.wellModule
 import com.defey.solitairewell.di.navigationModule
+import com.defey.solitairewell.di.storeModule
 
 private val coreModules
     get() = listOf(
@@ -19,7 +20,8 @@ private val dataModule
     get() = listOf(
         databaseModule,
         storageModule,
-        dataRepositoryModule
+        dataRepositoryModule,
+        storeModule
     )
 
 private val featureModules

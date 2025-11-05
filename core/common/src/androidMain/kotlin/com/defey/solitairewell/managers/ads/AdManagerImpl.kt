@@ -1,8 +1,6 @@
 package com.defey.solitairewell.managers.ads
 
-class AdManagerImpl (
-
-) : AdManager {
+class AdManagerImpl : AdManager {
 
     private var gamesPlayed = 0
 

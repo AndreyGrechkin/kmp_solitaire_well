@@ -96,7 +96,7 @@ fun WellScreen() {
                 viewModel.onEvent(OnMenu(it))
             }
         },
-        bottomBar = { BannerAd() }
+        bottomBar = { if (state.shouldShowAds) BannerAd() }
     ) { paddingValues ->
         Box(
             modifier = Modifier

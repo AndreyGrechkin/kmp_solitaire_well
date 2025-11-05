@@ -3,19 +3,25 @@ package com.defey.solitairewell
 import androidx.lifecycle.SavedStateHandle
 import com.defey.solitairewell.base.NavigationManager
 import com.defey.solitairewell.base_viewModel.BaseViewModel
+import com.defey.solitairewell.managers.AppLanguage
+import com.defey.solitairewell.managers.LanguageManager
+import com.defey.solitairewell.managers.billing.ProductsRepository
+import com.defey.solitairewell.managers.billing.PurchasesRepository
+import com.defey.solitairewell.managers.billing.StorePreferredPurchaseType
+import com.defey.solitairewell.models.Deck
+import com.defey.solitairewell.models.ProductArticle
+import com.defey.solitairewell.repository.StorageRepository
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import com.defey.solitairewell.managers.AppLanguage
-import com.defey.solitairewell.managers.LanguageManager
-import com.defey.solitairewell.models.Deck
-import com.defey.solitairewell.repository.StorageRepository
 
 class SettingsViewModel(
     savedStateHandle: SavedStateHandle,
     private val navigationManager: NavigationManager,
     private val storageRepository: StorageRepository,
     private val languageManager: LanguageManager,
+    private val productsRepository: ProductsRepository,
+    private val purchasesRepository: PurchasesRepository,
 ) : BaseViewModel<
         SettingsContract.SettingsEvent,
         SettingsContract.SettingsState,
@@ -30,6 +36,7 @@ class SettingsViewModel(
         observeBackCard()
         observeBackgroundIndex()
         observeLanguage()
+        observeAds()
     }
 
     override suspend fun handleEvent(event: SettingsContract.SettingsEvent) {
@@ -39,6 +46,7 @@ class SettingsViewModel(
             is SettingsContract.SettingsEvent.SaveBackCard -> saveBackCard(event.index)
             is SettingsContract.SettingsEvent.SaveBackgroundItem -> saveBackground(event.index)
             is SettingsContract.SettingsEvent.SaveLanguage -> saveLanguage(event.language)
+            SettingsContract.SettingsEvent.OnRemoveAds -> buyRemoveAds()
         }
     }
 
@@ -91,14 +99,35 @@ class SettingsViewModel(
         }.launchIn(viewModelScope)
     }
 
+    private fun observeAds() {
+        storageRepository.getRemoveAdsFlow().onEach { response ->
+            updateState {
+                this.copy(shouldShowAds = !response)
+            }
+        }.launchIn(viewModelScope)
+    }
+
     private fun saveDeck(deck: Deck) {
         viewModelScope.launch {
             storageRepository.setDeck(deck)
         }
     }
 
-    fun openWell() {
+    private fun openWell() {
         navigationManager.popBackStack()
+    }
+
+    private fun buyRemoveAds(purchaseType: StorePreferredPurchaseType = StorePreferredPurchaseType.ONE_STEP) {
+        viewModelScope.launch {
+            runCatching {
+                purchasesRepository.purchase(ProductArticle.REMOVE_ADS, purchaseType)
+            }.onSuccess {
+                val isCheck = productsRepository.checkPurchasedProduct(ProductArticle.REMOVE_ADS)
+                if (isCheck) storageRepository.setRemoveAds()
+
+            }.onFailure { error ->
+            }
+        }
     }
 
 }

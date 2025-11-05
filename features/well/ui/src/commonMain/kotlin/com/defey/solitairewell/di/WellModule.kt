@@ -7,5 +7,5 @@ import com.defey.solitairewell.WellViewModel
 val wellModule
     get() = module {
         includes(wellDomainModule)
-        viewModel { WellViewModel(get(), get(), get(), get(), get(), get()) }
+        viewModel { WellViewModel(get(), get(), get(), get(), get(), get(), get()) }
     }

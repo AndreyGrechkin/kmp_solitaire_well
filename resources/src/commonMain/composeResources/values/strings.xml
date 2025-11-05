@@ -36,4 +36,6 @@
     <string name="settings_background_dialog_title">Select Background</string>
     <string name="settings_language_title">Language</string>
     <string name="settings_language_dialog_title">Select Language</string>
+    <string name="settings_ads_title">Ads Removal</string>
+    <string name="settings_ads_remove_button_title">Remove Ads</string>
 </resources>

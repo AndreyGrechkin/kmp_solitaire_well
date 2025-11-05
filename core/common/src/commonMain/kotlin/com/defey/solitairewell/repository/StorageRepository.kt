@@ -21,4 +21,8 @@ interface StorageRepository {
 
     fun getLastUpdateNotificationTime(): Long
     fun setLastUpdateNotificationTime(time: Long)
+
+    suspend fun setRemoveAds()
+    suspend fun getRemoveAds(): Boolean
+    fun getRemoveAdsFlow(): Flow<Boolean>
 }

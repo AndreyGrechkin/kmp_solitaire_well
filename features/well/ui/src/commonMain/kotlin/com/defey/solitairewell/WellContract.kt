@@ -19,6 +19,7 @@ object WellContract {
         val deck: Deck = Deck.FIRST,
         val backCardIndex: Int = 0,
         val backgroundItemIndex: Int = 0,
+        val shouldShowAds: Boolean = true
     ) : UiState
 
     sealed interface WellEvent : UiEvent {

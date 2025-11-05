@@ -36,4 +36,6 @@
     <string name="settings_background_dialog_title">Выберите фон</string>
     <string name="settings_language_title">Язык</string>
     <string name="settings_language_dialog_title">Выберите язык</string>
+    <string name="settings_ads_title">Отключение рекламы</string>
+    <string name="settings_ads_remove_button_title">Отключить рекламу</string>
 </resources>
