@@ -17,7 +17,6 @@ kotlin {
             implementation(libs.androidx.core.ktx)
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.yandex.appmetrica)
-            implementation(libs.rustore.appupdate)
         }
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)

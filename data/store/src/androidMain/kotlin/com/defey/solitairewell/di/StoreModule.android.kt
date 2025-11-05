@@ -4,19 +4,22 @@ import com.defey.solitairewell.auth.AuthorizationRepositoryImpl
 import com.defey.solitairewell.managers.billing.AuthorizationRepository
 import com.defey.solitairewell.managers.billing.ProductsRepository
 import com.defey.solitairewell.managers.billing.PurchasesRepository
+import com.defey.solitairewell.managers.update.UpdateManager
 import com.defey.solitairewell.products.ProductsDataSource
 import com.defey.solitairewell.products.ProductsRepositoryImpl
-import com.defey.solitairewell.purchases.PurchaseStatusMapper
 import com.defey.solitairewell.products.StoreProductConverter
 import com.defey.solitairewell.purchases.DeviceIdDataSource
+import com.defey.solitairewell.purchases.PurchaseStatusMapper
 import com.defey.solitairewell.purchases.PurchasesDataSource
 import com.defey.solitairewell.purchases.PurchasesRepositoryImpl
+import com.defey.solitairewell.update.UpdateManagerImpl
 import org.koin.core.module.Module
 import org.koin.dsl.module
 import ru.rustore.sdk.pay.RuStorePayClient
 
 actual val storeModule: Module
     get() = module {
+        single<UpdateManager> { UpdateManagerImpl(get()) }
         single<AuthorizationRepository> { AuthorizationRepositoryImpl(get()) }
         single<RuStorePayClient> { RuStorePayClient.instance }
         factory<PurchaseStatusMapper> { PurchaseStatusMapper() }

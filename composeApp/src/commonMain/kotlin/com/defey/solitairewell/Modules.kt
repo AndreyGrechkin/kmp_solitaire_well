@@ -12,7 +12,6 @@ private val coreModules
         uiKitModule,
         languageModule,
         commonAnalyticsModule,
-        updateModule,
         adsModule
     )
 

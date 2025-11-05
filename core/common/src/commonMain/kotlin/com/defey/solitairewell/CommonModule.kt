@@ -20,7 +20,6 @@ val languageModule
     }
 
 expect val analyticsModule: Module
-expect val updateModule: Module
 
 val commonAnalyticsModule
     get() = module {
