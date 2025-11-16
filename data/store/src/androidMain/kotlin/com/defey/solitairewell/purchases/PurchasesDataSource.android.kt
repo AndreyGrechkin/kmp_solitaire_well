@@ -25,7 +25,7 @@ actual class PurchasesDataSource(
                 .getPurchaseInteractor()
                 .getPurchases(productType = productType, purchaseStatus = purchaseStatus)
                 .toSuspendResult()
-                .getOrThrow()
+                .getOrDefault(emptyList())
         }
 
     suspend fun purchase(

@@ -18,6 +18,6 @@ actual class ProductsDataSource(
                 .getProductInteractor()
                 .getProducts(productsId = productsIds.map(::ProductId))
                 .toSuspendResult()
-                .getOrThrow()
+                .getOrDefault(emptyList())
         }
 }
